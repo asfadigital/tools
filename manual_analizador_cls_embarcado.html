@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Usuario — Analizador CLS de ASFA Digital Embarcado</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap');
+
+  :root {
+    --blue: #0056b3;
+    --blue-dark: #003d80;
+    --blue-light: #e8f0fb;
+    --blue-mid: #c5d9f5;
+    --accent: #e63946;
+    --warn: #f4a300;
+    --green: #2a9d5c;
+    --bg: #f5f7fa;
+    --surface: #ffffff;
+    --surface2: #f0f4fa;
+    --border: #d0daea;
+    --text: #1a2233;
+    --muted: #6b7a99;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --sidebar-w: 280px;
+    --header-h: 56px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
+    background: var(--blue-dark);
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 28px;
+    z-index: 200;
+    box-shadow: 0 2px 12px rgba(0,0,0,.25);
+  }
+  .topbar-badge {
+    font-family: var(--mono);
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    background: var(--accent);
+    color: #fff;
+    padding: 3px 8px; border-radius: 3px;
+  }
+  .topbar-title {
+    font-family: var(--sans);
+    font-size: 15px; font-weight: 600;
+    color: rgba(255,255,255,.9);
+    letter-spacing: .3px;
+  }
+  .topbar-ver {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 11px; color: rgba(255,255,255,.45);
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed;
+    top: var(--header-h); left: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    z-index: 100;
+    padding: 20px 0 40px;
+  }
+  .sidebar-section {
+    padding: 6px 20px 4px;
+    font-family: var(--mono);
+    font-size: 9px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 14px;
+  }
+  .sidebar a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 20px;
+    text-decoration: none;
+    font-size: 13px; color: var(--text);
+    border-left: 3px solid transparent;
+    transition: all .15s;
+    line-height: 1.3;
+  }
+  .sidebar a:hover { background: var(--blue-light); color: var(--blue); border-left-color: var(--blue-mid); }
+  .sidebar a.active { background: var(--blue-light); color: var(--blue); border-left-color: var(--blue); font-weight: 600; }
+  .sidebar a .ic { font-size: 15px; flex-shrink: 0; width: 18px; text-align: center; }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: var(--sidebar-w);
+    margin-top: var(--header-h);
+    padding: 40px 48px 80px;
+    max-width: 920px;
+  }
+
+  /* ── SECTIONS ── */
+  .section { margin-bottom: 60px; scroll-margin-top: 80px; }
+
+  h1 { font-size: 28px; font-weight: 700; color: var(--blue-dark); line-height: 1.2; margin-bottom: 10px; }
+  h2 { font-size: 19px; font-weight: 700; color: var(--blue); margin-bottom: 16px; margin-top: 0;
+       border-bottom: 2px solid var(--blue-mid); padding-bottom: 6px; }
+  h3 { font-size: 14px; font-weight: 700; color: var(--text); margin: 20px 0 8px; text-transform: uppercase;
+       letter-spacing: .8px; font-family: var(--mono); }
+  p  { margin-bottom: 12px; color: #2c3a50; }
+
+  .lead { font-size: 15px; color: var(--muted); margin-bottom: 24px; line-height: 1.8; }
+
+  /* ── CALLOUTS ── */
+  .callout {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 14px 18px; border-radius: 6px; margin: 16px 0;
+    border-left: 4px solid;
+    font-size: 13px; line-height: 1.65;
+  }
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .callout.info  { background: #e8f0fb; border-color: var(--blue); }
+  .callout.warn  { background: #fff8e1; border-color: var(--warn); }
+  .callout.danger{ background: #fdecea; border-color: var(--accent); }
+  .callout.ok    { background: #edf7ef; border-color: var(--green); }
+
+  /* ── STEPS ── */
+  .steps { list-style: none; padding: 0; margin: 16px 0; counter-reset: steps; }
+  .steps li {
+    counter-increment: steps;
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+  }
+  .steps li:last-child { border-bottom: none; }
+  .steps li::before {
+    content: counter(steps);
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    background: var(--blue); color: #fff;
+    font-family: var(--mono); font-size: 12px; font-weight: 600;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px;
+  }
+  .steps li strong { display: block; margin-bottom: 2px; }
+
+  /* ── CODE / MONO ── */
+  code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 1px 6px; border-radius: 3px;
+    color: var(--blue-dark);
+  }
+  .file-path {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--mono); font-size: 12px;
+    background: var(--blue-dark); color: #c9dcf5;
+    padding: 3px 10px; border-radius: 4px;
+  }
+
+  /* ── FEATURE GRID ── */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px; margin: 16px 0;
+  }
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--blue);
+    border-radius: 6px;
+    padding: 16px;
+  }
+  .feature-card .fc-icon { font-size: 22px; margin-bottom: 8px; }
+  .feature-card .fc-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; color: var(--blue-dark); }
+  .feature-card .fc-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ── SECTION TABLE ── */
+  .section-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin-bottom: 16px;
+  }
+  .section-card .sc-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 10px;
+  }
+  .sc-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--blue); color: #fff;
+    font-family: var(--mono); font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sc-title { font-weight: 700; font-size: 14px; color: var(--blue-dark); }
+  .sc-body { font-size: 13px; color: #2c3a50; line-height: 1.65; }
+
+  /* ── KBD SHORTCUTS ── */
+  table.shortcuts { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  table.shortcuts th, table.shortcuts td { padding: 9px 14px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border); }
+  table.shortcuts th { background: var(--surface2); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); }
+  table.shortcuts tr:last-child td { border-bottom: none; }
+  kbd {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--surface2);
+    border: 1px solid #b0bdd0;
+    border-bottom: 2px solid #8090a8;
+    padding: 2px 7px; border-radius: 4px;
+    color: var(--text);
+  }
+
+  /* ── VAR TABLE ── */
+  table.vartable { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12px; }
+  table.vartable th { background: var(--blue-dark); color: #fff; padding: 8px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+  table.vartable td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  table.vartable tr:hover td { background: var(--blue-light); }
+  table.vartable .code { font-family: var(--mono); color: var(--blue); }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  /* ── TOC HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--blue-dark) 0%, #1a56a8 100%);
+    border-radius: 10px;
+    padding: 32px 36px;
+    margin-bottom: 40px;
+    color: #fff;
+    position: relative; overflow: hidden;
+  }
+  .hero::after {
+    content: 'CLS';
+    position: absolute; right: 32px; bottom: -16px;
+    font-family: var(--mono); font-size: 110px; font-weight: 700;
+    color: rgba(255,255,255,.05);
+    line-height: 1;
+    user-select: none;
+  }
+  .hero h1 { color: #fff; font-size: 22px; margin-bottom: 6px; }
+  .hero p { color: rgba(255,255,255,.72); font-size: 13px; margin: 0; }
+  .hero-meta { display: flex; gap: 20px; margin-top: 18px; }
+  .hero-meta span { font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,.55); }
+  .hero-meta strong { color: rgba(255,255,255,.9); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 24px 20px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-badge">ASFA Digital</div>
+  <div class="topbar-title">Analizador CLS Embarcado — Manual de Usuario</div>
+
+</div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-section">Inicio</div>
+  <a href="#introduccion" class="ic-link"><span class="ic">📘</span>Introducción</a>
+  <a href="#instalacion" class="ic-link"><span class="ic">📦</span>Instalación</a>
+  <a href="#inicio-sesion" class="ic-link"><span class="ic">🔐</span>Inicio de sesión</a>
+
+  <div class="sidebar-section">Uso</div>
+  <a href="#carga-fichero" class="ic-link"><span class="ic">📂</span>Carga de fichero CLS</a>
+  <a href="#cabecera" class="ic-link"><span class="ic">📋</span>1. Cabecera del registro</a>
+  <a href="#graficas" class="ic-link"><span class="ic">📈</span>2. Gráficas</a>
+  <a href="#tablas" class="ic-link"><span class="ic">📊</span>3. Tablas de eventos</a>
+
+  <div class="sidebar-section">Informes</div>
+  <a href="#informe-pdf" class="ic-link"><span class="ic">📄</span>Generación de informe</a>
+  <a href="#exportar-csv" class="ic-link"><span class="ic">💾</span>Exportar CSV</a>
+  <a href="#exportar-img" class="ic-link"><span class="ic">🖼️</span>Exportar gráfica</a>
+
+  <div class="sidebar-section">Referencia</div>
+  <a href="#variables" class="ic-link"><span class="ic">🗂️</span>Variables registradas</a>
+  <a href="#atajos" class="ic-link"><span class="ic">⌨️</span>Atajos de teclado</a>
+  <a href="#errores" class="ic-link"><span class="ic">⚠️</span>Diagnóstico de errores</a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Analizador CLS de ASFA Digital Embarcado</h1>
+    <p>Manual de usuario para el análisis de ficheros de registro CLS del sistema ASFA Digital a bordo</p>
+    <div class="hero-meta">
+      <span>Distribución: <strong>ANACLS_TREN.7z</strong></span>
+      <span>Ejecutable: <strong>AnalizadorCLS.EXE</strong></span>
+      <span>Formato entrada: <strong>.CLS</strong></span>
+    </div>
+  </div>
+
+  <!-- ══ 1. INTRODUCCIÓN ══ -->
+  <section class="section" id="introduccion">
+    <h2>Introducción</h2>
+    <p class="lead">El <strong>Analizador CLS de ASFA Digital Embarcado</strong> es una herramienta de escritorio para la inspección, análisis y generación de informes a partir de ficheros de registro binario <code>.CLS</code> generados por equipos ASFA Digital instalados a bordo de material rodante.</p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="fc-icon">🔍</div>
+        <div class="fc-title">Análisis binario</div>
+        <div class="fc-desc">Lectura y decodificación completa del formato binario CLS paquete a paquete.</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon">📈</div>
+        <div class="fc-title">Gráficas interactivas</div>
+        <div class="fc-desc">Perfiles de velocidad, aceleración y frenos de emergencia con zoom temporal y por distancia.</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon">📄</div>
+        <div class="fc-title">Informe PDF</div>
+        <div class="fc-desc">Generación de informe estructurado con KPIs, tablas de eventos y gráfica embebida.</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon">💾</div>
+        <div class="fc-title">Exportación CSV</div>
+        <div class="fc-desc">Descarga de todos los paquetes decodificados en formato CSV para análisis externo.</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon">🔐</div>
+        <div class="fc-title">Acceso controlado</div>
+        <div class="fc-desc">Sistema de autenticación con usuario y contraseña.</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon">⚠️</div>
+        <div class="fc-title">Detección de errores</div>
+        <div class="fc-desc">Identificación automática de paquetes con checksum incorrecto o distancia inválida.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 2. INSTALACIÓN ══ -->
+  <section class="section" id="instalacion">
+    <h2>Instalación</h2>
+
+    <h3>Requisitos del sistema</h3>
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <div>La aplicación es <strong>portable</strong>: no requiere instalación en el sistema operativo ni privilegios de administrador. Basta con descomprimir y ejecutar.</div>
+    </div>
+
+    <ul style="margin: 12px 0 16px 20px; line-height: 2;">
+      <li>Sistema operativo: <strong>Windows 10 / Windows 11</strong> (64 bits)</li>
+      <li>Espacio en disco: aprox. 150 MB tras descomprimir</li>
+      <li>Resolución mínima recomendada: 1280 × 800</li>
+    </ul>
+
+    <h3>Procedimiento de instalación</h3>
+    <ol class="steps">
+      <li>
+        <div>
+          <strong>Obtener el paquete de distribución</strong>
+          Localice el fichero <span class="file-path">📦 ANACLS_TREN.7z</span> recibido del distribuidor.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Descomprimir el archivo</strong>
+          Haga clic derecho sobre <code>ANACLS_TREN.7z</code> y seleccione <em>Extraer aquí</em> (requiere 7-Zip u otro gestor compatible con el formato <code>.7z</code>). Se creará una carpeta con todos los ficheros de la aplicación.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Ejecutar la aplicación</strong>
+          Dentro de la carpeta extraída, haga doble clic sobre <span class="file-path">🖥️ AnalizadorCLS.EXE</span> para iniciar el analizador.
+        </div>
+      </li>
+    </ol>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>Windows SmartScreen:</strong> En la primera ejecución puede aparecer un aviso de seguridad de Windows. Pulse <em>Más información</em> → <em>Ejecutar de todas formas</em> para continuar. La aplicación no requiere conexión a internet.</div>
+    </div>
+
+    <div class="callout info">
+      <span class="callout-icon">📁</span>
+      <div><strong>Portabilidad:</strong> La carpeta completa puede copiarse a una unidad USB o a cualquier ruta del sistema. No se escribe nada en el registro de Windows.</div>
+    </div>
+  </section>
+
+  <!-- ══ 3. INICIO DE SESIÓN ══ -->
+  <section class="section" id="inicio-sesion">
+    <h2>Inicio de sesión</h2>
+    <p>Al arrancar la aplicación se muestra una pantalla de autenticación. Es necesario introducir usuario y contraseña para acceder al analizador.</p>
+
+    <div class="section-card">
+      <div class="sc-header">
+        <div class="sc-num">🔐</div>
+        <div class="sc-title">Pantalla de login</div>
+      </div>
+      <div class="sc-body">
+        <p>El nombre de usuario queda registrado y se muestra en la barra superior de la aplicación durante toda la sesión.</p>
+        <p>Para cerrar sesión utilice el botón <kbd>⏏ Salir</kbd> situado en la esquina superior derecha de la ventana.</p>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <span class="callout-icon">🔑</span>
+      <div>Si la contraseña introducida no es correcta, aparecerá un mensaje de error en rojo bajo el campo de contraseña.</div>
+    </div>
+  </section>
+
+  <!-- ══ 4. CARGA DE FICHERO ══ -->
+  <section class="section" id="carga-fichero">
+    <h2>Carga de fichero CLS</h2>
+    <p>Tras autenticarse se accede a la pantalla principal. El primer paso es cargar el fichero de registro <code>.CLS</code> que se desea analizar.</p>
+
+    <h3>Métodos de carga</h3>
+    <div class="section-card">
+      <div class="sc-header"><div class="sc-num">A</div><div class="sc-title">Arrastrar y soltar (drag & drop)</div></div>
+      <div class="sc-body">Arrastre el fichero <code>.CLS</code> desde el explorador de Windows y suéltelo sobre el área central de la pantalla (zona punteada). El borde se volverá azul al detectar el fichero arrastrado.</div>
+    </div>
+    <div class="section-card">
+      <div class="sc-header"><div class="sc-num">B</div><div class="sc-title">Selector de fichero</div></div>
+      <div class="sc-body">Haga clic sobre el área punteada para abrir el diálogo estándar de apertura de ficheros de Windows. Seleccione el fichero <code>.CLS</code> deseado y pulse <em>Abrir</em>.</div>
+    </div>
+
+    <p>Una vez cargado el fichero, la aplicación procesará el binario y mostrará automáticamente todas las secciones de análisis. El tiempo de carga depende del tamaño del fichero.</p>
+
+    <div class="callout ok">
+      <span class="callout-icon">✅</span>
+      <div>Los ficheros <code>.CLS</code> aceptados son los generados por el registrador del equipo ASFA Digital Embarcado conforme a la especificación técnica <strong>ET 03.365.003.7</strong>.</div>
+    </div>
+  </section>
+
+  <!-- ══ 5. CABECERA ══ -->
+  <section class="section" id="cabecera">
+    <h2>1. Cabecera del Registro</h2>
+    <p>La primera sección que aparece tras la carga muestra los campos de la cabecera binaria del fichero. Cada campo se presenta en una tarjeta con su etiqueta y valor decodificado.</p>
+
+    <div class="section-card">
+      <div class="sc-body">
+        <p>Los campos típicos de la cabecera incluyen: número de serie del equipo, versión de firmware, fecha y hora de inicio del registro, tipo de tren, modo de funcionamiento inicial y diámetro de rueda configurado.</p>
+        <p>Haga clic en cualquier tarjeta de campo para abrir el <strong>visor hexadecimal</strong> correspondiente. Este visor muestra los bytes crudos del campo seleccionado, resaltando en azul los bytes relevantes, con su representación ASCII en verde.</p>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <div>Los campos con valor correcto se muestran en <span style="color:#28a745;font-weight:600;">verde</span>. Los campos con valor anómalo o inesperado se muestran en <span style="color:#dc3545;font-weight:600;">rojo</span>.</div>
+    </div>
+  </section>
+
+  <!-- ══ 6. GRÁFICAS ══ -->
+  <section class="section" id="graficas">
+    <h2>2. Gráficas del Registro</h2>
+    <p>La sección de gráficas presenta el perfil completo de velocidad del tren a lo largo del registro, junto con marcadores de eventos relevantes.</p>
+
+    <h3>Elementos de la gráfica</h3>
+    <div class="section-card">
+      <div class="sc-body">
+        <ul style="margin-left: 18px; line-height: 2.1;">
+          <li><strong>Velocidad real (V.R)</strong> — Traza azul principal, velocidad del tren en km/h.</li>
+          <li><strong>Velocidad de control (V.C)</strong> — Traza naranja, límite de velocidad activo en el equipo.</li>
+          <li><strong>Frenos de emergencia</strong> — Marcadores rojos verticales en los instantes en que se activó el freno de emergencia.</li>
+          <li><strong>Balizas recibidas</strong> — Marcadores en la parte inferior de la gráfica.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Opciones de visualización</h3>
+    <table class="shortcuts">
+      <thead><tr><th>Opción</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Visualiza Aceleración</strong></td><td>Superpone la traza de aceleración calculada sobre la gráfica de velocidad.</td></tr>
+        <tr><td><strong>Mostrar puntos</strong></td><td>Añade marcadores en cada muestra de velocidad de la traza principal.</td></tr>
+        <tr><td><strong>F.E. solo V.R &gt; 5 km/h</strong></td><td>Filtra los marcadores de freno de emergencia para mostrar únicamente aquellos producidos con el tren en movimiento (V.R superior a 5 km/h).</td></tr>
+        <tr><td><strong>Eje distancia</strong></td><td>Cambia el eje X de tiempo a distancia acumulada en metros.</td></tr>
+        <tr><td><strong>Distancia relativa</strong></td><td>Muestra la distancia desde el inicio del fichero en lugar de la distancia absoluta (disponible cuando el eje distancia está activo).</td></tr>
+        <tr><td><strong>Esc. Y</strong></td><td>Permite ajustar manualmente el límite superior del eje de velocidad (km/h). Valor por defecto: 150 km/h.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Navegación en la gráfica</h3>
+    <p>La gráfica es interactiva (Plotly.js). Puede usar las acciones estándar:</p>
+    <ul style="margin: 8px 0 16px 20px; line-height: 2.1;">
+      <li><strong>Seleccionar rango:</strong> haga clic y arrastre horizontalmente para hacer zoom en un intervalo temporal.</li>
+      <li><strong>Desplazarse:</strong> doble clic para restablecer el zoom.</li>
+      <li><strong>Tooltip:</strong> pase el cursor sobre la traza para ver los valores exactos en ese instante.</li>
+    </ul>
+
+    <div class="callout info">
+      <span class="callout-icon">📌</span>
+      <div>Cuando se aplica un zoom en la gráfica, los <strong>KPIs</strong> del panel inferior y el <strong>informe</strong> se calculan únicamente sobre el tramo visible, facilitando el análisis de segmentos concretos del recorrido.</div>
+    </div>
+
+    <h3>Panel de KPIs</h3>
+    <p>Bajo la gráfica se muestra un panel con los indicadores clave del tramo visualizado:</p>
+    <div class="feature-grid">
+      <div class="feature-card"><div class="fc-title">V.Max</div><div class="fc-desc">Velocidad máxima alcanzada en el tramo.</div></div>
+      <div class="feature-card"><div class="fc-title">V.Med</div><div class="fc-desc">Velocidad media (con V &gt; 0).</div></div>
+      <div class="feature-card"><div class="fc-title">Dist.Vis</div><div class="fc-desc">Distancia recorrida con el tren en movimiento.</div></div>
+      <div class="feature-card"><div class="fc-title">Tiempo.Tot</div><div class="fc-desc">Duración total del tramo.</div></div>
+      <div class="feature-card"><div class="fc-title">Tiempo.V&gt;0</div><div class="fc-desc">Tiempo con el tren en movimiento.</div></div>
+      <div class="feature-card"><div class="fc-title">Tiempo.V=0</div><div class="fc-desc">Tiempo con el tren detenido.</div></div>
+    </div>
+  </section>
+
+  <!-- ══ 7. TABLAS ══ -->
+  <section class="section" id="tablas">
+    <h2>3. Tablas de Eventos</h2>
+    <p>La tercera sección agrupa cuatro vistas de los datos registrados, accesibles mediante los botones de la barra inferior:</p>
+
+    <div class="section-card">
+      <div class="sc-header"><div class="sc-num">1</div><div class="sc-title">Resumen de Tipos de Eventos</div></div>
+      <div class="sc-body">Tabla resumen con el total de ocurrencias de cada tipo de variable registrada en el fichero, ordenada por frecuencia. Incluye el código hexadecimal, la denominación de la variable y el porcentaje sobre el total de paquetes.</div>
+    </div>
+
+    <div class="section-card">
+      <div class="sc-header"><div class="sc-num">2</div><div class="sc-title">Lista Cronológica Completa de Paquetes</div></div>
+      <div class="sc-body">
+        <p>Listado completo de todos los paquetes del fichero en orden cronológico, con columnas: fecha, hora, milisegundos, código, variable, valor, distancia acumulada, velocidad real (V.R), velocidad de control (V.C), velocidad de infranqueable (V.IF), control activo y checksum.</p>
+        <p>Dispone de un <strong>filtro por tipo de variable</strong>: use los checkboxes para mostrar u ocultar tipos de evento. Los botones <em>Seleccionar Todas</em> / <em>Deseleccionar Todas</em> permiten selección masiva.</p>
+        <p>Haga clic en cualquier fila para expandir el <strong>detalle del paquete</strong>, con dos pestañas: <em>Decodificado</em> (campos interpretados) y <em>Hex</em> (volcado hexadecimal del paquete completo).</p>
+        <p>Las filas de <strong>freno de emergencia</strong> aparecen resaltadas en rojo. Las filas con <strong>distancia diferencial inválida</strong> (<code>0xFFFFFFFF</code>) aparecen en amarillo.</p>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="sc-header"><div class="sc-num">3</div><div class="sc-title">Resumen de Controles Activos</div></div>
+      <div class="sc-body">Tabla estadística de los controles activos registrados (variable <code>0xFFF1</code>), con el número de activaciones y porcentaje de cada control. El botón <em>🥧 Ver gráfico</em> abre un gráfico de sectores con la distribución de controles.</div>
+    </div>
+
+    <div class="section-card">
+      <div class="sc-header"><div class="sc-num">4</div><div class="sc-title">Paquetes con Error</div></div>
+      <div class="sc-body">Lista de paquetes con <strong>checksum incorrecto</strong> y/o <strong>distancia diferencial inválida</strong> (<code>0xFFFFFFFF</code>). Para cada paquete erróneo se indica el motivo del error en la columna <em>Motivo error</em>. El número de errores se muestra en el badge naranja del botón <em>⚠ Ver Errores</em>.</div>
+    </div>
+  </section>
+
+  <!-- ══ 8. INFORME ══ -->
+  <section class="section" id="informe-pdf">
+    <h2>Generación de Informe</h2>
+    <p>Pulse el botón <strong>📄 Generar informe</strong> de la barra de controles de la gráfica para abrir el modal de informe. El informe se genera sobre el tramo actualmente visible en la gráfica (o el registro completo si no hay zoom aplicado).</p>
+
+    <h3>Secciones del informe</h3>
+    <div class="section-card"><div class="sc-header"><div class="sc-num">1</div><div class="sc-title">Datos del registro</div></div><div class="sc-body">Información de cabecera: número de serie del equipo, fechas y horas del tramo analizado, tipo de tren, modo de funcionamiento y diámetro de rueda.</div></div>
+    <div class="section-card"><div class="sc-header"><div class="sc-num">2</div><div class="sc-title">Gráfica de velocidad</div></div><div class="sc-body">Captura PNG de la gráfica interactiva en el estado actual, incluyendo el zoom aplicado.</div></div>
+    <div class="section-card"><div class="sc-header"><div class="sc-num">3</div><div class="sc-title">KPIs del tramo</div></div><div class="sc-body">Velocidad máxima y media, distancias, tiempos en movimiento y detenido.</div></div>
+    <div class="section-card"><div class="sc-header"><div class="sc-num">4</div><div class="sc-title">Frenos de emergencia</div></div><div class="sc-body">Listado detallado de cada freno de emergencia: fecha, hora, velocidad real en el momento del disparo, causa inferida y velocidad de control vigente.</div></div>
+    <div class="section-card"><div class="sc-header"><div class="sc-num">5</div><div class="sc-title">Balizas L7 recibidas</div></div><div class="sc-body">Tabla con todas las balizas de tipo L7 (<code>0xFFF0</code>, valor=7) del tramo.</div></div>
+    <div class="section-card"><div class="sc-header"><div class="sc-num">6</div><div class="sc-title">Métricas por 100 km</div></div><div class="sc-body">Ratios normalizados de frenos de emergencia, balizas L7 e indicaciones acústicas por cada 100 km recorridos.</div></div>
+    <div class="section-card"><div class="sc-header"><div class="sc-num">7</div><div class="sc-title">Balizas en menos de 4 s</div></div><div class="sc-body">Detección de balizas recibidas con un intervalo inferior a 4 segundos respecto a la baliza anterior, con el tiempo transcurrido y la distancia entre ambas.</div></div>
+
+    <h3>Acciones sobre el informe</h3>
+    <table class="shortcuts">
+      <thead><tr><th>Botón</th><th>Acción</th></tr></thead>
+      <tbody>
+        <tr><td><strong>📥 Guardar PDF</strong></td><td>Descarga el informe como fichero PDF en la carpeta de descargas del sistema.</td></tr>
+        <tr><td><strong>🖨️ Imprimir</strong></td><td>Abre el diálogo de impresión del sistema. También permite guardar como PDF desde el driver de impresión.</td></tr>
+        <tr><td><strong>✉ Email</strong></td><td>Copia el informe con formato HTML al portapapeles para pegarlo directamente en el cuerpo de un email (Outlook, Gmail…). Ver <a href="#email">instrucciones detalladas</a>.</td></tr>
+        <tr><td><strong>✕ Cerrar</strong></td><td>Cierra el modal sin ninguna acción.</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="email">Envío por email</h3>
+    <ol class="steps">
+      <li><div>Pulse el botón <strong>✉ Email</strong> en la barra del informe para abrir el asistente de envío.</div></li>
+      <li><div>Pulse <strong>📋 Copiar informe</strong>. El informe completo (con tablas y gráfica embebida) se copia al portapapeles.</div></li>
+      <li><div>Abra su cliente de correo (Outlook, Gmail, etc.) y cree un nuevo mensaje.</div></li>
+      <li><div>Haga clic en el cuerpo del mensaje y pegue con <kbd>Ctrl</kbd>+<kbd>V</kbd>. El informe aparecerá con formato completo.</div></li>
+    </ol>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div>Si aparece el aviso de <em>No se pudo copiar automáticamente</em>, el informe se abrirá en una nueva pestaña del navegador. En esa pestaña, seleccione todo con <kbd>Ctrl</kbd>+<kbd>A</kbd> y copie con <kbd>Ctrl</kbd>+<kbd>C</kbd>.</div>
+    </div>
+  </section>
+
+  <!-- ══ 9. CSV ══ -->
+  <section class="section" id="exportar-csv">
+    <h2>Exportar CSV</h2>
+    <p>El botón <strong>Exportar CSV</strong> (en la barra inferior de vistas) genera y descarga un fichero <code>.csv</code> con todos los paquetes del registro decodificados, incluyendo las columnas de fecha, hora, ms, código, variable, valor, distancia, V.R, V.C, V.IF y control activo.</p>
+
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <div>El CSV exportado es independiente del zoom aplicado en la gráfica: siempre incluye el registro completo. Use filtros de fecha/hora en Excel o herramientas similares para acotar el análisis a un tramo concreto.</div>
+    </div>
+  </section>
+
+  <!-- ══ 10. IMG ══ -->
+  <section class="section" id="exportar-img">
+    <h2>Exportar Gráfica</h2>
+    <p>El botón <strong>📷 Exportar gráfica</strong> (o la tecla <kbd>P</kbd>) captura la gráfica en su estado actual —incluyendo el zoom aplicado y cualquier tooltip visible— y la descarga como imagen <code>.png</code>.</p>
+
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <div>Para obtener la mejor calidad de exportación, maximice la ventana de la aplicación antes de exportar la gráfica.</div>
+    </div>
+  </section>
+
+  <!-- ══ 11. VARIABLES ══ -->
+  <section class="section" id="variables">
+    <h2>Variables Registradas</h2>
+    <p>La siguiente tabla recoge los códigos de variable principales del formato CLS de ASFA Digital Embarcado:</p>
+
+    <table class="vartable">
+      <thead><tr><th>Código</th><th>Denominación</th></tr></thead>
+      <tbody>
+        <tr><td class="code">0xFF02</td><td>Cambio de fecha/hora</td></tr>
+        <tr><td class="code">0xFF03</td><td>Encendido</td></tr>
+        <tr><td class="code">0xFF04</td><td>Apagado</td></tr>
+        <tr><td class="code">0xFF05</td><td>Frecuencia</td></tr>
+        <tr><td class="code">0xFF06</td><td>Código de fallo del sistema</td></tr>
+        <tr><td class="code">0xFF10</td><td>Velocidad real del tren (V.R)</td></tr>
+        <tr><td class="code">0xFF11</td><td>Velocidad de control inicial (V.C)</td></tr>
+        <tr><td class="code">0xFF12</td><td>Velocidad de control final</td></tr>
+        <tr><td class="code">0xFF13</td><td>Tipo de tren</td></tr>
+        <tr><td class="code">0xFF14</td><td>Modo de funcionamiento</td></tr>
+        <tr><td class="code">0xFF15</td><td>Cabina habilitada</td></tr>
+        <tr><td class="code">0xFF16</td><td>Diámetro de rueda</td></tr>
+        <tr><td class="code">0xFF17</td><td>Número de serie del equipo ASFA-D</td></tr>
+        <tr><td class="code">0xFF20</td><td>Freno de emergencia</td></tr>
+        <tr><td class="code">0xFF46</td><td>Estado de la eficacia del sistema</td></tr>
+        <tr><td class="code">0xFF47</td><td>Estado de la eficacia del DIV</td></tr>
+        <tr><td class="code">0xFFF0</td><td>Baliza recibida</td></tr>
+        <tr><td class="code">0xFFF1</td><td>Control Activo</td></tr>
+        <tr><td class="code">0xFFF2</td><td>Indicación acústica</td></tr>
+        <tr><td class="code">0xFF30–0xFF41</td><td>Fallos de sistema (ECP, captadores, displays, avisador acústico…)</td></tr>
+        <tr><td class="code">0xFF49–0xFF4A</td><td>Velocidad en cabina 1 y cabina 2</td></tr>
+        <tr><td class="code">0xFF50–0xFF69</td><td>Pulsadores e interruptores de cabina (PR1 y PR2)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ══ 12. ATAJOS ══ -->
+  <section class="section" id="atajos">
+    <h2>Atajos de Teclado</h2>
+    <table class="shortcuts">
+      <thead><tr><th>Atajo</th><th>Acción</th></tr></thead>
+      <tbody>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>+</kbd></td><td>Aumentar zoom de interfaz</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>−</kbd></td><td>Reducir zoom de interfaz</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>0</kbd></td><td>Restablecer zoom de interfaz al 100%</td></tr>
+        <tr><td><kbd>P</kbd></td><td>Exportar gráfica como imagen PNG (equivale al botón 📷)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <div>El atajo <kbd>P</kbd> solo funciona cuando el foco no está en un campo de texto. El porcentaje de zoom actual se muestra en el control central de la barra superior entre los botones <strong>−</strong> y <strong>+</strong>; pulse sobre él para restablecer el 100%.</div>
+    </div>
+  </section>
+
+  <!-- ══ 13. ERRORES ══ -->
+  <section class="section" id="errores">
+    <h2>Diagnóstico de Errores</h2>
+
+    <h3>Errores en la carga del fichero</h3>
+    <table class="shortcuts">
+      <thead><tr><th>Mensaje</th><th>Causa probable</th><th>Solución</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Fichero no reconocido</td>
+          <td>El fichero no tiene la cabecera de un CLS válido.</td>
+          <td>Verifique que el fichero es un <code>.CLS</code> generado por el registrador ASFA Digital.</td>
+        </tr>
+        <tr>
+          <td>Error de lectura</td>
+          <td>Fichero truncado o corrupto.</td>
+          <td>Compruebe la integridad del fichero. Intente obtener una nueva copia del registrador.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Paquetes con error en el registro</h3>
+    <p>Los paquetes con error <strong>no se descartan</strong>: se incluyen en la lista general marcados en amarillo y se listan adicionalmente en la vista <em>⚠ Ver Errores</em>. Existen dos tipos de error:</p>
+
+    <div class="callout danger">
+      <span class="callout-icon">🔴</span>
+      <div><strong>Checksum incorrecto:</strong> El byte de comprobación del paquete no coincide con el valor calculado. Puede indicar corrupción puntual del registro o un fallo en el registrador.</div>
+    </div>
+    <div class="callout warn">
+      <span class="callout-icon">🟡</span>
+      <div><strong>Distancia diferencial inválida (0xFFFFFFFF):</strong> El campo de distancia del paquete contiene el valor de relleno máximo, lo que indica que el odómetro no tenía un valor válido en ese instante.</div>
+    </div>
+
+    <h3>Contraseña de acceso incorrecta</h3>
+    <div class="callout warn">
+      <span class="callout-icon">🔑</span>
+      <div>Si la contraseña no es aceptada, contacte con el administrador del sistema.</div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // Active sidebar link on scroll
+  const sections = document.querySelectorAll('.section');
+  const links = document.querySelectorAll('.sidebar a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.sidebar a[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-60px 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+</script>
+</body>
+</html>

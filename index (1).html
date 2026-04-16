@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manuales — Analizador CLS de ASFA Digital</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap');
+
+  :root {
+    --amber: #c47a00;
+    --amber-dark: #8a5600;
+    --amber-light: #fdf4e3;
+    --amber-mid: #f0d090;
+    --blue: #1a6fba;
+    --blue-light: #e8f2fb;
+    --bg: #f2f4f7;
+    --surface: #ffffff;
+    --border: #d0d4dc;
+    --text: #1a1e2a;
+    --muted: #6b7280;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .logo-badge {
+    background: var(--amber);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 0.25rem 0.55rem;
+    border-radius: 4px;
+  }
+
+  .logo-text {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--amber-dark);
+    letter-spacing: 0.04em;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+
+  .cards {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 780px;
+    width: 100%;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem 2rem 1.6rem;
+    flex: 1 1 300px;
+    max-width: 340px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: box-shadow 0.15s, border-color 0.15s, transform 0.12s;
+    cursor: pointer;
+  }
+
+  .card:hover {
+    box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+    border-color: var(--amber);
+    transform: translateY(-2px);
+  }
+
+  .card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+  }
+
+  .card-via .card-icon   { background: var(--amber-light); }
+  .card-emb .card-icon   { background: var(--blue-light); }
+
+  .card-tag {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    align-self: flex-start;
+  }
+
+  .card-via .card-tag { background: var(--amber-light); color: var(--amber-dark); }
+  .card-emb .card-tag { background: var(--blue-light);  color: var(--blue); }
+
+  .card h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .card p {
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.55;
+    flex: 1;
+  }
+
+  .card-cta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+  }
+
+  .card-via .card-cta { color: var(--amber); }
+  .card-emb .card-cta { color: var(--blue); }
+
+  footer {
+    margin-top: 3rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-family: var(--mono);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-badge">CLS</span>
+    <span class="logo-text">ASFA Digital</span>
+  </div>
+  <h1>Manuales de Usuario</h1>
+  <p class="subtitle">Seleccione el manual correspondiente al equipo analizado</p>
+</header>
+
+<div class="cards">
+
+  <a class="card card-via" href="manual_analizador_cls_via.html">
+    <div class="card-icon">🛤️</div>
+    <span class="card-tag">Vía</span>
+    <h2>Analizador CLS<br>ASFA Digital Vía</h2>
+    <p>Manual del analizador para equipos de vía. Cobertura de balizas, grupos funcionales, registro de eventos y exportación de informes.</p>
+    <span class="card-cta">Abrir manual →</span>
+  </a>
+
+  <a class="card card-emb" href="manual_analizador_cls_embarcado.html">
+    <div class="card-icon">🚆</div>
+    <span class="card-tag">Embarcado</span>
+    <h2>Analizador CLS<br>ASFA Digital Embarcado</h2>
+    <p>Manual del analizador para equipos embarcados. Trazas de velocidad, frenadas de emergencia, KPIs de eficacia y exportación PDF/CSV.</p>
+    <span class="card-cta">Abrir manual →</span>
+  </a>
+
+</div>
+
+<footer>ET 03.365.003.7 &nbsp;|&nbsp; Analizador CLS de ASFA Digital</footer>
+
+</body>
+</html>
