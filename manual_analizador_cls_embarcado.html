@@ -65,6 +65,26 @@
     font-family: var(--mono);
     font-size: 11px; color: rgba(255,255,255,.45);
   }
+  .topbar-dl {
+    margin-left: auto;
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.25);
+    color: rgba(255,255,255,.92);
+    font-family: var(--mono);
+    font-size: 11px; font-weight: 600;
+    letter-spacing: .5px;
+    padding: 5px 13px; border-radius: 4px;
+    text-decoration: none;
+    transition: background .15s, border-color .15s;
+    white-space: nowrap;
+  }
+  .topbar-dl:hover {
+    background: rgba(255,255,255,.22);
+    border-color: rgba(255,255,255,.5);
+    color: #fff;
+  }
+  .topbar-dl svg { flex-shrink: 0; }
 
   /* ── SIDEBAR ── */
   .sidebar {
@@ -267,7 +287,13 @@
 <div class="topbar">
   <div class="topbar-badge">ASFA Digital</div>
   <div class="topbar-title">Analizador CLS Embarcado — Manual de Usuario</div>
-
+  <a class="topbar-dl" href="ANACLS_TREN.7z" download>
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 1v9M4.5 7l3.5 3.5L11.5 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M2 12h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+    ANACLS_TREN.7z
+  </a>
 </div>
 
 <!-- SIDEBAR -->
@@ -279,9 +305,13 @@
 
   <div class="sidebar-section">Uso</div>
   <a href="#carga-fichero" class="ic-link"><span class="ic">📂</span>Carga de fichero CLS</a>
+  <a href="#ficheros-grandes" class="ic-link"><span class="ic">📦</span>Ficheros grandes (&gt;500k paq.)</a>
   <a href="#cabecera" class="ic-link"><span class="ic">📋</span>1. Cabecera del registro</a>
   <a href="#graficas" class="ic-link"><span class="ic">📈</span>2. Gráficas</a>
   <a href="#tablas" class="ic-link"><span class="ic">📊</span>3. Tablas de eventos</a>
+
+  <div class="sidebar-section">Herramientas</div>
+  <a href="#simulacion" class="ic-link"><span class="ic">▶️</span>Simulación de conducción</a>
 
   <div class="sidebar-section">Informes</div>
   <a href="#informe-pdf" class="ic-link"><span class="ic">📄</span>Generación de informe</a>
@@ -344,6 +374,11 @@
         <div class="fc-title">Detección de errores</div>
         <div class="fc-desc">Identificación automática de paquetes con checksum incorrecto o distancia inválida.</div>
       </div>
+      <div class="feature-card">
+        <div class="fc-icon">▶️</div>
+        <div class="fc-title">Simulación de conducción</div>
+        <div class="fc-desc">Reproducción animada del registro sobre la gráfica con panel en tiempo real de velocidades, control activo, eventos y exportación CSV.</div>
+      </div>
     </div>
   </section>
 
@@ -367,8 +402,8 @@
     <ol class="steps">
       <li>
         <div>
-          <strong>Obtener el paquete de distribución</strong>
-          Localice el fichero <span class="file-path">📦 ANACLS_TREN.7z</span> recibido del distribuidor.
+          <strong>Descargar el paquete de distribución</strong>
+          Haga clic en el botón <strong>↓ ANACLS_TREN.7z</strong> situado en la esquina superior derecha de esta página para descargar el fichero.
         </div>
       </li>
       <li>
@@ -441,6 +476,64 @@
     </div>
   </section>
 
+  <!-- ══ 4b. FICHEROS GRANDES ══ -->
+  <section class="section" id="ficheros-grandes">
+    <h2>Ficheros grandes (&gt; 500.000 paquetes)</h2>
+    <p>El analizador puede trabajar con ficheros <code>.CLS</code> de cualquier tamaño. Cuando el fichero contiene <strong>más de 500.000 paquetes</strong>, se activa un flujo de carga especial para garantizar la fluidez de la aplicación.</p>
+
+    <h3>Flujo automático</h3>
+    <ol class="steps">
+      <li>
+        <div>
+          <strong>Escaneo rápido de fechas</strong>
+          Al cargar el fichero, la aplicación realiza un escaneo rápido leyendo únicamente el campo de marca de tiempo de cada paquete. Obtiene así el rango de fechas disponible y el total de paquetes sin cargar el registro completo en memoria.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Selector de rango de fechas</strong>
+          Se abre automáticamente un diálogo que muestra el rango disponible completo (<em>Disponible: desde — hasta</em>) e invita al usuario a seleccionar un subconjunto de fechas (fecha de inicio y fecha de fin) para cargar en memoria.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Estimación previa de paquetes</strong>
+          Al cambiar las fechas del selector, la aplicación estima el número de paquetes incluidos en el rango mediante densidad media. Si el rango estimado supera los 500.000 paquetes, se muestra el aviso <em>⚠ Se cargarán los primeros 500.000 desde la fecha inicial</em>, permitiendo al usuario ajustar el rango antes de confirmar.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Carga del subconjunto</strong>
+          Confirmado el rango, se filtran los paquetes comprendidos entre las fechas seleccionadas (hora 00:00:00 del día inicial — 23:59:59 del día final) y se cargan en memoria hasta un máximo de 500.000. Si el rango filtrado supera ese límite, se cargan los primeros 500.000 cronológicamente y se muestra el aviso <em>⚠ Rango contiene N paquetes; se han cargado los primeros 500.000</em> en la barra de estado.
+        </div>
+      </li>
+    </ol>
+
+    <h3>Barra de información en ficheros grandes</h3>
+    <p>Cuando está activo el modo de fichero grande, la barra superior muestra los tres campos de información:</p>
+    <table class="shortcuts">
+      <thead><tr><th>Campo</th><th>Contenido</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Cargado</strong></td><td>Rango de fechas del subconjunto cargado en memoria (el seleccionado en el diálogo).</td></tr>
+        <tr><td><strong>Disponible</strong></td><td>Rango de fechas total del fichero original, independientemente del subconjunto cargado.</td></tr>
+        <tr><td><strong>Visualizado</strong></td><td>Rango visible actualmente en la gráfica (aparece al hacer zoom).</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Cambiar el rango cargado</h3>
+    <p>El botón <strong>📅 Cambiar rango</strong> de la barra superior (visible únicamente cuando el fichero supera los 500.000 paquetes) permite volver a abrir el selector de fechas y cargar un subconjunto diferente del mismo fichero sin necesidad de volver a arrastrarlo.</p>
+
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <div>Para analizar un tramo concreto de un fichero largo, seleccione el rango de días mínimo necesario. Cuanto más acotado sea el rango, más rápida será la carga y mayor será la resolución temporal disponible en la gráfica.</div>
+    </div>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div>Todos los KPIs, tablas e informes se calculan únicamente sobre el subconjunto cargado en memoria, no sobre el fichero completo. Si el rango cargado fue truncado a 500.000 paquetes, los datos de la parte no cargada no se reflejan en los resultados.</div>
+    </div>
+  </section>
+
   <!-- ══ 5. CABECERA ══ -->
   <section class="section" id="cabecera">
     <h2>1. Cabecera del Registro</h2>
@@ -502,6 +595,17 @@
       <div>Cuando se aplica un zoom en la gráfica, los <strong>KPIs</strong> del panel inferior y el <strong>informe</strong> se calculan únicamente sobre el tramo visible, facilitando el análisis de segmentos concretos del recorrido.</div>
     </div>
 
+    <h3>Barra de información del fichero</h3>
+    <p>En la parte superior de la pantalla, junto al contador de paquetes y el botón <strong>Cambiar rango</strong>, se muestra una barra de información con tres campos:</p>
+    <table class="shortcuts">
+      <thead><tr><th>Campo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Cargado</strong></td><td>Rango de fechas del tramo cargado en memoria (inicio — fin del fichero o del rango seleccionado con <em>Cambiar rango</em>).</td></tr>
+        <tr><td><strong>Disponible</strong></td><td>Rango de fechas total disponible en el fichero, cuando el registro supera el límite de carga directa y se usa la exploración de gran fichero.</td></tr>
+        <tr><td><strong>Visualizado</strong></td><td>Rango de fechas actualmente visible en la gráfica tras aplicar zoom. Se actualiza en tiempo real al hacer zoom o desplazar la gráfica. Cuando inicio y fin corresponden al mismo día, se muestra en formato <code>DD/MM/AAAA HH:MM — HH:MM</code>; si abarcan días distintos, <code>DD/MM/AAAA HH:MM — DD/MM/AAAA HH:MM</code>. Este campo desaparece al restablecer el zoom completo.</td></tr>
+      </tbody>
+    </table>
+
     <h3>Panel de KPIs</h3>
     <p>Bajo la gráfica se muestra un panel con los indicadores clave del tramo visualizado:</p>
     <div class="feature-grid">
@@ -511,7 +615,23 @@
       <div class="feature-card"><div class="fc-title">Tiempo.Tot</div><div class="fc-desc">Duración total del tramo.</div></div>
       <div class="feature-card"><div class="fc-title">Tiempo.V&gt;0</div><div class="fc-desc">Tiempo con el tren en movimiento.</div></div>
       <div class="feature-card"><div class="fc-title">Tiempo.V=0</div><div class="fc-desc">Tiempo con el tren detenido.</div></div>
+      <div class="feature-card"><div class="fc-title">Dif.Med.VrVc</div><div class="fc-desc">Diferencia porcentual entre la velocidad media real y la velocidad media de control: <code>(V.Med.R − V.Med.C) / V.Med.C × 100</code>. Valor negativo indica circulación por debajo del control; positivo, por encima. Solo se computan intervalos con V.C &gt; 0.</div></div>
+      <div class="feature-card"><div class="fc-title">T.Med Recon</div><div class="fc-desc">Tiempo medio de reconocimiento de baliza desde la recepción hasta la pulsación del reconocedor (incluyendo pulsación de Alarma para balizas L7).</div></div>
+      <div class="feature-card"><div class="fc-title">T.Med Pulsación</div><div class="fc-desc">Duración media de la pulsación de reconocimiento (tiempo que el pulsador permanece presionado, incluyendo el pulsador de Alarma en reconocimientos de L7).</div></div>
     </div>
+
+    <div class="callout info">
+      <span class="callout-icon">📐</span>
+      <div><strong>Cálculo de V.Max y V.Med:</strong> Ambas métricas se calculan sobre los datos realmente pintados en la gráfica. V.Med es una <strong>media ponderada por tiempo</strong> (cada muestra de velocidad pondera según el intervalo temporal que representa), no una media aritmética de muestras. V.Max se toma del valor más alto de V.R dentro del rango visible. Si el tramo visualizado no contiene paquetes de velocidad directos (velocidad constante sin nuevas muestras), ambos valores se calculan desde los datos interpolados de la gráfica.</div>
+    </div>
+
+    <h3>Gráficas de evolución de tiempos</h3>
+    <p>Los botones <strong>📊 T.Reconocimiento</strong> y <strong>📊 T.Pulsación</strong> abren sendas gráficas modales con la evolución temporal de cada métrica sobre el tramo visible:</p>
+    <ul style="margin: 8px 0 16px 20px; line-height: 2.1;">
+      <li><strong>Dispersión de valores</strong> — Cada punto representa un evento de reconocimiento/pulsación.</li>
+      <li><strong>Línea de tendencia</strong> — Regresión lineal que indica si los tiempos aumentan o disminuyen a lo largo del tramo.</li>
+      <li><strong>Media</strong> — Línea horizontal de referencia con el valor medio del tramo.</li>
+    </ul>
   </section>
 
   <!-- ══ 7. TABLAS ══ -->
@@ -531,6 +651,7 @@
         <p>Dispone de un <strong>filtro por tipo de variable</strong>: use los checkboxes para mostrar u ocultar tipos de evento. Los botones <em>Seleccionar Todas</em> / <em>Deseleccionar Todas</em> permiten selección masiva.</p>
         <p>Haga clic en cualquier fila para expandir el <strong>detalle del paquete</strong>, con dos pestañas: <em>Decodificado</em> (campos interpretados) y <em>Hex</em> (volcado hexadecimal del paquete completo).</p>
         <p>Las filas de <strong>freno de emergencia</strong> aparecen resaltadas en rojo. Las filas con <strong>distancia diferencial inválida</strong> (<code>0xFFFFFFFF</code>) aparecen en amarillo.</p>
+        <p>Los paquetes cuya distancia diferencial supera <strong>25 veces la distancia teórica</strong> estimada por velocidad y tiempo transcurrido se consideran anómalos y se ignoran en el cómputo de distancia acumulada. Esta condición se indica con un aviso <em>dd anómalo — 25× superior a la estimada</em> en el detalle del paquete.</p>
       </div>
     </div>
 
@@ -553,7 +674,7 @@
     <h3>Secciones del informe</h3>
     <div class="section-card"><div class="sc-header"><div class="sc-num">1</div><div class="sc-title">Datos del registro</div></div><div class="sc-body">Información de cabecera: número de serie del equipo, fechas y horas del tramo analizado, tipo de tren, modo de funcionamiento y diámetro de rueda.</div></div>
     <div class="section-card"><div class="sc-header"><div class="sc-num">2</div><div class="sc-title">Gráfica de velocidad</div></div><div class="sc-body">Captura PNG de la gráfica interactiva en el estado actual, incluyendo el zoom aplicado.</div></div>
-    <div class="section-card"><div class="sc-header"><div class="sc-num">3</div><div class="sc-title">KPIs del tramo</div></div><div class="sc-body">Velocidad máxima y media, distancias, tiempos en movimiento y detenido.</div></div>
+    <div class="section-card"><div class="sc-header"><div class="sc-num">3</div><div class="sc-title">KPIs del tramo</div></div><div class="sc-body">Velocidad máxima y media, distancias, tiempos en movimiento y detenido. Incluye también el <strong>tiempo medio de reconocimiento de baliza</strong> y la <strong>duración media de pulsación</strong>, calculados sobre los pulsadores de reconocimiento estándar y el pulsador de Alarma cuando éste actúa como reconocedor de baliza L7.</div></div>
     <div class="section-card"><div class="sc-header"><div class="sc-num">4</div><div class="sc-title">Frenos de emergencia</div></div><div class="sc-body">Listado detallado de cada freno de emergencia: fecha, hora, velocidad real en el momento del disparo, causa inferida y velocidad de control vigente.</div></div>
     <div class="section-card"><div class="sc-header"><div class="sc-num">5</div><div class="sc-title">Balizas L7 recibidas</div></div><div class="sc-body">Tabla con todas las balizas de tipo L7 (<code>0xFFF0</code>, valor=7) del tramo.</div></div>
     <div class="section-card"><div class="sc-header"><div class="sc-num">6</div><div class="sc-title">Métricas por 100 km</div></div><div class="sc-body">Ratios normalizados de frenos de emergencia, balizas L7 e indicaciones acústicas por cada 100 km recorridos.</div></div>
@@ -584,14 +705,85 @@
     </div>
   </section>
 
-  <!-- ══ 9. CSV ══ -->
-  <section class="section" id="exportar-csv">
-    <h2>Exportar CSV</h2>
-    <p>El botón <strong>Exportar CSV</strong> (en la barra inferior de vistas) genera y descarga un fichero <code>.csv</code> con todos los paquetes del registro decodificados, incluyendo las columnas de fecha, hora, ms, código, variable, valor, distancia, V.R, V.C, V.IF y control activo.</p>
+  <!-- ══ SIMULACIÓN ══ -->
+  <section class="section" id="simulacion">
+    <h2>Simulación de Conducción</h2>
+    <p>La simulación reproduce el registro de forma animada sobre la gráfica, mostrando un cursor que avanza paquete a paquete y un panel flotante con toda la información del instante actual.</p>
+
+    <div class="callout info">
+      <span class="callout-icon">⏱️</span>
+      <div>El botón <strong>▶ Simular</strong> solo está disponible cuando el tramo visible en la gráfica tiene una duración inferior a <strong>1 hora</strong>. Para tramos más largos, aplique zoom hasta acotar el rango por debajo de ese límite.</div>
+    </div>
+
+    <h3>Activación</h3>
+    <p>El botón <strong>▶ Simular</strong> aparece en la barra de controles de la gráfica una vez cargado un fichero. Al pulsarlo se abre el panel flotante y la simulación arranca automáticamente desde el inicio del tramo visible.</p>
+
+    <h3>Panel de simulación</h3>
+    <div class="section-card">
+      <div class="sc-body">
+        <p>El panel es <strong>arrastrable</strong>: pulse y arrastre la cabecera azul para reposicionarlo en cualquier zona de la pantalla. Contiene:</p>
+        <ul style="margin: 8px 0 12px 20px; line-height: 2.1;">
+          <li><strong>Velocímetro triple</strong> — V.Real (azul, se torna naranja al superar el 90% de V.Control y rojo al alcanzarla), V.Control (naranja) y V.Intervención (rojo).</li>
+          <li><strong>Control activo</strong> — nombre completo del control ASFA vigente en cada instante.</li>
+          <li><strong>Timestamp</strong> — hora exacta del paquete en curso (HH:MM:SS.mmm).</li>
+          <li><strong>Tiempo restante</strong> — tiempo de registro pendiente de reproducir, escalado por el multiplicador de velocidad activo.</li>
+          <li><strong>Log de eventos</strong> — registro cronológico (más reciente arriba) de todos los eventos relevantes del tramo, con código de color por tipo.</li>
+          <li><strong>Barra de progreso</strong> — porcentaje del tramo reproducido.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Tipos de evento en el log</h3>
+    <table class="shortcuts">
+      <thead><tr><th>Color</th><th>Tipo</th><th>Descripción</th></tr></thead>
+      <tbody>
+        <tr><td style="background:#fff8e1;color:#856404;font-weight:600;">Amarillo</td><td>Baliza</td><td>Baliza recibida (L1–L11), con tipo y V.Real en ese instante.</td></tr>
+        <tr><td style="background:#e8f5e9;color:#1b5e20;font-weight:600;">Verde</td><td>Reconocimiento</td><td>Pulsación de reconocimiento estándar (anuncio parada, precaución, preanuncio, PN, LVI).</td></tr>
+        <tr><td style="background:#fce4ec;color:#880e4f;font-weight:600;">Rosa</td><td>Alarma / Rearme</td><td>Pulsación del pulsador de Alarma o rearme de freno.</td></tr>
+        <tr><td style="background:#ffebee;color:#b71c1c;font-weight:700;">Rojo</td><td>Freno / Fallo</td><td>Freno de emergencia o fallo de sistema activo.</td></tr>
+        <tr><td style="background:#e3f2fd;color:#0d47a1;font-weight:600;">Azul</td><td>Acústica / Rebase</td><td>Indicación acústica (pitido ASFA) o rebase autorizado.</td></tr>
+        <tr><td style="background:#f3e5f5;color:#4a148c;font-weight:600;">Violeta</td><td>Control activo</td><td>Cambio de control activo (0xFFF1).</td></tr>
+        <tr><td style="background:#e8f5e9;color:#2e7d32;font-weight:600;">Verde oscuro</td><td>Aumento</td><td>Pulsación de aumento de velocidad de control.</td></tr>
+        <tr><td style="background:#f5f5f5;color:#616161;font-weight:600;">Gris</td><td>Ocultación / Info</td><td>Ocultación o eventos informativos (inicio, fin).</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Controles de reproducción</h3>
+    <table class="shortcuts">
+      <thead><tr><th>Botón</th><th>Acción</th></tr></thead>
+      <tbody>
+        <tr><td><strong>▶ Play / ⏸ Pausa</strong></td><td>Inicia o pausa la reproducción. Si la simulación no ha comenzado, la arranca desde el principio.</td></tr>
+        <tr><td><strong>■ Stop</strong></td><td>Detiene la simulación y reinicia al estado inicial.</td></tr>
+        <tr><td><strong>½×</strong></td><td>Reduce la velocidad de reproducción al nivel anterior (mínimo ½×).</td></tr>
+        <tr><td><strong>1×</strong></td><td>Vuelve a velocidad real (tiempo real del registro).</td></tr>
+        <tr><td><strong>2×</strong></td><td>Aumenta la velocidad de reproducción al nivel siguiente (máximo 4×).</td></tr>
+        <tr><td><strong>💾 Exportar</strong></td><td>Descarga todos los eventos acumulados durante la simulación como fichero CSV.</td></tr>
+        <tr><td><strong>✕</strong></td><td>Cierra el panel y detiene la simulación.</td></tr>
+      </tbody>
+    </table>
 
     <div class="callout info">
       <span class="callout-icon">💡</span>
-      <div>El CSV exportado es independiente del zoom aplicado en la gráfica: siempre incluye el registro completo. Use filtros de fecha/hora en Excel o herramientas similares para acotar el análisis a un tramo concreto.</div>
+      <div>Las velocidades de reproducción disponibles son <strong>½×, 1×, 2× y 4×</strong>. El tiempo entre paquetes se escala proporcionalmente al intervalo real registrado, con un límite máximo de 5 segundos por salto para no bloquear la reproducción en paradas largas.</div>
+    </div>
+
+    <h3>Exportación de eventos</h3>
+    <p>El botón <strong>💾 Exportar</strong> genera un fichero <code>.csv</code> con todos los eventos registrados durante la simulación (sin límite de filas), con tres columnas: <em>Hora</em>, <em>Tipo</em> y <em>Descripción</em>. El fichero incluye BOM UTF-8 para compatibilidad directa con Excel y su nombre incorpora la fecha y hora de exportación.</p>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div>Los eventos acumulados se reinician cada vez que se pulsa <strong>▶ Play</strong> (inicio de nueva simulación). Exporte antes de volver a iniciar si desea conservar los eventos de la reproducción anterior.</div>
+    </div>
+  </section>
+
+  <!-- ══ 9. CSV ══ -->
+  <section class="section" id="exportar-csv">
+    <h2>Exportar CSV</h2>
+    <p>El botón <strong>Exportar CSV</strong> (en la barra inferior de vistas) genera y descarga un fichero <code>.csv</code> con los paquetes del registro decodificados, incluyendo las columnas: fecha, hora, ms, código, variable, valor, distancia, V.R, V.C, V.IF y control activo.</p>
+
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <div>El CSV exportado respeta el <strong>zoom y los filtros de variable</strong> activos en ese momento: solo incluye los paquetes visibles en la tabla (rango temporal y tipos de variable seleccionados). Para exportar el registro completo, restablezca el zoom y active todas las variables antes de exportar.</div>
     </div>
   </section>
 
@@ -690,6 +882,10 @@
     <div class="callout warn">
       <span class="callout-icon">🟡</span>
       <div><strong>Distancia diferencial inválida (0xFFFFFFFF):</strong> El campo de distancia del paquete contiene el valor de relleno máximo, lo que indica que el odómetro no tenía un valor válido en ese instante.</div>
+    </div>
+    <div class="callout warn">
+      <span class="callout-icon">🟠</span>
+      <div><strong>Distancia diferencial anómala:</strong> El valor de distancia diferencial supera 25 veces la distancia teórica calculada por velocidad y tiempo. El paquete se incluye en la lista pero su distancia se descarta del cómputo de la odometría acumulada.</div>
     </div>
 
     <h3>Contraseña de acceso incorrecta</h3>
