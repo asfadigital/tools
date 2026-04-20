@@ -267,7 +267,7 @@
 <div class="topbar">
   <div class="topbar-badge">ASFA Digital</div>
   <div class="topbar-title">Analizador CLS Embarcado — Manual de Usuario</div>
-
+  <div class="topbar-ver">v1</div>
 </div>
 
 <!-- SIDEBAR -->
@@ -285,7 +285,7 @@
   <a href="#tablas" class="ic-link"><span class="ic">📊</span>3. Tablas de eventos</a>
 
   <div class="sidebar-section">Herramientas</div>
-  <a href="#simulacion" class="ic-link"><span class="ic">▶️</span>Simulación de conducción</a>
+  <a href="#simulacion" class="ic-link"><span class="ic">▶️</span>Moviola de conducción</a>
 
   <div class="sidebar-section">Informes</div>
   <a href="#informe-pdf" class="ic-link"><span class="ic">📄</span>Generación de informe</a>
@@ -350,7 +350,7 @@
       </div>
       <div class="feature-card">
         <div class="fc-icon">▶️</div>
-        <div class="fc-title">Simulación de conducción</div>
+        <div class="fc-title">Moviola de conducción</div>
         <div class="fc-desc">Reproducción animada del registro sobre la gráfica con panel en tiempo real de velocidades, control activo, eventos y exportación CSV.</div>
       </div>
     </div>
@@ -416,7 +416,7 @@
         <div class="sc-title">Pantalla de login</div>
       </div>
       <div class="sc-body">
-        <p>El nombre de usuario queda registrado y se muestra en la barra superior de la aplicación durante toda la sesión.</p>
+        <p>El nombre de usuario queda registrado y se muestra en la barra superior de la aplicación durante toda la sesión. A la izquierda del nombre de usuario se muestra el <strong>indicador de versión</strong> (<code>v1</code>) del programa.</p>
         <p>Para cerrar sesión utilice el botón <kbd>⏏ Salir</kbd> situado en la esquina superior derecha de la ventana.</p>
       </div>
     </div>
@@ -681,18 +681,18 @@
 
   <!-- ══ SIMULACIÓN ══ -->
   <section class="section" id="simulacion">
-    <h2>Simulación de Conducción</h2>
-    <p>La simulación reproduce el registro de forma animada sobre la gráfica, mostrando un cursor que avanza paquete a paquete y un panel flotante con toda la información del instante actual.</p>
+    <h2>Moviola de Conducción</h2>
+    <p>La moviola reproduce el registro de forma animada sobre la gráfica, mostrando un cursor que avanza paquete a paquete y un panel flotante con toda la información del instante actual.</p>
 
     <div class="callout info">
       <span class="callout-icon">⏱️</span>
-      <div>El botón <strong>▶ Simular</strong> solo está disponible cuando el tramo visible en la gráfica tiene una duración inferior a <strong>1 hora</strong>. Para tramos más largos, aplique zoom hasta acotar el rango por debajo de ese límite.</div>
+      <div>El botón <strong>▶ Moviola</strong> solo está disponible cuando el tramo visible en la gráfica tiene una duración inferior a <strong>1 hora</strong>. Para tramos más largos, aplique zoom hasta acotar el rango por debajo de ese límite.</div>
     </div>
 
     <h3>Activación</h3>
-    <p>El botón <strong>▶ Simular</strong> aparece en la barra de controles de la gráfica una vez cargado un fichero. Al pulsarlo se abre el panel flotante y la simulación arranca automáticamente desde el inicio del tramo visible.</p>
+    <p>El botón <strong>▶ Moviola</strong> aparece en la barra de controles de la gráfica una vez cargado un fichero. Al pulsarlo se abre el panel flotante y la reproducción arranca automáticamente desde el inicio del tramo visible.</p>
 
-    <h3>Panel de simulación</h3>
+    <h3>Panel de moviola</h3>
     <div class="section-card">
       <div class="sc-body">
         <p>El panel es <strong>arrastrable</strong>: pulse y arrastre la cabecera azul para reposicionarlo en cualquier zona de la pantalla. Contiene:</p>
@@ -712,7 +712,7 @@
       <thead><tr><th>Color</th><th>Tipo</th><th>Descripción</th></tr></thead>
       <tbody>
         <tr><td style="background:#fff8e1;color:#856404;font-weight:600;">Amarillo</td><td>Baliza</td><td>Baliza recibida (L1–L11), con tipo y V.Real en ese instante.</td></tr>
-        <tr><td style="background:#e8f5e9;color:#1b5e20;font-weight:600;">Verde</td><td>Reconocimiento</td><td>Pulsación de reconocimiento estándar (anuncio parada, precaución, preanuncio, PN, LVI).</td></tr>
+        <tr><td style="background:#e8f5e9;color:#1b5e20;font-weight:600;">Verde</td><td>Reconocimiento</td><td>Pulsación de reconocimiento, indicando el tipo específico: <em>Anuncio parada</em>, <em>Anuncio precaución</em>, <em>Preanuncio parada/VLC</em>, <em>Paso a nivel</em> o <em>LVI</em>, junto con la cabina activa (Cab 1 / Cab 2).</td></tr>
         <tr><td style="background:#fce4ec;color:#880e4f;font-weight:600;">Rosa</td><td>Alarma / Rearme</td><td>Pulsación del pulsador de Alarma o rearme de freno.</td></tr>
         <tr><td style="background:#ffebee;color:#b71c1c;font-weight:700;">Rojo</td><td>Freno / Fallo</td><td>Freno de emergencia o fallo de sistema activo.</td></tr>
         <tr><td style="background:#e3f2fd;color:#0d47a1;font-weight:600;">Azul</td><td>Acústica / Rebase</td><td>Indicación acústica (pitido ASFA) o rebase autorizado.</td></tr>
@@ -726,27 +726,28 @@
     <table class="shortcuts">
       <thead><tr><th>Botón</th><th>Acción</th></tr></thead>
       <tbody>
-        <tr><td><strong>▶ Play / ⏸ Pausa</strong></td><td>Inicia o pausa la reproducción. Si la simulación no ha comenzado, la arranca desde el principio.</td></tr>
-        <tr><td><strong>■ Stop</strong></td><td>Detiene la simulación y reinicia al estado inicial.</td></tr>
-        <tr><td><strong>½×</strong></td><td>Reduce la velocidad de reproducción al nivel anterior (mínimo ½×).</td></tr>
-        <tr><td><strong>1×</strong></td><td>Vuelve a velocidad real (tiempo real del registro).</td></tr>
-        <tr><td><strong>2×</strong></td><td>Aumenta la velocidad de reproducción al nivel siguiente (máximo 4×).</td></tr>
+        <tr><td><strong>▶ Play / ⏸ Pausa</strong></td><td>Inicia o pausa la reproducción. Si la moviola no ha comenzado, la arranca desde el principio.</td></tr>
+        <tr><td><strong>■ Stop</strong></td><td>Detiene la moviola y reinicia al estado inicial.</td></tr>
+        <tr><td><strong>½×</strong></td><td>Velocidad de reproducción a la mitad del tiempo real.</td></tr>
+        <tr><td><strong>1×</strong></td><td>Velocidad real (tiempo real del registro). Activo por defecto al iniciar.</td></tr>
+        <tr><td><strong>2×</strong></td><td>Velocidad de reproducción al doble del tiempo real.</td></tr>
+        <tr><td><strong>4×</strong></td><td>Velocidad de reproducción cuatro veces más rápida. El botón activo se resalta en azul.</td></tr>
         <tr><td><strong>💾 Exportar</strong></td><td>Descarga todos los eventos acumulados durante la simulación como fichero CSV.</td></tr>
-        <tr><td><strong>✕</strong></td><td>Cierra el panel y detiene la simulación.</td></tr>
+        <tr><td><strong>✕</strong></td><td>Cierra el panel y detiene la moviola.</td></tr>
       </tbody>
     </table>
 
     <div class="callout info">
       <span class="callout-icon">💡</span>
-      <div>Las velocidades de reproducción disponibles son <strong>½×, 1×, 2× y 4×</strong>. El tiempo entre paquetes se escala proporcionalmente al intervalo real registrado, con un límite máximo de 5 segundos por salto para no bloquear la reproducción en paradas largas.</div>
+      <div>Las velocidades de reproducción disponibles son <strong>½×, 1×, 2× y 4×</strong>, accesibles mediante cuatro botones fijos. El botón activo se resalta en azul. El tiempo entre paquetes se escala proporcionalmente al intervalo real registrado, con un límite máximo de 5 segundos por salto para no bloquear la reproducción en paradas largas.</div>
     </div>
 
     <h3>Exportación de eventos</h3>
-    <p>El botón <strong>💾 Exportar</strong> genera un fichero <code>.csv</code> con todos los eventos registrados durante la simulación (sin límite de filas), con tres columnas: <em>Hora</em>, <em>Tipo</em> y <em>Descripción</em>. El fichero incluye BOM UTF-8 para compatibilidad directa con Excel y su nombre incorpora la fecha y hora de exportación.</p>
+    <p>El botón <strong>💾 Exportar</strong> genera un fichero <code>.csv</code> con todos los eventos registrados durante la moviola (sin límite de filas), con tres columnas: <em>Hora</em>, <em>Tipo</em> y <em>Descripción</em>. El fichero incluye BOM UTF-8 para compatibilidad directa con Excel y su nombre incorpora la fecha y hora de exportación.</p>
 
     <div class="callout warn">
       <span class="callout-icon">⚠️</span>
-      <div>Los eventos acumulados se reinician cada vez que se pulsa <strong>▶ Play</strong> (inicio de nueva simulación). Exporte antes de volver a iniciar si desea conservar los eventos de la reproducción anterior.</div>
+      <div>Los eventos acumulados se reinician cada vez que se pulsa <strong>▶ Play</strong> (inicio de nueva moviola). Exporte antes de volver a iniciar si desea conservar los eventos de la reproducción anterior.</div>
     </div>
   </section>
 
