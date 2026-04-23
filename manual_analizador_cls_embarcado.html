@@ -267,7 +267,7 @@
 <div class="topbar">
   <div class="topbar-badge">ASFA Digital</div>
   <div class="topbar-title">Analizador CLS Embarcado — Manual de Usuario</div>
-  <div class="topbar-ver">v1</div>
+  <div class="topbar-ver">v2</div>
 </div>
 
 <!-- SIDEBAR -->
@@ -279,13 +279,17 @@
 
   <div class="sidebar-section">Uso</div>
   <a href="#carga-fichero" class="ic-link"><span class="ic">📂</span>Carga de fichero CLS</a>
-  <a href="#ficheros-grandes" class="ic-link"><span class="ic">📦</span>Ficheros grandes (&gt;500k paq.)</a>
+  <a href="#ficheros-grandes" class="ic-link"><span class="ic">📦</span>Ficheros grandes (&gt;1M paq.)</a>
   <a href="#cabecera" class="ic-link"><span class="ic">📋</span>1. Cabecera del registro</a>
   <a href="#graficas" class="ic-link"><span class="ic">📈</span>2. Gráficas</a>
   <a href="#tablas" class="ic-link"><span class="ic">📊</span>3. Tablas de eventos</a>
 
   <div class="sidebar-section">Herramientas</div>
   <a href="#simulacion" class="ic-link"><span class="ic">▶️</span>Moviola de conducción</a>
+  <a href="#kpi-acusticas" class="ic-link"><span class="ic">🔊</span>KPI Ind. Acústicas</a>
+  <a href="#kpi-controles" class="ic-link"><span class="ic">⚙️</span>KPI Ctrl. Activos</a>
+  <a href="#kpi-fe" class="ic-link"><span class="ic">🛑</span>KPI Fr. Emergencia</a>
+  <a href="#soporte-telegram" class="ic-link"><span class="ic">✉️</span>Soporte (mensajería)</a>
 
   <div class="sidebar-section">Informes</div>
   <a href="#informe-pdf" class="ic-link"><span class="ic">📄</span>Generación de informe</a>
@@ -425,6 +429,11 @@
       <span class="callout-icon">🔑</span>
       <div>Si la contraseña introducida no es correcta, aparecerá un mensaje de error en rojo bajo el campo de contraseña.</div>
     </div>
+
+    <div class="callout info">
+      <span class="callout-icon">✉️</span>
+      <div>Si dispone de acceso al <strong>servicio de mensajería</strong>, puede solicitar la clave de acceso directamente desde la pantalla de login mediante el enlace <strong>Solicitar contraseña</strong>. Al pulsarlo se abre un formulario donde introducir su nombre y dirección de correo electrónico; la solicitud se envía automáticamente al administrador a través del servicio de mensajería.</div>
+    </div>
   </section>
 
   <!-- ══ 4. CARGA DE FICHERO ══ -->
@@ -452,8 +461,8 @@
 
   <!-- ══ 4b. FICHEROS GRANDES ══ -->
   <section class="section" id="ficheros-grandes">
-    <h2>Ficheros grandes (&gt; 500.000 paquetes)</h2>
-    <p>El analizador puede trabajar con ficheros <code>.CLS</code> de cualquier tamaño. Cuando el fichero contiene <strong>más de 500.000 paquetes</strong>, se activa un flujo de carga especial para garantizar la fluidez de la aplicación.</p>
+    <h2>Ficheros grandes (&gt; 1.000.000 paquetes)</h2>
+    <p>El analizador puede trabajar con ficheros <code>.CLS</code> de cualquier tamaño. Cuando el fichero contiene <strong>más de 1.000.000 paquetes</strong>, se activa un flujo de carga especial para garantizar la fluidez de la aplicación.</p>
 
     <h3>Flujo automático</h3>
     <ol class="steps">
@@ -472,13 +481,13 @@
       <li>
         <div>
           <strong>Estimación previa de paquetes</strong>
-          Al cambiar las fechas del selector, la aplicación estima el número de paquetes incluidos en el rango mediante densidad media. Si el rango estimado supera los 500.000 paquetes, se muestra el aviso <em>⚠ Se cargarán los primeros 500.000 desde la fecha inicial</em>, permitiendo al usuario ajustar el rango antes de confirmar.
+          Al cambiar las fechas del selector, la aplicación estima el número de paquetes incluidos en el rango mediante densidad media. Si el rango estimado supera los 1.000.000 paquetes, se muestra el aviso <em>⚠ Se cargarán los primeros 1.000.000 desde la fecha inicial</em>, permitiendo al usuario ajustar el rango antes de confirmar.
         </div>
       </li>
       <li>
         <div>
           <strong>Carga del subconjunto</strong>
-          Confirmado el rango, se filtran los paquetes comprendidos entre las fechas seleccionadas (hora 00:00:00 del día inicial — 23:59:59 del día final) y se cargan en memoria hasta un máximo de 500.000. Si el rango filtrado supera ese límite, se cargan los primeros 500.000 cronológicamente y se muestra el aviso <em>⚠ Rango contiene N paquetes; se han cargado los primeros 500.000</em> en la barra de estado.
+          Confirmado el rango, se filtran los paquetes comprendidos entre las fechas seleccionadas (hora 00:00:00 del día inicial — 23:59:59 del día final) y se cargan en memoria hasta un máximo de 1.000.000. Si el rango filtrado supera ese límite, se cargan los primeros 1.000.000 cronológicamente y se muestra el aviso <em>⚠ Rango contiene N paquetes; se han cargado los primeros 1.000.000</em> en la barra de estado.
         </div>
       </li>
     </ol>
@@ -504,7 +513,7 @@
 
     <div class="callout warn">
       <span class="callout-icon">⚠️</span>
-      <div>Todos los KPIs, tablas e informes se calculan únicamente sobre el subconjunto cargado en memoria, no sobre el fichero completo. Si el rango cargado fue truncado a 500.000 paquetes, los datos de la parte no cargada no se reflejan en los resultados.</div>
+      <div>Todos los KPIs, tablas e informes se calculan únicamente sobre el subconjunto cargado en memoria, no sobre el fichero completo. Si el rango cargado fue truncado a 1.000.000 paquetes, los datos de la parte no cargada no se reflejan en los resultados.</div>
     </div>
   </section>
 
@@ -549,7 +558,7 @@
       <tbody>
         <tr><td><strong>Visualiza Aceleración</strong></td><td>Superpone la traza de aceleración calculada sobre la gráfica de velocidad.</td></tr>
         <tr><td><strong>Mostrar puntos</strong></td><td>Añade marcadores en cada muestra de velocidad de la traza principal.</td></tr>
-        <tr><td><strong>F.E. solo V.R &gt; 5 km/h</strong></td><td>Filtra los marcadores de freno de emergencia para mostrar únicamente aquellos producidos con el tren en movimiento (V.R superior a 5 km/h).</td></tr>
+        <tr><td><strong>F.E. e Ind.Acústicas solo V.R &gt; 5 km/h</strong></td><td>Filtro compartido que limita el conteo de frenos de emergencia <em>y</em> el de indicaciones acústicas al intervalo en que el tren circula a más de 5 km/h. Afecta tanto a los KPIs del panel como al informe generado.</td></tr>
         <tr><td><strong>Eje distancia</strong></td><td>Cambia el eje X de tiempo a distancia acumulada en metros.</td></tr>
         <tr><td><strong>Distancia relativa</strong></td><td>Muestra la distancia desde el inicio del fichero en lugar de la distancia absoluta (disponible cuando el eje distancia está activo).</td></tr>
         <tr><td><strong>Esc. Y</strong></td><td>Permite ajustar manualmente el límite superior del eje de velocidad (km/h). Valor por defecto: 150 km/h.</td></tr>
@@ -581,17 +590,20 @@
     </table>
 
     <h3>Panel de KPIs</h3>
-    <p>Bajo la gráfica se muestra un panel con los indicadores clave del tramo visualizado:</p>
+    <p>Bajo la gráfica se muestra un panel con los indicadores clave del tramo visualizado. Los KPIs marcados con <strong>►</strong> son interactivos: al pulsarlos se abre un panel con información detallada.</p>
     <div class="feature-grid">
       <div class="feature-card"><div class="fc-title">V.Max</div><div class="fc-desc">Velocidad máxima alcanzada en el tramo.</div></div>
-      <div class="feature-card"><div class="fc-title">V.Med</div><div class="fc-desc">Velocidad media (con V &gt; 0).</div></div>
+      <div class="feature-card"><div class="fc-title">V.Med</div><div class="fc-desc">Velocidad media ponderada por tiempo (con V &gt; 0).</div></div>
+      <div class="feature-card"><div class="fc-title">Dif.Med.VrVc</div><div class="fc-desc">Diferencia porcentual entre la velocidad media real y la velocidad media de control: <code>(V.Med.R − V.Med.C) / V.Med.C × 100</code>. Valor negativo indica circulación por debajo del control; positivo, por encima. Solo se computan intervalos con V.C &gt; 0.</div></div>
       <div class="feature-card"><div class="fc-title">Dist.Vis</div><div class="fc-desc">Distancia recorrida con el tren en movimiento.</div></div>
       <div class="feature-card"><div class="fc-title">Tiempo.Tot</div><div class="fc-desc">Duración total del tramo.</div></div>
       <div class="feature-card"><div class="fc-title">Tiempo.V&gt;0</div><div class="fc-desc">Tiempo con el tren en movimiento.</div></div>
       <div class="feature-card"><div class="fc-title">Tiempo.V=0</div><div class="fc-desc">Tiempo con el tren detenido.</div></div>
-      <div class="feature-card"><div class="fc-title">Dif.Med.VrVc</div><div class="fc-desc">Diferencia porcentual entre la velocidad media real y la velocidad media de control: <code>(V.Med.R − V.Med.C) / V.Med.C × 100</code>. Valor negativo indica circulación por debajo del control; positivo, por encima. Solo se computan intervalos con V.C &gt; 0.</div></div>
-      <div class="feature-card"><div class="fc-title">T.Med Recon</div><div class="fc-desc">Tiempo medio de reconocimiento de baliza desde la recepción hasta la pulsación del reconocedor (incluyendo pulsación de Alarma para balizas L7).</div></div>
-      <div class="feature-card"><div class="fc-title">T.Med Pulsación</div><div class="fc-desc">Duración media de la pulsación de reconocimiento (tiempo que el pulsador permanece presionado, incluyendo el pulsador de Alarma en reconocimientos de L7).</div></div>
+      <div class="feature-card"><div class="fc-title">T.Med.Recon ►</div><div class="fc-desc">Tiempo medio de reconocimiento de baliza desde la recepción hasta la pulsación. Al pulsar se abre la gráfica de evolución temporal.</div></div>
+      <div class="feature-card"><div class="fc-title">T.Med.Puls ►</div><div class="fc-desc">Duración media de la pulsación de reconocimiento. Al pulsar se abre la gráfica de evolución temporal.</div></div>
+      <div class="feature-card"><div class="fc-title">Ind.Acústicas ►</div><div class="fc-desc">Total de indicaciones acústicas registradas (variable <code>0xFFF2</code>, val &gt; 0) en el tramo. La sub-etiqueta muestra el ratio por cada 100 km. Si el filtro <em>V.R &gt; 5 km/h</em> está activo, se añade la indicación <code>(V&gt;5)</code>. Al pulsar se abre la distribución por tipo de sonido.</div></div>
+      <div class="feature-card"><div class="fc-title">Ctrl.Activos ►</div><div class="fc-desc">Total de activaciones de control activo (variable <code>0xFFF1</code>, detección por flanco de cambio) en el tramo. La sub-etiqueta muestra el ratio por cada 100 km. Al pulsar se abre el desglose por tipo de control.</div></div>
+      <div class="feature-card"><div class="fc-title">Fr.Emergencia ►</div><div class="fc-desc">Total de frenos de emergencia (variable <code>0xFF20</code>, flanco 0→1) en el tramo. Al pulsar se abre la ventana flotante con el listado de frenos y su causa probable.</div></div>
     </div>
 
     <div class="callout info">
@@ -606,6 +618,52 @@
       <li><strong>Línea de tendencia</strong> — Regresión lineal que indica si los tiempos aumentan o disminuyen a lo largo del tramo.</li>
       <li><strong>Media</strong> — Línea horizontal de referencia con el valor medio del tramo.</li>
     </ul>
+
+    <h3 id="kpi-acusticas">Distribución de indicaciones acústicas (KPI Ind.Acústicas ►)</h3>
+    <p>Al pulsar el KPI <strong>Ind.Acústicas</strong> se abre un gráfico modal con la distribución del total de indicaciones acústicas registradas desglosadas por tipo de sonido (bits 0–4 de la variable <code>0xFFF2</code>). El gráfico muestra el número de ocurrencias de cada código de sonido y puede filtrarse por tipo de baliza.</p>
+    <div class="callout info">
+      <span class="callout-icon">🔊</span>
+      <div>El bit 5 de la variable <code>0xFFF2</code> indica el <em>modo Básico</em> y se ignora en el conteo, de forma que dos indicaciones del mismo tipo sonarán igual independientemente de si el equipo está en modo estándar o básico.</div>
+    </div>
+
+    <h3 id="kpi-controles">Desglose de controles activos (KPI Ctrl.Activos ►)</h3>
+    <p>Al pulsar el KPI <strong>Ctrl.Activos</strong> se abre un modal centrado con dos elementos:</p>
+    <ul style="margin: 8px 0 12px 20px; line-height: 2.1;">
+      <li><strong>Gráfico de barras horizontales</strong> — Controles ordenados de mayor a menor número de activaciones. Cada barra etiqueta el total y el ratio <em>/100 km</em>. El color varía en intensidad según la frecuencia relativa.</li>
+      <li><strong>Tabla</strong> — Lista completa con columnas: nombre del control, total de activaciones, activaciones por 100 km y porcentaje sobre el total.</li>
+    </ul>
+    <p>El conteo utiliza detección por <strong>flanco de cambio</strong>: solo se cuenta una activación cuando el valor del control cambia respecto al paquete anterior, evitando contabilizar repeticiones del mismo estado.</p>
+    <p>El modal se cierra haciendo clic fuera de él o pulsando el botón <strong>✕</strong>.</p>
+
+    <h3 id="kpi-fe">Ventana flotante de frenos de emergencia (KPI Fr.Emergencia ►)</h3>
+    <p>Al pulsar el KPI <strong>Fr.Emergencia</strong> se abre una ventana flotante arrastrable con el análisis de cada freno de emergencia del tramo. A diferencia del resto de modales, esta ventana puede coexistir con la gráfica y permanece abierta mientras se navega por el registro.</p>
+    <div class="section-card">
+      <div class="sc-body">
+        <p>La ventana contiene dos áreas principales:</p>
+        <ul style="margin: 6px 0 10px 20px; line-height: 2.1;">
+          <li><strong>Gráfico de barras de causas</strong> — Distribución de frenos por causa probable. Pulse una barra para filtrar la tabla a los frenos de esa causa; pulse de nuevo para desactivar el filtro.</li>
+          <li><strong>Tabla de frenos</strong> — Listado cronológico con fecha, hora, V.Real, V.Control, V.Intervención y causa probable de cada freno. Pulse cualquier fila para hacer <strong>zoom automático</strong> en la gráfica principal centrado en ese instante (15 minutos antes y 2 minutos después).</li>
+        </ul>
+        <p>Las causas probables que el analizador infiere son:</p>
+        <table class="shortcuts" style="margin-top:8px;">
+          <thead><tr><th>Causa</th><th>Criterio de detección</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Alcance V. Intervención</strong></td><td>V.Real ≥ V.Intervención en el momento del freno.</td></tr>
+            <tr><td><strong>Rebase señal rojo sin autorización</strong></td><td>Última baliza recibida es tipo L8 en los 2 s previos y no existe pulsador de rebase autorizado en los 10 s anteriores.</td></tr>
+            <tr><td><strong>Ausencia reconocimiento</strong></td><td>Baliza de reconocimiento obligatorio (L4, L5, L6, L11) en los 3 s previos sin pulsación de reconocimiento registrada.</td></tr>
+            <tr><td><strong>No determinada</strong></td><td>No se cumple ninguno de los criterios anteriores.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="callout info">
+      <span class="callout-icon">🖱️</span>
+      <div>La ventana flotante es <strong>arrastrable</strong> por la barra de título y <strong>redimensionable</strong> desde la esquina inferior derecha. Se posiciona inicialmente en el lado izquierdo de la pantalla para no tapar la gráfica.</div>
+    </div>
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div>El conteo de frenos de emergencia utiliza detección por <strong>flanco de subida</strong> (transición <code>val 0→1</code>), de forma que un freno prolongado que genera múltiples paquetes consecutivos con <code>val=1</code> se contabiliza como un único evento. Este mismo criterio aplica tanto al KPI como al informe generado.</div>
+    </div>
   </section>
 
   <!-- ══ 7. TABLAS ══ -->
@@ -866,7 +924,45 @@
     <h3>Contraseña de acceso incorrecta</h3>
     <div class="callout warn">
       <span class="callout-icon">🔑</span>
-      <div>Si la contraseña no es aceptada, contacte con el administrador del sistema.</div>
+      <div>Si la contraseña no es aceptada, utilice el enlace <strong>Solicitar contraseña</strong> de la pantalla de login (disponible cuando el servicio de mensajería está activo) o contacte con el administrador del sistema.</div>
+    </div>
+  </section>
+
+  <!-- ══ SOPORTE MENSAJERÍA ══ -->
+  <section class="section" id="soporte-telegram">
+    <h2>Soporte y Consultas</h2>
+    <p>La barra superior de la aplicación incluye un botón de soporte <strong>✈</strong> (icono de avión de papel) que permite enviar consultas o incidencias directamente al equipo de soporte a través del servicio de mensajería, sin salir del analizador.</p>
+
+    <h3>Envío de una consulta</h3>
+    <ol class="steps">
+      <li>
+        <div>
+          <strong>Abrir el formulario</strong>
+          Pulse el botón <strong>✈</strong> situado en la barra superior, a la derecha de los controles de zoom. Se abrirá un modal con un campo de texto libre.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Redactar el mensaje</strong>
+          Escriba su consulta o descripción del problema. El campo acepta texto libre sin límite de longitud.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Enviar</strong>
+          Pulse <strong>Enviar</strong>. Si hay un fichero CLS cargado, la aplicación generará automáticamente un informe PDF del tramo actual y lo adjuntará al mensaje. Si no hay datos cargados, se enviará únicamente el texto.
+        </div>
+      </li>
+    </ol>
+
+    <div class="callout info">
+      <span class="callout-icon">📎</span>
+      <div>El mensaje enviado incluye automáticamente el <strong>nombre de usuario</strong> del analista, el <strong>nombre del fichero CLS</strong> cargado (si lo hay) y la <strong>fecha y hora</strong> del envío, facilitando la trazabilidad de la consulta.</div>
+    </div>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div>El botón de soporte requiere conexión a internet activa para poder enviar el mensaje. Si el envío falla, se mostrará un aviso en rojo en el propio modal.</div>
     </div>
   </section>
 
