@@ -267,7 +267,7 @@
 <div class="topbar">
   <div class="topbar-badge">ASFA Digital</div>
   <div class="topbar-title">Analizador CLS Embarcado — Manual de Usuario</div>
-  <div class="topbar-ver">v2</div>
+  <div class="topbar-ver">v1</div>
 </div>
 
 <!-- SIDEBAR -->
@@ -289,6 +289,8 @@
   <a href="#kpi-acusticas" class="ic-link"><span class="ic">🔊</span>KPI Ind. Acústicas</a>
   <a href="#kpi-controles" class="ic-link"><span class="ic">⚙️</span>KPI Ctrl. Activos</a>
   <a href="#kpi-fe" class="ic-link"><span class="ic">🛑</span>KPI Fr. Emergencia</a>
+  <a href="#kpi-frecuencia" class="ic-link"><span class="ic">📡</span>KPI Frec. Captador</a>
+  <a href="#kpi-fallo" class="ic-link"><span class="ic">☠</span>KPI Cód. Fallo</a>
   <a href="#soporte-telegram" class="ic-link"><span class="ic">✉️</span>Soporte (mensajería)</a>
 
   <div class="sidebar-section">Informes</div>
@@ -558,7 +560,7 @@
       <tbody>
         <tr><td><strong>Visualiza Aceleración</strong></td><td>Superpone la traza de aceleración calculada sobre la gráfica de velocidad.</td></tr>
         <tr><td><strong>Mostrar puntos</strong></td><td>Añade marcadores en cada muestra de velocidad de la traza principal.</td></tr>
-        <tr><td><strong>F.E. e Ind.Acústicas solo V.R &gt; 5 km/h</strong></td><td>Filtro compartido que limita el conteo de frenos de emergencia <em>y</em> el de indicaciones acústicas al intervalo en que el tren circula a más de 5 km/h. Afecta tanto a los KPIs del panel como al informe generado.</td></tr>
+        <tr><td><strong>V &gt; 5 km/h</strong></td><td>Filtro compartido que limita el conteo de frenos de emergencia, indicaciones acústicas <em>y</em> códigos de fallo al intervalo en que el tren circula a más de 5 km/h, excluyendo eventos con el tren parado o a muy baja velocidad. Afecta tanto a los KPIs del panel como al informe generado.</td></tr>
         <tr><td><strong>Eje distancia</strong></td><td>Cambia el eje X de tiempo a distancia acumulada en metros.</td></tr>
         <tr><td><strong>Distancia relativa</strong></td><td>Muestra la distancia desde el inicio del fichero en lugar de la distancia absoluta (disponible cuando el eje distancia está activo).</td></tr>
         <tr><td><strong>Esc. Y</strong></td><td>Permite ajustar manualmente el límite superior del eje de velocidad (km/h). Valor por defecto: 150 km/h.</td></tr>
@@ -571,7 +573,12 @@
       <li><strong>Seleccionar rango:</strong> haga clic y arrastre horizontalmente para hacer zoom en un intervalo temporal.</li>
       <li><strong>Desplazarse:</strong> doble clic para restablecer el zoom.</li>
       <li><strong>Tooltip:</strong> pase el cursor sobre la traza para ver los valores exactos en ese instante.</li>
+      <li><strong>Zoom con rueda del ratón:</strong> active el modo <em>Pan</em> en la barra de herramientas de Plotly (icono de mano); mientras este modo esté activo, la rueda del ratón realiza zoom centrado en la posición del cursor. Al volver al modo de selección de rango, el zoom con rueda se desactiva automáticamente.</li>
     </ul>
+    <div class="callout info">
+      <span class="callout-icon">🖱️</span>
+      <div>Tras realizar zoom con la rueda del ratón, la gráfica se actualiza a máxima resolución en aproximadamente <strong>400 ms</strong> tras el último movimiento de la rueda, sin necesidad de ninguna acción adicional.</div>
+    </div>
 
     <div class="callout info">
       <span class="callout-icon">📌</span>
@@ -604,6 +611,9 @@
       <div class="feature-card"><div class="fc-title">Ind.Acústicas ►</div><div class="fc-desc">Total de indicaciones acústicas registradas (variable <code>0xFFF2</code>, val &gt; 0) en el tramo. La sub-etiqueta muestra el ratio por cada 100 km. Si el filtro <em>V.R &gt; 5 km/h</em> está activo, se añade la indicación <code>(V&gt;5)</code>. Al pulsar se abre la distribución por tipo de sonido.</div></div>
       <div class="feature-card"><div class="fc-title">Ctrl.Activos ►</div><div class="fc-desc">Total de activaciones de control activo (variable <code>0xFFF1</code>, detección por flanco de cambio) en el tramo. La sub-etiqueta muestra el ratio por cada 100 km. Al pulsar se abre el desglose por tipo de control.</div></div>
       <div class="feature-card"><div class="fc-title">Fr.Emergencia ►</div><div class="fc-desc">Total de frenos de emergencia (variable <code>0xFF20</code>, flanco 0→1) en el tramo. Al pulsar se abre la ventana flotante con el listado de frenos y su causa probable.</div></div>
+      <div class="feature-card"><div class="fc-title">Acel / Decel Med (m/s²)</div><div class="fc-desc">Aceleración media y deceleración media del tramo visualizado, mostradas en un único recuadro como <code>+x.xx / -x.xx</code>. Se calcula sobre los valores de aceleración derivados de la variación de V.R: valores positivos &gt; 0,05 m/s² para la aceleración y negativos &lt; −0,05 m/s² para la deceleración. El umbral filtra el ruido de tramos a velocidad constante.</div></div>
+      <div class="feature-card"><div class="fc-title">Frec.Captador ►</div><div class="fc-desc">Total de paquetes de frecuencia del captador (variable <code>0xFF05</code>, val ≠ 0) en el tramo. La sub-etiqueta muestra el ratio por cada 100 km. Al pulsar se abre el visor de frecuencias con la distribución temporal de medidas. Si se detecta factor ×100 en lugar del estándar ×500, se muestra un aviso de anomalía.</div></div>
+      <div class="feature-card"><div class="fc-title">☠ Cód.Fallo ►</div><div class="fc-desc">Total de códigos de fallo registrados en el tramo (variables <code>0xFF30–0xFF41</code> con val=1 y <code>0xFF06</code> con val impar). La sub-etiqueta muestra el ratio por cada 100 km. Al pulsar se abre la ventana flotante con la distribución por tipo de fallo y el listado cronológico de paquetes. Las calaveras ☠ que aparecen sobre la gráfica principal representan la posición de cada fallo; al situar el cursor sobre una calavera se muestran todos los códigos de fallo que coinciden en esa marca temporal.</div></div>
     </div>
 
     <div class="callout info">
@@ -664,6 +674,55 @@
       <span class="callout-icon">⚠️</span>
       <div>El conteo de frenos de emergencia utiliza detección por <strong>flanco de subida</strong> (transición <code>val 0→1</code>), de forma que un freno prolongado que genera múltiples paquetes consecutivos con <code>val=1</code> se contabiliza como un único evento. Este mismo criterio aplica tanto al KPI como al informe generado.</div>
     </div>
+
+    <h3 id="kpi-frecuencia">Visor de frecuencias del captador (KPI Frec.Captador ►)</h3>
+    <p>Al pulsar el KPI <strong>Frec.Captador</strong> se abre un modal centrado con la distribución temporal de todas las medidas de frecuencia del captador (variable <code>0xFF05</code>, val ≠ 0) del tramo.</p>
+    <div class="section-card">
+      <div class="sc-body">
+        <p>El gráfico muestra la frecuencia medida en Hz a lo largo del tiempo, con las bandas de referencia de los canales de baliza superpuestas. Los puntos se colorean según su estado:</p>
+        <ul style="margin: 6px 0 10px 20px; line-height: 2.1;">
+          <li><strong>Puntos azules</strong> — Medidas dentro del rango de segura activación del canal correspondiente.</li>
+          <li><strong>Puntos rojos / naranja</strong> — Medidas anómalas: fuera del rango de segura activación o con factor de conversión incorrecto.</li>
+        </ul>
+        <p>Los controles disponibles en el modal son:</p>
+        <ul style="margin: 6px 0 10px 20px; line-height: 2.1;">
+          <li><strong>Tipo de captador</strong> — Selecciona entre tablas de frecuencias <em>AVE</em> y <em>SICVA</em>, que definen los rangos nominales y de segura activación de cada canal.</li>
+          <li><strong>Canal</strong> — Filtra la vista al canal seleccionado (L1–L11, FP) o muestra todos. Al seleccionar un canal concreto, el eje Y se ajusta automáticamente a su rango y se muestra el porcentaje de desviación de cada medida respecto a la frecuencia nominal.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div>Si la mayoría de las medidas encajan con un factor de conversión <strong>×100</strong> en lugar del estándar <strong>×500</strong> definido en la especificación técnica, el analizador aplica automáticamente el factor ×100 y muestra un aviso de anomalía en amarillo bajo el gráfico. Esta condición se señala también en la sub-etiqueta del KPI con el indicador <code>⚠×100</code>.</div>
+    </div>
+
+    <h3 id="kpi-fallo">Ventana flotante de códigos de fallo (KPI ☠ Cód.Fallo ►)</h3>
+    <p>Al pulsar el KPI <strong>☠ Cód.Fallo</strong> se abre una ventana flotante arrastrable con el análisis de los códigos de fallo registrados en el tramo. Al igual que la ventana de frenos de emergencia, puede coexistir con la gráfica y permanece abierta mientras se navega por el registro.</p>
+    <div class="section-card">
+      <div class="sc-body">
+        <p>La ventana contiene dos áreas principales:</p>
+        <ul style="margin: 6px 0 10px 20px; line-height: 2.1;">
+          <li><strong>Gráfico de barras por tipo de fallo</strong> — Distribución de fallos ordenada de mayor a menor frecuencia. La anchura del panel izquierdo se adapta automáticamente a la longitud de las etiquetas. Pulse una barra para filtrar la tabla a los paquetes de ese tipo de fallo; pulse de nuevo la misma barra para desactivar el filtro. Las barras no seleccionadas se atenúan para resaltar la selección activa.</li>
+          <li><strong>Tabla cronológica</strong> — Listado con fecha, hora, código hexadecimal, valor, V.Real y descripción del fallo. Pulse cualquier fila para hacer <strong>zoom automático</strong> en la gráfica principal centrado en ese instante (15 minutos antes y 2 minutos después).</li>
+        </ul>
+        <p>Los tipos de fallo que el analizador detecta son:</p>
+        <table class="shortcuts" style="margin-top:8px;">
+          <thead><tr><th>Código</th><th>Descripción</th></tr></thead>
+          <tbody>
+            <tr><td><code>0xFF30–0xFF41</code></td><td>Fallos de sistema (ECP, captadores, displays, avisador acústico…). Se contabilizan los paquetes con <code>val=1</code> (activación).</td></tr>
+            <tr><td><code>0xFF06</code></td><td>Código de fallo del sistema. Se contabilizan los paquetes con val impar (activación); el valor numérico identifica el subtipo de fallo del fabricante.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="callout info">
+      <span class="callout-icon">☠</span>
+      <div>Cada fallo queda representado en la gráfica principal mediante una calavera <strong>☠</strong> situada en la posición temporal del paquete. Cuando varios fallos coinciden en la misma marca temporal se agrupa una única calavera; al situar el cursor sobre ella el tooltip muestra todos los códigos de fallo de ese instante. Las calaveras no aparecen en la leyenda de la gráfica para no sobrecargarla.</div>
+    </div>
+    <div class="callout info">
+      <span class="callout-icon">🖱️</span>
+      <div>La ventana flotante es <strong>arrastrable</strong> por la barra de título y <strong>redimensionable</strong> desde la esquina inferior derecha. Se posiciona inicialmente en el lado derecho de la pantalla. El área interior dispone de <strong>scroll vertical</strong> que permite desplazarse por la gráfica completa y el listado de paquetes cuando el número de tipos de fallo es elevado.</div>
+    </div>
   </section>
 
   <!-- ══ 7. TABLAS ══ -->
@@ -704,13 +763,14 @@
     <p>Pulse el botón <strong>📄 Generar informe</strong> de la barra de controles de la gráfica para abrir el modal de informe. El informe se genera sobre el tramo actualmente visible en la gráfica (o el registro completo si no hay zoom aplicado).</p>
 
     <h3>Secciones del informe</h3>
-    <div class="section-card"><div class="sc-header"><div class="sc-num">1</div><div class="sc-title">Datos del registro</div></div><div class="sc-body">Información de cabecera: número de serie del equipo, fechas y horas del tramo analizado, tipo de tren, modo de funcionamiento y diámetro de rueda.</div></div>
-    <div class="section-card"><div class="sc-header"><div class="sc-num">2</div><div class="sc-title">Gráfica de velocidad</div></div><div class="sc-body">Captura PNG de la gráfica interactiva en el estado actual, incluyendo el zoom aplicado.</div></div>
-    <div class="section-card"><div class="sc-header"><div class="sc-num">3</div><div class="sc-title">KPIs del tramo</div></div><div class="sc-body">Velocidad máxima y media, distancias, tiempos en movimiento y detenido. Incluye también el <strong>tiempo medio de reconocimiento de baliza</strong> y la <strong>duración media de pulsación</strong>, calculados sobre los pulsadores de reconocimiento estándar y el pulsador de Alarma cuando éste actúa como reconocedor de baliza L7.</div></div>
-    <div class="section-card"><div class="sc-header"><div class="sc-num">4</div><div class="sc-title">Frenos de emergencia</div></div><div class="sc-body">Listado detallado de cada freno de emergencia: fecha, hora, velocidad real en el momento del disparo, causa inferida y velocidad de control vigente.</div></div>
-    <div class="section-card"><div class="sc-header"><div class="sc-num">5</div><div class="sc-title">Balizas L7 recibidas</div></div><div class="sc-body">Tabla con todas las balizas de tipo L7 (<code>0xFFF0</code>, valor=7) del tramo.</div></div>
-    <div class="section-card"><div class="sc-header"><div class="sc-num">6</div><div class="sc-title">Métricas por 100 km</div></div><div class="sc-body">Ratios normalizados de frenos de emergencia, balizas L7 e indicaciones acústicas por cada 100 km recorridos.</div></div>
-    <div class="section-card"><div class="sc-header"><div class="sc-num">7</div><div class="sc-title">Balizas en menos de 4 s</div></div><div class="sc-body">Detección de balizas recibidas con un intervalo inferior a 4 segundos respecto a la baliza anterior, con el tiempo transcurrido y la distancia entre ambas.</div></div>
+    <div class="section-card"><div class="sc-header"><div class="sc-num">1</div><div class="sc-title">Cabecera del registro</div></div><div class="sc-body">Información de cabecera: número de serie del equipo, fechas y horas del tramo analizado, tipo de tren, modo de funcionamiento y diámetro de rueda.</div></div>
+    <div class="section-card"><div class="sc-header"><div class="sc-num">2</div><div class="sc-title">Gráfica del registro + KPIs</div></div><div class="sc-body">Captura PNG de la gráfica interactiva en el estado actual (incluyendo el zoom aplicado), seguida de una tabla con todos los KPIs del panel: velocidades, distancias, tiempos, aceleración/deceleración media, tiempos de reconocimiento y pulsación, y conteos de eventos.</div></div>
+    <div class="section-card"><div class="sc-header"><div class="sc-num">3</div><div class="sc-title">Resumen de paquetes</div></div><div class="sc-body">Tabla con el total de ocurrencias de cada tipo de variable registrada, ordenada por frecuencia, con código hexadecimal y porcentaje sobre el total.</div></div>
+    <div class="section-card"><div class="sc-header"><div class="sc-num">4</div><div class="sc-title">Resumen de controles activos</div></div><div class="sc-body">Tabla estadística de los controles activos registrados (variable <code>0xFFF1</code>), con el número de activaciones y porcentaje de cada control sobre el total.</div></div>
+    <div class="section-card"><div class="sc-header"><div class="sc-num">5</div><div class="sc-title">Frenos de emergencia</div></div><div class="sc-body">Listado detallado de cada freno de emergencia: fecha, hora, velocidad real en el momento del disparo, causa inferida y velocidades de control e intervención. Incluye un resumen por causa y, si existen, el detalle de rebases de señal en rojo sin autorización.</div></div>
+    <div class="section-card"><div class="sc-header"><div class="sc-num">6</div><div class="sc-title">Métricas por 100 km</div></div><div class="sc-body">Ratios normalizados de frenos de emergencia, balizas L7, indicaciones acústicas (con y sin filtro V&gt;0) y reconocimientos de baliza por cada 100 km recorridos.</div></div>
+    <div class="section-card"><div class="sc-header"><div class="sc-num">7</div><div class="sc-title">Balizas recibidas en menos de 4 s</div></div><div class="sc-body">Detección de balizas recibidas con un intervalo inferior a 4 segundos respecto a la baliza anterior, con el tiempo transcurrido, la distancia entre ambas y el tipo de cada baliza.</div></div>
+    <div class="section-card"><div class="sc-header"><div class="sc-num">8</div><div class="sc-title">Listado completo de paquetes <span style="font-weight:400;color:#888;">(condicional)</span></div></div><div class="sc-body">Tabla con todos los paquetes del tramo visible (fecha, hora, ms, código, variable, valor, distancia, V.R, V.C, V.IF, control activo y checksum). Esta sección <strong>solo se incluye si el tramo visible contiene menos de 500 paquetes</strong>; para tramos más amplios se omite para mantener el PDF manejable.</div></div>
 
     <h3>Acciones sobre el informe</h3>
     <table class="shortcuts">
@@ -757,6 +817,7 @@
         <ul style="margin: 8px 0 12px 20px; line-height: 2.1;">
           <li><strong>Velocímetro triple</strong> — V.Real (azul, se torna naranja al superar el 90% de V.Control y rojo al alcanzarla), V.Control (naranja) y V.Intervención (rojo).</li>
           <li><strong>Control activo</strong> — nombre completo del control ASFA vigente en cada instante.</li>
+          <li><strong>Indicación acústica</strong> — barra azul que aparece brevemente al registrarse una indicación acústica (variable <code>0xFFF2</code>), mostrando el nombre del sonido emitido. Desaparece automáticamente tras unos instantes.</li>
           <li><strong>Timestamp</strong> — hora exacta del paquete en curso (HH:MM:SS.mmm).</li>
           <li><strong>Tiempo restante</strong> — tiempo de registro pendiente de reproducir, escalado por el multiplicador de velocidad activo.</li>
           <li><strong>Log de eventos</strong> — registro cronológico (más reciente arriba) de todos los eventos relevantes del tramo, con código de color por tipo.</li>
@@ -938,7 +999,7 @@
       <li>
         <div>
           <strong>Abrir el formulario</strong>
-          Pulse el botón <strong>✈</strong> situado en la barra superior, a la derecha de los controles de zoom. Se abrirá un modal con un campo de texto libre.
+          Pulse el botón <strong>✈</strong> situado en la barra superior, a la derecha del indicador de versión. Se abrirá un modal con un campo de texto libre.
         </div>
       </li>
       <li>
