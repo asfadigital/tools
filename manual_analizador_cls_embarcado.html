@@ -291,6 +291,8 @@
   <a href="#kpi-fe" class="ic-link"><span class="ic">🛑</span>KPI Fr. Emergencia</a>
   <a href="#kpi-frecuencia" class="ic-link"><span class="ic">📡</span>KPI Frec. Captador</a>
   <a href="#kpi-fallo" class="ic-link"><span class="ic">☠</span>KPI Cód. Fallo</a>
+  <a href="#kpi-energetica" class="ic-link"><span class="ic">🔋</span>KPI Efic. Energética</a>
+  <a href="#kpi-numtren" class="ic-link"><span class="ic">🚆</span>KPI Núm. Tren</a>
   <a href="#soporte-telegram" class="ic-link"><span class="ic">✉️</span>Soporte (mensajería)</a>
 
   <div class="sidebar-section">Informes</div>
@@ -560,6 +562,7 @@
       <tbody>
         <tr><td><strong>Visualiza Aceleración</strong></td><td>Superpone la traza de aceleración calculada sobre la gráfica de velocidad.</td></tr>
         <tr><td><strong>Mostrar puntos</strong></td><td>Añade marcadores en cada muestra de velocidad de la traza principal.</td></tr>
+        <tr><td><strong>Nº baliza</strong></td><td>Muestra el número secuencial de cada baliza recibida directamente sobre los marcadores de la gráfica. Solo aparece cuando el tramo visible contiene menos de 25 balizas.</td></tr>
         <tr><td><strong>V &gt; 5 km/h</strong></td><td>Filtro compartido que limita el conteo de frenos de emergencia, indicaciones acústicas <em>y</em> códigos de fallo al intervalo en que el tren circula a más de 5 km/h, excluyendo eventos con el tren parado o a muy baja velocidad. Afecta tanto a los KPIs del panel como al informe generado.</td></tr>
         <tr><td><strong>Eje distancia</strong></td><td>Cambia el eje X de tiempo a distancia acumulada en metros.</td></tr>
         <tr><td><strong>Distancia relativa</strong></td><td>Muestra la distancia desde el inicio del fichero en lugar de la distancia absoluta (disponible cuando el eje distancia está activo).</td></tr>
@@ -608,12 +611,14 @@
       <div class="feature-card"><div class="fc-title">Tiempo.V=0</div><div class="fc-desc">Tiempo con el tren detenido.</div></div>
       <div class="feature-card"><div class="fc-title">T.Med.Recon ►</div><div class="fc-desc">Tiempo medio de reconocimiento de baliza desde la recepción hasta la pulsación. Al pulsar se abre la gráfica de evolución temporal.</div></div>
       <div class="feature-card"><div class="fc-title">T.Med.Puls ►</div><div class="fc-desc">Duración media de la pulsación de reconocimiento. Al pulsar se abre la gráfica de evolución temporal.</div></div>
-      <div class="feature-card"><div class="fc-title">Ind.Acústicas ►</div><div class="fc-desc">Total de indicaciones acústicas registradas (variable <code>0xFFF2</code>, val &gt; 0) en el tramo. La sub-etiqueta muestra el ratio por cada 100 km. Si el filtro <em>V.R &gt; 5 km/h</em> está activo, se añade la indicación <code>(V&gt;5)</code>. Al pulsar se abre la distribución por tipo de sonido.</div></div>
+      <div class="feature-card"><div class="fc-title">Ind.Acústicas ►</div><div class="fc-desc">Total de indicaciones acústicas registradas (variable <code>0xFFF2</code>, val &gt; 0) en el tramo. La sub-etiqueta muestra el ratio por cada 100 km. Si el filtro <em>V.R &gt; 5 km/h</em> está activo, se añade la indicación <code>(V&gt;5)</code>. Si el análisis acústico detecta anomalías (errores de temporización, indicaciones sin condición o sin pulsador), aparece un badge rojo con el número de incidencias junto al KPI. Al pulsar se abre la distribución por tipo de sonido.</div></div>
       <div class="feature-card"><div class="fc-title">Ctrl.Activos ►</div><div class="fc-desc">Total de activaciones de control activo (variable <code>0xFFF1</code>, detección por flanco de cambio) en el tramo. La sub-etiqueta muestra el ratio por cada 100 km. Al pulsar se abre el desglose por tipo de control.</div></div>
       <div class="feature-card"><div class="fc-title">Fr.Emergencia ►</div><div class="fc-desc">Total de frenos de emergencia (variable <code>0xFF20</code>, flanco 0→1) en el tramo. Al pulsar se abre la ventana flotante con el listado de frenos y su causa probable.</div></div>
       <div class="feature-card"><div class="fc-title">Acel / Decel Med (m/s²)</div><div class="fc-desc">Aceleración media y deceleración media del tramo visualizado, mostradas en un único recuadro como <code>+x.xx / -x.xx</code>. Se calcula sobre los valores de aceleración derivados de la variación de V.R: valores positivos &gt; 0,05 m/s² para la aceleración y negativos &lt; −0,05 m/s² para la deceleración. El umbral filtra el ruido de tramos a velocidad constante.</div></div>
       <div class="feature-card"><div class="fc-title">Frec.Captador ►</div><div class="fc-desc">Total de paquetes de frecuencia del captador (variable <code>0xFF05</code>, val ≠ 0) en el tramo. La sub-etiqueta muestra el ratio por cada 100 km. Al pulsar se abre el visor de frecuencias con la distribución temporal de medidas. Si se detecta factor ×100 en lugar del estándar ×500, se muestra un aviso de anomalía.</div></div>
       <div class="feature-card"><div class="fc-title">☠ Cód.Fallo ►</div><div class="fc-desc">Total de códigos de fallo registrados en el tramo (variables <code>0xFF30–0xFF41</code> con val=1 y <code>0xFF06</code> con val impar). La sub-etiqueta muestra el ratio por cada 100 km. Al pulsar se abre la ventana flotante con la distribución por tipo de fallo y el listado cronológico de paquetes. Las calaveras ☠ que aparecen sobre la gráfica principal representan la posición de cada fallo; al situar el cursor sobre una calavera se muestran todos los códigos de fallo que coinciden en esa marca temporal.</div></div>
+      <div class="feature-card"><div class="fc-title">Efic.Energética <span style="font-size:9px; background:var(--blue-dark); color:#fff; padding:1px 5px; border-radius:2px; vertical-align:1px;">LAB</span> ►</div><div class="fc-desc">Índice experimental de eficiencia energética de la conducción (1–10) sobre el tramo visualizado. Al pulsar se abre el desglose por fases. Ver <a href="#kpi-energetica">KPI Efic. Energética</a>.</div></div>
+      <div class="feature-card"><div class="fc-title">🚆 Núm.Tren ►</div><div class="fc-desc">Números de tren identificados por comparación con el índice GTFS de RENFE. Solo visible en líneas de Cercanías con la opción <em>Estaciones</em> activa. Ver <a href="#kpi-numtren">KPI Núm. Tren</a>.</div></div>
     </div>
 
     <div class="callout info">
@@ -658,12 +663,15 @@
         <table class="shortcuts" style="margin-top:8px;">
           <thead><tr><th>Causa</th><th>Criterio de detección</th></tr></thead>
           <tbody>
+            <tr><td><strong>Transición a Modo Externo</strong></td><td>Variable <code>0xFF14</code> con valor 7 (modo externo) en los 3 s previos al freno.</td></tr>
             <tr><td><strong>Alcance V. Intervención</strong></td><td>V.Real ≥ V.Intervención en el momento del freno.</td></tr>
-            <tr><td><strong>Rebase señal rojo sin autorización</strong></td><td>Última baliza recibida es tipo L8 en los 2 s previos y no existe pulsador de rebase autorizado en los 10 s anteriores.</td></tr>
-            <tr><td><strong>Ausencia reconocimiento</strong></td><td>Baliza de reconocimiento obligatorio (L4, L5, L6, L11) en los 3 s previos sin pulsación de reconocimiento registrada.</td></tr>
+            <tr><td><strong>Rebase de señal en rojo sin autorización</strong></td><td>Última baliza recibida es tipo L8 en los 2 s previos y no existe pulsador de rebase autorizado en los 10 s anteriores.</td></tr>
+            <tr><td><strong>Ausencia de reconocimiento</strong></td><td>Control activo de reconocimiento obligatorio (tipos 4, 5, 6 u 11) activo, baliza reciente (≤ 6 s) no-L8 y sin tipo específico (no L1/L5/L6/L7/L9), sin pulsación de reconocimiento en los 3 s previos.</td></tr>
+            <tr><td><strong>Ausencia de reconocimiento de baliza Lx</strong></td><td>Última baliza recibida es de tipo Lx (L1, L5, L6, L7 o L9) en los 6 s previos, sin pulsación de reconocimiento registrada. El tipo concreto se indica en la etiqueta (p. ej. <em>Ausencia de reconocimiento de baliza L7</em>).</td></tr>
             <tr><td><strong>No determinada</strong></td><td>No se cumple ninguno de los criterios anteriores.</td></tr>
           </tbody>
         </table>
+        <p style="margin-top:8px;font-size:13px;color:#555;">Un mismo freno puede tener varias causas simultáneas; en ese caso se muestran separadas por «&nbsp;/&nbsp;».</p>
       </div>
     </div>
     <div class="callout info">
@@ -722,6 +730,52 @@
     <div class="callout info">
       <span class="callout-icon">🖱️</span>
       <div>La ventana flotante es <strong>arrastrable</strong> por la barra de título y <strong>redimensionable</strong> desde la esquina inferior derecha. Se posiciona inicialmente en el lado derecho de la pantalla. El área interior dispone de <strong>scroll vertical</strong> que permite desplazarse por la gráfica completa y el listado de paquetes cuando el número de tipos de fallo es elevado.</div>
+    </div>
+
+    <h3 id="kpi-energetica">Desglose de eficiencia energética (KPI Efic.Energética ►)</h3>
+    <div class="callout warn">
+      <span class="callout-icon">🧪</span>
+      <div>Función <strong>experimental (LAB)</strong>. El índice se calcula únicamente a partir de la velocidad registrada (V.R): no tiene en cuenta la potencia de tracción real, la energía regenerada en frenado ni el consumo de auxiliares. Debe interpretarse como una estimación orientativa, no como una medición energética certificada.</div>
+    </div>
+    <div class="section-card">
+      <div class="sc-body">
+        <p>Al pulsar el KPI <strong>Efic.Energética</strong> se abre un panel con el desglose por fases de conducción del tramo visualizado (tracción, coasting o marcha por inercia, crucero, y tres niveles de frenado: suave, servicio y urgencia), representadas como barra apilada y como listado con duración y porcentaje de cada fase.</p>
+        <p>El índice global (escala 1–10) se compone de tres sub-índices ponderados:</p>
+        <table class="shortcuts" style="margin-top:8px;">
+          <thead><tr><th>Sub-índice</th><th>Peso</th><th>Qué mide</th></tr></thead>
+          <tbody>
+            <tr><td><strong>ISA</strong> (suavidad de aceleración)</td><td>30&nbsp;%</td><td>Intensidad media de la aceleración en fases de tracción, penalizada si el tiempo en tracción supera el 25&nbsp;% del tiempo en marcha.</td></tr>
+            <tr><td><strong>ICE</strong> (índice de coasting)</td><td>35&nbsp;%</td><td>Proporción del tiempo en marcha aprovechada en marcha por inercia (sin tracción ni freno) frente a un objetivo de referencia del 20&nbsp;%.</td></tr>
+            <tr><td><strong>IQF</strong> (calidad de frenada)</td><td>35&nbsp;%</td><td>Proporción del tiempo de frenado en cada nivel (suave, servicio, urgencia), penalizando el uso prolongado del freno de urgencia.</td></tr>
+          </tbody>
+        </table>
+        <p>La sub-etiqueta del KPI muestra una valoración cualitativa (<em>Bueno · Aceptable · Mejorable · Deficiente · Muy ineficiente</em>) junto con el porcentaje de coasting y de frenado de servicio del tramo.</p>
+      </div>
+    </div>
+    <div class="callout info">
+      <span class="callout-icon">ℹ️</span>
+      <div>El KPI solo se calcula cuando el tramo visualizado contiene al menos <strong>30 segundos</strong> de tren en movimiento; en caso contrario se muestra <code>—</code>.</div>
+    </div>
+
+    <h3 id="kpi-numtren">Identificación de número de tren (KPI 🚆 Núm.Tren ►)</h3>
+    <p>Disponible en registros de líneas de <strong>Cercanías</strong> cuando la opción <em>Estaciones</em> de la gráfica está activa. Compara los trayectos visualizados con el índice GTFS de RENFE (empaquetado con la aplicación, sin necesidad de conexión) para identificar el número de tren de cada trayecto.</p>
+    <div class="section-card">
+      <div class="sc-body">
+        <p>Pulse el botón <strong>🚆 Num.Tren</strong> para lanzar la identificación sobre el tramo visible. Al finalizar, el KPI muestra el número de trenes distintos identificados y, en la sub-etiqueta, el número de trayectos analizados. Al pulsar el KPI se abre una ventana con el listado:</p>
+        <table class="shortcuts" style="margin-top:8px;">
+          <thead><tr><th>Columna</th><th>Descripción</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Trayecto</strong></td><td>Tramo del registro correspondiente a esa circulación.</td></tr>
+            <tr><td><strong>Nº tren</strong></td><td>Número de tren identificado según el índice GTFS.</td></tr>
+            <tr><td><strong>Recorrido</strong></td><td>Origen y destino programados del servicio.</td></tr>
+            <tr><td><strong>Salida prog.</strong></td><td>Hora de salida programada según el horario GTFS.</td></tr>
+            <tr><td><strong>Días</strong></td><td>Días de circulación del servicio identificado.</td></tr>
+            <tr><td><strong>Vigencia</strong></td><td>Periodo de validez del feed GTFS utilizado para la identificación.</td></tr>
+            <tr><td><strong>Desfase</strong></td><td>Diferencia entre la hora real registrada y la hora programada (puntual, o adelanto/retraso en minutos).</td></tr>
+            <tr><td><strong>Confianza</strong></td><td>Nivel de confianza del emparejamiento: <strong>Alta</strong>, <strong>Media</strong> o <strong>Baja</strong>.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
