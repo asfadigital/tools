@@ -282,7 +282,6 @@
 <div class="topbar">
   <div class="topbar-badge">ASFA Digital</div>
   <div class="topbar-title">Analizador CLS Vía — Manual de Usuario</div>
-  <span class="topbar-ref">ET 03.365.003.7</span>
   <div class="topbar-ver">v1</div>
 </div>
 
@@ -322,14 +321,14 @@
       <span>Distribución: <strong>ANACLS_VIA.7z</strong></span>
       <span>Ejecutable: <strong>AnalizadorCLS.EXE</strong></span>
       <span>Formato entrada: <strong>.CLS</strong></span>
-      <span>Norma: <strong>ET 03.365.003.7</strong></span>
+      
     </div>
   </div>
 
   <!-- ══ INTRODUCCIÓN ══ -->
   <section class="section" id="introduccion">
     <h2>Introducción</h2>
-    <p class="lead">El <strong>Analizador CLS de ASFA Digital Vía</strong> es una herramienta de escritorio para la inspección, análisis y generación de informes a partir de ficheros de registro binario <code>.CLS</code> generados por equipos ASFA Digital instalados en la infraestructura de vía, conforme a la especificación técnica <strong>ET 03.365.003.7</strong>.</p>
+    <p class="lead">El <strong>Analizador CLS de ASFA Digital Vía</strong> es una herramienta de escritorio para la inspección, análisis y generación de informes a partir de ficheros de registro binario <code>.CLS</code> generados por equipos ASFA Digital instalados en la infraestructura de vía.</p>
 
     <p>La herramienta está orientada al análisis del comportamiento de los <strong>equipos de vía</strong>: sensado de aspectos de señal, activación de balizas, detección de paso de trenes, códigos de fallo del sistema y estado de los Equipos Intermedios de Conexión (EIC).</p>
 
@@ -459,7 +458,7 @@
 
     <div class="callout ok">
       <span class="callout-icon">✅</span>
-      <div>Los ficheros <code>.CLS</code> aceptados son los generados por el registrador del equipo ASFA Digital de Vía conforme a la especificación técnica <strong>ET 03.365.003.7</strong>.</div>
+      <div>Los ficheros <code>.CLS</code> aceptados son los generados por el registrador del equipo ASFA Digital de Vía.</div>
     </div>
   </section>
 
@@ -501,7 +500,7 @@
       <tbody>
         <tr><td><strong>#</strong></td><td>Número de secuencia del paquete en el fichero.</td></tr>
         <tr><td><strong>Código</strong></td><td>Código hexadecimal de la variable registrada (ej. <code>FE00</code>).</td></tr>
-        <tr><td><strong>Variable</strong></td><td>Denominación de la variable según ET 03.365.003.7.</td></tr>
+        <tr><td><strong>Variable</strong></td><td>Denominación de la variable.</td></tr>
         <tr><td><strong>Fecha</strong></td><td>Fecha del evento (UTC).</td></tr>
         <tr><td><strong>Hora (UTC)</strong></td><td>Hora del evento en tiempo universal coordinado.</td></tr>
         <tr><td><strong>Milisegundos</strong></td><td>Fracción de milisegundos del evento.</td></tr>
@@ -680,7 +679,7 @@
   <!-- ══ VARIABLES ══ -->
   <section class="section" id="variables">
     <h2>Variables Registradas</h2>
-    <p>Principales códigos de variable del formato CLS de ASFA Digital Vía (ET 03.365.003.7):</p>
+    <p>Principales códigos de variable del formato CLS de ASFA Digital Vía:</p>
 
     <table class="vartable">
       <thead><tr><th>Código</th><th>Denominación</th></tr></thead>
@@ -765,7 +764,7 @@
         <tr>
           <td>Fichero no reconocido / sin datos</td>
           <td>El fichero no tiene la estructura de cabecera CLS esperada.</td>
-          <td>Verifique que el fichero es un <code>.CLS</code> generado por un equipo ASFA Digital de Vía conforme a ET 03.365.003.7.</td>
+          <td>Verifique que el fichero es un <code>.CLS</code> generado por un equipo ASFA Digital de Vía.</td>
         </tr>
         <tr>
           <td>Integridad CRC: ERROR</td>

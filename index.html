@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manuales — Analizador CLS de ASFA Digital</title>
+<title>Manuales — Herramientas Ferroviarias</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap');
 
@@ -14,6 +14,10 @@
     --amber-mid: #f0d090;
     --blue: #1a6fba;
     --blue-light: #e8f2fb;
+    --navy: #1a3a6a;
+    --navy-dark: #0f2244;
+    --navy-light: #e6eef8;
+    --navy-mid: #f0d080;
     --bg: #f2f4f7;
     --surface: #ffffff;
     --border: #d0d4dc;
@@ -60,6 +64,11 @@
     border-radius: 4px;
   }
 
+  .logo-badge.navy {
+    background: var(--navy);
+    color: var(--navy-mid);
+  }
+
   .logo-text {
     font-family: var(--mono);
     font-size: 0.85rem;
@@ -85,7 +94,7 @@
     gap: 1.5rem;
     flex-wrap: wrap;
     justify-content: center;
-    max-width: 780px;
+    max-width: 1140px;
     width: 100%;
   }
 
@@ -94,7 +103,7 @@
     border: 1px solid var(--border);
     border-radius: 10px;
     padding: 2rem 2rem 1.6rem;
-    flex: 1 1 300px;
+    flex: 1 1 280px;
     max-width: 340px;
     text-decoration: none;
     color: inherit;
@@ -105,9 +114,21 @@
     cursor: pointer;
   }
 
-  .card:hover {
+  .card-via:hover, .card-emb:hover {
     box-shadow: 0 6px 24px rgba(0,0,0,0.10);
     border-color: var(--amber);
+    transform: translateY(-2px);
+  }
+
+  .card-cvm:hover {
+    box-shadow: 0 6px 24px rgba(26,58,106,0.18);
+    border-color: var(--navy);
+    transform: translateY(-2px);
+  }
+
+  .card-sim:hover {
+    box-shadow: 0 6px 24px rgba(168,92,26,0.18);
+    border-color: #a85c1a;
     transform: translateY(-2px);
   }
 
@@ -123,6 +144,8 @@
 
   .card-via .card-icon   { background: var(--amber-light); }
   .card-emb .card-icon   { background: var(--blue-light); }
+  .card-cvm .card-icon   { background: var(--navy-light); }
+  .card-sim .card-icon   { background: #fbeee0; }
 
   .card-tag {
     font-family: var(--mono);
@@ -137,6 +160,8 @@
 
   .card-via .card-tag { background: var(--amber-light); color: var(--amber-dark); }
   .card-emb .card-tag { background: var(--blue-light);  color: var(--blue); }
+  .card-cvm .card-tag { background: var(--navy-light);  color: var(--navy); }
+  .card-sim .card-tag { background: #fbeee0;            color: #6e3c10; }
 
   .card h2 {
     font-size: 1.1rem;
@@ -162,6 +187,28 @@
 
   .card-via .card-cta { color: var(--amber); }
   .card-emb .card-cta { color: var(--blue); }
+  .card-cvm .card-cta { color: var(--navy); }
+  .card-sim .card-cta { color: #a85c1a; }
+
+  .divider {
+    width: 100%;
+    max-width: 1140px;
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2.5rem 0 2rem;
+  }
+
+  .section-label {
+    width: 100%;
+    max-width: 1140px;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
 
   footer {
     margin-top: 3rem;
@@ -178,11 +225,15 @@
   <div class="logo">
     <span class="logo-badge">CLS</span>
     <span class="logo-text">ASFA Digital</span>
+    <span style="color:var(--border); margin: 0 .2rem;">|</span>
+    <span class="logo-badge navy">CVM</span>
+    <span class="logo-text" style="color:var(--navy);">Explorer</span>
   </div>
   <h1>Manuales de Usuario</h1>
-  <p class="subtitle">Seleccione el manual correspondiente al equipo analizado</p>
+  <p class="subtitle">Seleccione el manual correspondiente a la herramienta</p>
 </header>
 
+<p class="section-label">Analizador CLS de ASFA Digital</p>
 <div class="cards">
 
   <a class="card card-via" href="manual_analizador_cls_via.html">
@@ -203,7 +254,30 @@
 
 </div>
 
-<footer>ET 03.365.003.7 &nbsp;|&nbsp; Analizador CLS de ASFA Digital</footer>
+<hr class="divider">
+
+<p class="section-label">Planificación y velocidades</p>
+<div class="cards">
+
+  <a class="card card-cvm" href="manual_cvm_explorer.html">
+    <div class="card-icon">🗺️</div>
+    <span class="card-tag">CVM</span>
+    <h2>CVM Explorer</h2>
+    <p>Manual del explorador de Cuadros de Velocidades Máximas. Consulta de líneas, estadísticas de señalización y bloqueo, planificador de rutas con simulación física y animación de circulación de trenes.</p>
+    <span class="card-cta">Abrir manual →</span>
+  </a>
+
+  <a class="card card-sim" href="manual_simasfa.html">
+    <div class="card-icon">🚦</div>
+    <span class="card-tag">ASFA</span>
+    <h2>SIMAsfa</h2>
+    <p>Manual del analizador de secuencias de balizas ASFA Digital y simulador dinámico de conducción, con curvas de control e intervención, importación desde CLS y exportación CSV.</p>
+    <span class="card-cta">Abrir manual →</span>
+  </a>
+
+</div>
+
+<footer>Analizador CLS de ASFA Digital &nbsp;·&nbsp; CVM Explorer &nbsp;·&nbsp; SIMAsfa</footer>
 
 </body>
 </html>
