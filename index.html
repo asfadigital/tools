@@ -132,6 +132,12 @@
     transform: translateY(-2px);
   }
 
+  .card-bt:hover {
+    box-shadow: 0 6px 24px rgba(15,122,108,0.18);
+    border-color: #0f7a6c;
+    transform: translateY(-2px);
+  }
+
   .card-icon {
     width: 48px;
     height: 48px;
@@ -146,6 +152,7 @@
   .card-emb .card-icon   { background: var(--blue-light); }
   .card-cvm .card-icon   { background: var(--navy-light); }
   .card-sim .card-icon   { background: #fbeee0; }
+  .card-bt .card-icon    { background: #e3f5f1; }
 
   .card-tag {
     font-family: var(--mono);
@@ -162,6 +169,7 @@
   .card-emb .card-tag { background: var(--blue-light);  color: var(--blue); }
   .card-cvm .card-tag { background: var(--navy-light);  color: var(--navy); }
   .card-sim .card-tag { background: #fbeee0;            color: #6e3c10; }
+  .card-bt .card-tag  { background: #e3f5f1;            color: #0a5a4f; }
 
   .card h2 {
     font-size: 1.1rem;
@@ -189,6 +197,7 @@
   .card-emb .card-cta { color: var(--blue); }
   .card-cvm .card-cta { color: var(--navy); }
   .card-sim .card-cta { color: #a85c1a; }
+  .card-bt .card-cta  { color: #0f7a6c; }
 
   .divider {
     width: 100%;
@@ -277,7 +286,22 @@
 
 </div>
 
-<footer>Analizador CLS de ASFA Digital &nbsp;·&nbsp; CVM Explorer &nbsp;·&nbsp; SIMAsfa</footer>
+<hr class="divider">
+
+<p class="section-label">Aplicación de viajeros</p>
+<div class="cards">
+
+  <a class="card card-bt" href="manual_buscatrenes.html">
+    <div class="card-icon">🚆</div>
+    <span class="card-tag">Viajeros</span>
+    <h2>BuscaTrenes</h2>
+    <p>Manual de la aplicación de consulta de horarios de tren para Android. Búsqueda de trayectos y transbordos, salidas por estación, incidencias en tiempo real y seguimiento en directo de un trayecto.</p>
+    <span class="card-cta">Abrir manual →</span>
+  </a>
+
+</div>
+
+<footer>Analizador CLS de ASFA Digital &nbsp;·&nbsp; CVM Explorer &nbsp;·&nbsp; SIMAsfa &nbsp;·&nbsp; BuscaTrenes</footer>
 
 </body>
 </html>
