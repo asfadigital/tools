@@ -355,7 +355,7 @@
         <tr><td><strong>Permisos</strong></td><td>Debe poder escribir en la carpeta donde están los ficheros de entrada, porque allí se guarda el fichero de instalación.</td></tr>
         <tr><td><strong>Conexión</strong></td><td>Necesita acceso a github.com para leer las versiones publicadas y subir las nuevas. Sin conexión, el programa genera igualmente el fichero de instalación, pero no publica nada (<a href="#ejecucion">sección 5</a>).</td></tr>
         <tr><td><strong>Entrega</strong></td><td>Se distribuye como <code>csv_build_windows.exe</code>. Si se entrega en versión de carpeta, hay que copiar la carpeta <code>csv_build_windows</code> entera: el ejecutable no funciona sin la subcarpeta <code>_internal</code>.</td></tr>
-        <tr><td><strong>Configuración</strong></td><td>El acceso a GitHub va incluido en el programa; el usuario no tiene que configurar nada.</td></tr>
+        <tr><td><strong>Configuración</strong></td><td>El programa viene listo para usar; el usuario no tiene que configurar nada.</td></tr>
       </tbody>
     </table>
 
@@ -711,18 +711,8 @@
           <td>Comprobar la conexión; las CSV mantenidas se publicarían sin Descripción, Dependencia ni Motivo</td>
         </tr>
         <tr>
-          <td><code>ERROR GitHub: la aplicacion no incluye el token de acceso</code></td>
-          <td>El programa no lleva el token de acceso</td>
-          <td>Avisar al responsable del programa</td>
-        </tr>
-        <tr>
-          <td><code>ERROR GitHub</code> con <code>HTTP Error 403</code></td>
-          <td>El acceso a GitHub no tiene permiso de escritura</td>
-          <td>Avisar al responsable del programa</td>
-        </tr>
-        <tr>
-          <td><code>ERROR GitHub</code> con <code>HTTP Error 404</code> o <code>422</code></td>
-          <td>Repositorio o rama incorrectos, o rama protegida</td>
+          <td><code>ERROR GitHub</code>, con cualquier otro detalle</td>
+          <td>Problema con la publicación en el repositorio</td>
           <td>Avisar al responsable del programa</td>
         </tr>
         <tr>
