@@ -258,6 +258,9 @@
   }
   /* Los nombres de fichero largos pueden partirse dentro de las tablas */
   table.coltable code { overflow-wrap: anywhere; }
+  .plain-list { margin: 8px 0 16px 20px; line-height: 1.75; }
+  .plain-list li { margin-bottom: 6px; }
+  .callout .plain-list { margin-bottom: 0; }
 </style>
 </head>
 <body>
@@ -391,7 +394,37 @@
       </tbody>
     </table>
 
-    <p>Una fila que sigue ausente en semanas posteriores permanece en rojo y tachada. Si reaparece, pierde el tachado y el fondo. El verde solo señala las filas añadidas en la última ejecución. Los rellenos de otros colores que ya tuviera el fichero no se tocan.</p>
+    <p>Las filas que desaparecen no se borran: se conservan en el fichero, con sus datos de instalación, mientras sigan ausentes. El verde solo señala las filas añadidas en la última ejecución. Los rellenos de otros colores que ya tuviera el fichero no se tocan.</p>
+
+    <h3>CSV que vuelven a aparecer</h3>
+    <p>Una CSV que desaparece puede volver a aparecer en una semana posterior. Lo que ocurre depende de si coincide la identificación de la fila (Línea, Referencia LV e ID PDF LTV):</p>
+    <ul class="plain-list">
+      <li><strong>Con la misma Línea, Referencia LV e ID PDF LTV:</strong> se recupera su fila. Pierde el tachado y el fondo rojo, se actualizan las columnas automáticas y se conservan los datos de instalación que se hubieran rellenado. No se añade como fila nueva.</li>
+      <li><strong>Con otro ID PDF LTV</strong> (por ejemplo, una LTV dada de baja y emitida de nuevo): se trata como una CSV distinta. Se añade al final en verde, con las columnas granate vacías, y la fila antigua sigue en rojo y tachada. Si las balizas instaladas son las mismas, hay que copiar a mano los datos de instalación de la fila antigua a la nueva.</li>
+    </ul>
+
+    <h3>Cambios en las columnas del fichero de instalación</h3>
+    <p>El nuevo fichero de instalación es una copia del anterior, con sus mismas columnas, en el mismo orden y con el mismo formato. El programa localiza cada columna por el texto de su cabecera, no por su posición, así que se pueden insertar, eliminar o reordenar columnas sin perder información:</p>
+    <ul class="plain-list">
+      <li><strong>Columna insertada con cabecera granate:</strong> se trata como columna de edición manual. Su contenido se conserva en todas las filas, también en las tachadas, y en las filas nuevas queda vacía.</li>
+      <li><strong>Columna insertada con cabecera de otro color:</strong> si su cabecera coincide con una columna de los datos de la semana, se rellena con esos datos; si no, su contenido se conserva, pero se tacha en las filas que desaparecen y queda vacía en las filas nuevas. Para que una columna añadida se trate como manual, su cabecera debe llevar el relleno granate de las demás.</li>
+      <li><strong>Columna eliminada:</strong> desaparece también en los ficheros siguientes; el programa no la vuelve a crear. Las columnas que llegan con los datos de la semana y no existen en el fichero de instalación no se añaden.</li>
+      <li><strong>Cabecera renombrada:</strong> equivale a eliminar la columna e insertar otra. Si era una columna de los datos de la semana, deja de actualizarse.</li>
+    </ul>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div>
+        <strong>Algunas columnas no se deben eliminar ni renombrar:</strong>
+        <ul class="plain-list">
+          <li><strong>Línea, Referencia LV e ID PDF LTV:</strong> identifican cada fila. Sin ellas, el programa no puede asociar las filas con las de la semana: todas se marcarían como desaparecidas y se añadirían de nuevo, sin los datos de instalación.</li>
+          <li><strong>Tipo LV:</strong> el programa la usa para localizar la fila de cabeceras; sin ella, el proceso falla.</li>
+          <li><strong>Columnas de instalación que muestra la web</strong> (Nº parejas, Baliza 1, Baliza 2, Pk y Nº serie de cada baliza, Fabricante balizas, Fecha Instalación, Hojas Control, Fecha puesta en servicio y Observaciones): la web las busca por su nombre. Si se elimina o renombra alguna, deja de mostrarse en la ventana de instalación y, si es un dato obligatorio, ninguna instalación se considera completa. Las columnas añadidas no se muestran en la web.</li>
+        </ul>
+      </div>
+    </div>
+
+    <p>Las cabeceras deben seguir en la primera fila de la primera hoja del libro, que es donde las lee la web.</p>
 
     <h3>Generar solo el fichero de instalación</h3>
     <p>Si solo se quiere generar el nuevo fichero de instalación, sin actualizar la información de seguimiento de la web, hay que desactivar la conexión a internet antes de abrir el programa (o antes de pulsar <kbd>Comprobar</kbd>, véase la <a href="#ejecucion">sección 5</a>). Sin conexión, el fichero de instalación se crea y se guarda igualmente, pero no se publica nada, y el programa termina con el aviso «El proceso ha concluido sin publicar (no hay conexión con GitHub).». Después hay que restablecer la conexión.</p>
@@ -626,7 +659,7 @@
 
     <div class="callout danger">
       <span class="callout-icon">❌</span>
-      <div>Si la subida de la nueva versión falla, aparece <code>* NO SE HA PODIDO PUBLICAR EL HTML EN GITHUB *</code>, precedido por el motivo. En ese caso la página principal no se actualiza, pero el fichero de instalación se guarda igualmente. Si falla solo la subida de la página principal, la nueva versión ya está publicada y aparece <code>* NO SE HA PODIDO PUBLICAR LA PÁGINA PRINCIPAL EN GITHUB *</code>.</div>
+      <div>Si la subida de la nueva versión falla, aparece <code>*** NO SE HA PODIDO PUBLICAR EL HTML EN GITHUB ***</code>, precedido por el motivo. En ese caso la página principal no se actualiza, pero el fichero de instalación se guarda igualmente. Si falla solo la subida de la página principal, la nueva versión ya está publicada y aparece <code>*** NO SE HA PODIDO PUBLICAR LA PÁGINA PRINCIPAL EN GITHUB ***</code>.</div>
     </div>
   </section>
 
