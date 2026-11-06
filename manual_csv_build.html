@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Usuario — csv_build</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap');
+
+  :root {
+    --csv: #0f7a6c;
+    --csv-dark: #0a5a4f;
+    --csv-mid: #14957f;
+    --csv-light: #e3f5f1;
+    --csv-pale: #f2faf8;
+    --blue: #1a6fba;
+    --amber: #c47a00;
+    --green: #1a8a4a;
+    --red: #cc2a2a;
+    --bg: #f2f4f7;
+    --surface: #ffffff;
+    --surface2: #e8eaee;
+    --border: #d0d4dc;
+    --text: #1a1e2a;
+    --muted: #6b7280;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --sidebar-w: 280px;
+    --header-h: 56px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
+    background: var(--csv-dark);
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 28px;
+    z-index: 200;
+    box-shadow: 0 2px 12px rgba(0,0,0,.35);
+  }
+  .topbar-badge {
+    font-family: var(--mono);
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    background: #9fe3d3;
+    color: var(--csv-dark);
+    padding: 3px 8px; border-radius: 2px;
+  }
+  .topbar-title {
+    font-family: var(--sans);
+    font-size: 15px; font-weight: 600;
+    color: rgba(255,255,255,.88);
+    letter-spacing: .3px;
+  }
+  .topbar-ver {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 11px; color: rgba(255,255,255,.35);
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed;
+    top: var(--header-h); left: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    z-index: 100;
+    padding: 20px 0 40px;
+  }
+  .sidebar-section {
+    padding: 6px 20px 4px;
+    font-family: var(--mono);
+    font-size: 9px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 14px;
+  }
+  .sidebar a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 20px;
+    text-decoration: none;
+    font-size: 13px; color: var(--text);
+    border-left: 3px solid transparent;
+    transition: all .15s;
+    line-height: 1.3;
+  }
+  .sidebar a:hover { background: var(--csv-pale); color: var(--csv); border-left-color: var(--csv); }
+  .sidebar a.active { background: var(--csv-pale); color: var(--csv-dark); border-left-color: var(--csv-dark); font-weight: 600; }
+  .sidebar a .ic { font-size: 15px; flex-shrink: 0; width: 18px; text-align: center; }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: var(--sidebar-w);
+    margin-top: var(--header-h);
+    padding: 40px 48px 80px;
+    max-width: 920px;
+  }
+
+  /* ── SECTIONS ── */
+  .section { margin-bottom: 60px; scroll-margin-top: 80px; }
+
+  h1 { font-size: 28px; font-weight: 700; color: #1a1e2a; line-height: 1.2; margin-bottom: 10px; }
+  h2 { font-size: 19px; font-weight: 700; color: var(--csv-dark); margin-bottom: 16px; margin-top: 0;
+       border-bottom: 2px solid var(--csv-light); padding-bottom: 6px; }
+  h3 { font-size: 14px; font-weight: 700; color: var(--text); margin: 20px 0 8px; text-transform: uppercase;
+       letter-spacing: .8px; font-family: var(--mono); }
+  p  { margin-bottom: 12px; color: #2c3a50; }
+
+  .lead { font-size: 15px; color: var(--muted); margin-bottom: 24px; line-height: 1.8; }
+
+  /* ── CALLOUTS ── */
+  .callout {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 14px 18px; border-radius: 4px; margin: 16px 0;
+    border-left: 4px solid;
+    font-size: 13px; line-height: 1.65;
+  }
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .callout.info  { background: var(--csv-pale); border-color: var(--csv); }
+  .callout.warn  { background: #fff8e1; border-color: #e0a000; }
+  .callout.danger{ background: #fdecea; border-color: var(--red); }
+  .callout.ok    { background: #edf7ef; border-color: var(--green); }
+
+  /* ── STEPS ── */
+  .steps { list-style: none; padding: 0; margin: 16px 0; counter-reset: steps; }
+  .steps li {
+    counter-increment: steps;
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+  }
+  .steps li:last-child { border-bottom: none; }
+  .steps li::before {
+    content: counter(steps);
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    background: var(--csv-dark); color: #9fe3d3;
+    font-family: var(--mono); font-size: 12px; font-weight: 700;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px;
+  }
+  .steps li strong { display: block; margin-bottom: 2px; }
+
+  /* ── CODE / MONO ── */
+  code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 1px 6px; border-radius: 3px;
+    color: var(--csv-dark);
+  }
+  .file-path {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--mono); font-size: 12px;
+    background: var(--csv-dark); color: #9fe3d3;
+    padding: 3px 10px; border-radius: 3px;
+  }
+  kbd {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--surface2);
+    border: 1px solid #b0bdd0;
+    border-bottom: 2px solid #8090a8;
+    padding: 2px 7px; border-radius: 4px;
+    color: var(--text);
+  }
+
+  /* ── FEATURE GRID ── */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px; margin: 16px 0;
+  }
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--csv);
+    border-radius: 4px;
+    padding: 16px;
+  }
+  .feature-card .fc-icon { font-size: 22px; margin-bottom: 8px; }
+  .feature-card .fc-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; color: var(--csv-dark); }
+  .feature-card .fc-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ── TABLES ── */
+  table.info-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  table.info-table th, table.info-table td { padding: 9px 14px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border); }
+  table.info-table th { background: var(--surface2); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); }
+  table.info-table tr:last-child td { border-bottom: none; }
+
+  /* ── COL TABLE ── */
+  table.coltable { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12px; }
+  table.coltable th { background: var(--csv-dark); color: #9fe3d3; padding: 8px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+  table.coltable td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  table.coltable tr:hover td { background: var(--csv-pale); }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--csv-dark) 0%, #146b5c 100%);
+    border-radius: 8px;
+    padding: 32px 36px;
+    margin-bottom: 40px;
+    color: #fff;
+    position: relative; overflow: hidden;
+    border-left: 5px solid #9fe3d3;
+  }
+  .hero::after {
+    content: '📋';
+    position: absolute; right: 24px; bottom: -22px;
+    font-size: 90px;
+    opacity: .09;
+    line-height: 1;
+    user-select: none;
+  }
+  .hero h1 { color: #fff; font-size: 22px; margin-bottom: 6px; }
+  .hero p { color: rgba(255,255,255,.65); font-size: 13px; margin: 0; }
+  .hero-meta { display: flex; gap: 20px; margin-top: 18px; flex-wrap: wrap; }
+  .hero-meta span { font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,.45); }
+  .hero-meta strong { color: rgba(255,255,255,.85); }
+
+  /* ── VISTA BADGE ── */
+  .view-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--csv-dark); color: #9fe3d3;
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 2px;
+    vertical-align: middle;
+  }
+
+  /* ── CHIPS (badges de categoría) ── */
+  .chip { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; color: #fff; }
+  .chip.av    { background: #e5484d; }
+  .chip.ld    { background: #f0883e; }
+  .chip.md    { background: #2fbf71; }
+  .chip.cer   { background: #3a9bdc; }
+  .chip.ouigo { background: #e6007e; }
+  .chip.fgc   { background: #2e7d32; }
+  .chip.eus   { background: #00838f; }
+  .chip.sfm   { background: #c77c02; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 24px 20px 60px; }
+  }
+  /* Los nombres de fichero largos pueden partirse dentro de las tablas */
+  table.coltable code { overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-badge">CSV</div>
+  <div class="topbar-title">csv_build — Manual de Usuario</div>
+  <div class="topbar-ver">v1.0.0</div>
+</div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-section">Inicio</div>
+  <a href="#introduccion"><span class="ic">📘</span>1. Introducción</a>
+  <a href="#requisitos"><span class="ic">📦</span>2. Requisitos y entrega</a>
+
+  <div class="sidebar-section">Ficheros</div>
+  <a href="#fichero-instalacion"><span class="ic">📊</span>3. Fichero de instalación</a>
+  <a href="#ficheros-entrada"><span class="ic">📥</span>4. Ficheros de entrada</a>
+
+  <div class="sidebar-section">Uso del programa</div>
+  <a href="#ejecucion"><span class="ic">▶️</span>5. Ejecución paso a paso</a>
+  <a href="#fases"><span class="ic">🔢</span>6. Las ocho fases del proceso</a>
+  <a href="#progreso"><span class="ic">⏳</span>7. Ventana de progreso</a>
+  <a href="#resultados"><span class="ic">💾</span>8. Resultados y ficheros guardados</a>
+
+  <div class="sidebar-section">Publicación y consulta</div>
+  <a href="#publicacion"><span class="ic">🌐</span>9. Publicación en GitHub Pages</a>
+  <a href="#pagina-principal"><span class="ic">📈</span>10. Página principal y consulta de una semana</a>
+
+  <div class="sidebar-section">Referencia</div>
+  <a href="#problemas"><span class="ic">🔧</span>11. Solución de problemas</a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>csv_build</h1>
+    <p>Manual de usuario para la generación, publicación y seguimiento del listado y del progreso de instalación de CSV</p>
+    <div class="hero-meta">
+      <span>Versión: <strong>1.0.0</strong></span>
+      <span>Ejecutable: <strong>csv_build_windows.exe</strong></span>
+      <span>Web: <strong>asfadigital.github.io/csv</strong></span>
+    </div>
+  </div>
+
+  <!-- ══ 1. INTRODUCCIÓN ══ -->
+  <section class="section" id="introduccion">
+    <h2>1. Introducción</h2>
+    <p class="lead">La función principal de <strong>csv_build</strong> es regenerar el fichero de seguimiento de la instalación, <code>CSV_RFIG_NN_AAAA_instalacion.xlsx</code>, actualizando el listado de CSVs conforme a la información de entrada.</p>
+
+    <p>El programa parte del fichero de instalación de la semana anterior y lo actualiza con las CSV fijas y temporales que aportan los ficheros de entrada (PDF DLTV y libros Excel): añade las CSV nuevas, marca las que han desaparecido y conserva los datos de instalación que se han ido rellenando a mano. Así, el fichero de instalación refleja en todo momento el listado global de CSVs vigente y el estado de instalación de las balizas L1X de cada una.</p>
+
+    <p>Además, el programa publica el listado de la semana en GitHub Pages, junto con los datos del fichero de instalación, y regenera la página principal, que enlaza todas las versiones y permite compararlas. Desde la web se consulta el seguimiento de la implantación: al pulsar sobre un CSV se ven sus datos de instalación y el porcentaje de ejecución indica cómo avanza el despliegue.</p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="fc-icon">📊</div>
+        <div class="fc-title">Fichero de instalación</div>
+        <div class="fc-desc">Regenera cada semana el listado global de CSVs y conserva los datos introducidos a mano.</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon">🌐</div>
+        <div class="fc-title">Publicación web</div>
+        <div class="fc-desc">Publica la versión de la semana y regenera la página principal en GitHub Pages.</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon">🔍</div>
+        <div class="fc-title">Comparador</div>
+        <div class="fc-desc">Calcula las LTV añadidas, eliminadas y modificadas entre dos versiones cualesquiera.</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon">📈</div>
+        <div class="fc-title">Seguimiento</div>
+        <div class="fc-desc">Muestra los datos de instalación de cada CSV y el porcentaje de ejecución.</div>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <span class="callout-icon">🌐</span>
+      <div>La página principal está en <a href="https://asfadigital.github.io/csv/" target="_blank" rel="noopener">https://asfadigital.github.io/csv/</a> y desde ella se elige qué semana abrir, en otra ventana del navegador.</div>
+    </div>
+  </section>
+
+  <!-- ══ 2. REQUISITOS ══ -->
+  <section class="section" id="requisitos">
+    <h2>2. Requisitos y entrega</h2>
+    <p>El programa funciona en <strong>Windows</strong> con conexión a internet y no necesita tener Excel instalado.</p>
+
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>Permisos</strong></td><td>Debe poder escribir en la carpeta donde están los ficheros de entrada, porque allí se guarda el fichero de instalación.</td></tr>
+        <tr><td><strong>Conexión</strong></td><td>Necesita acceso a github.com para leer las versiones publicadas y subir las nuevas. Sin conexión, el programa genera igualmente el fichero de instalación, pero no publica nada (<a href="#ejecucion">sección 5</a>).</td></tr>
+        <tr><td><strong>Entrega</strong></td><td>Se distribuye como <code>csv_build_windows.exe</code>. Si se entrega en versión de carpeta, hay que copiar la carpeta <code>csv_build_windows</code> entera: el ejecutable no funciona sin la subcarpeta <code>_internal</code>.</td></tr>
+        <tr><td><strong>Configuración</strong></td><td>El acceso a GitHub va incluido en el programa; el usuario no tiene que configurar nada.</td></tr>
+      </tbody>
+    </table>
+
+    <p>Si Windows o el antivirus bloquean el ejecutable, véase la <a href="#problemas">sección 11</a>.</p>
+  </section>
+
+  <!-- ══ 3. FICHERO DE INSTALACIÓN ══ -->
+  <section class="section" id="fichero-instalacion">
+    <h2>3. Fichero de instalación</h2>
+    <p>El fichero <code>CSV_RFIG_NN_AAAA_instalacion.xlsx</code> es el resultado principal del programa. Contiene el listado global de CSVs y, para cada una, los datos de instalación de sus balizas L1X, que hay que ir completando a mano con la información que se vaya recibiendo. Se arrastra de una semana a la siguiente. Los datos que se ven en la web son los que tiene este fichero cuando se ejecuta el proceso, así que hay que actualizarlo antes de ejecutarlo para que los cambios aparezcan.</p>
+
+    <div class="callout danger">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>IMPORTANTE:</strong> los cambios que se vayan introduciendo manualmente en el fichero de instalación deben hacerse siempre sobre el <strong>último fichero generado</strong>, y ese mismo fichero es el que debe usarse como «anterior» en la siguiente generación. El programa propone automáticamente el más reciente de la carpeta. Si se edita otro fichero o se selecciona uno anterior, los cambios no se trasladarán a la nueva generación.</div>
+    </div>
+
+    <p>Cada ejecución genera un fichero nuevo a partir del de la semana anterior: actualiza el listado de CSVs con la información de entrada, rellena con los datos nuevos todas las columnas que no son de edición manual, y conserva las columnas de cabecera granate, que se rellenan a mano: número de parejas, Pk y número de serie de cada baliza, fabricante, fechas, hojas de control y observaciones. Cada fila se asocia con la anterior por <strong>Línea</strong>, <strong>Referencia LV</strong> e <strong>ID PDF LTV</strong>. Las columnas «Baliza 1» y «Baliza 2» se recalculan siempre desde la secuencia de balizas.</p>
+
+    <h3>Marcas en el fichero</h3>
+    <table class="coltable">
+      <thead>
+        <tr><th>Marca en el fichero</th><th>Significado</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span style="background:#fdecea;text-decoration:line-through;padding:2px 8px;">Fondo rojo claro y texto tachado</span></td>
+          <td>La LTV ya no aparece en los datos de esta semana. Las columnas granate no se tachan, pero la fila entera lleva el fondo rojo.</td>
+        </tr>
+        <tr>
+          <td><span style="background:#e3f5e6;padding:2px 8px;">Fondo verde claro</span></td>
+          <td>LTV nueva de esta semana, añadida al final con «Nº parejas» = 1 y las columnas granate vacías.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Una fila que sigue ausente en semanas posteriores permanece en rojo y tachada. Si reaparece, pierde el tachado y el fondo. El verde solo señala las filas añadidas en la última ejecución. Los rellenos de otros colores que ya tuviera el fichero no se tocan.</p>
+
+    <h3>Generar solo el fichero de instalación</h3>
+    <p>Si solo se quiere generar el nuevo fichero de instalación, sin actualizar la información de seguimiento de la web, hay que desactivar la conexión a internet antes de abrir el programa (o antes de pulsar <kbd>Comprobar</kbd>, véase la <a href="#ejecucion">sección 5</a>). Sin conexión, el fichero de instalación se crea y se guarda igualmente, pero no se publica nada, y el programa termina con el aviso «El proceso ha concluido sin publicar (no hay conexión con GitHub).». Después hay que restablecer la conexión.</p>
+  </section>
+
+  <!-- ══ 4. FICHEROS DE ENTRADA ══ -->
+  <section class="section" id="ficheros-entrada">
+    <h2>4. Ficheros de entrada</h2>
+    <p>El fichero de instalación de la semana anterior es la base del proceso: es el fichero que se regenera. Los demás ficheros aportan la información con la que se actualiza su listado de CSVs y son opcionales: cada uno aporta un grupo de CSV y, si no se indica, ese grupo se mantiene tal como está en el fichero de instalación. Sin él, hacen falta los cuatro ficheros de CSV fijas y temporales, y no se genera fichero de instalación.</p>
+
+    <p>Al arrancar, el programa busca los ficheros en su propia carpeta, o en la que se elija con <kbd>Cambiar carpeta...</kbd>, y propone el más reciente de cada tipo. Cualquiera de ellos se puede cambiar con su botón <kbd>Seleccionar...</kbd>, incluso por un fichero de otra carpeta. Los ficheros de CSV fijas (XLSX Conv/AV y XLSM Métrico) solo aparecen en la lista si están en la carpeta; si no están, su fila no se muestra y se mantienen las CSV fijas del fichero de instalación.</p>
+
+    <table class="coltable">
+      <thead>
+        <tr><th>Fichero</th><th>Qué aporta</th><th>Nombre que se busca</th><th>Si no se indica</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Instalación de la semana anterior</strong></td>
+          <td>Fichero que se regenera</td>
+          <td><code>CSV_RFIG_NN_AAAA_instalacion.xlsx</code> (semana y año más altos)</td>
+          <td>Hacen falta los otros cuatro ficheros y no se genera fichero de instalación</td>
+        </tr>
+        <tr>
+          <td><strong>XLSX Conv/AV</strong></td>
+          <td>CSV fijas Conv/AV</td>
+          <td><code>CSV_CONV_AV_NN.xlsx</code> (el modificado más recientemente)</td>
+          <td>Se mantienen las CSV fijas Conv/AV del fichero de instalación</td>
+        </tr>
+        <tr>
+          <td><strong>XLSM Métrico</strong></td>
+          <td>CSV fijas métricas</td>
+          <td><code>CSV_RAM*.xlsm</code> (el más reciente); si no hay, <code>LTV_Metrico*.xlsm</code>, <code>Metrico*.xlsm</code> o <code>RAM*.xlsm</code></td>
+          <td>Se mantienen las CSV fijas métricas del fichero de instalación</td>
+        </tr>
+        <tr>
+          <td><strong>PDF DLTV</strong></td>
+          <td>CSV temporales de la red convencional y métrica</td>
+          <td><code>DLTV*.pdf</code>, con «Semana NN» y el año en el nombre (el más reciente)</td>
+          <td>Se mantienen las CSV temporales del fichero de instalación</td>
+        </tr>
+        <tr>
+          <td><strong>XLSM de LTV AV</strong></td>
+          <td>CSV temporales de AV (filas naranjas)</td>
+          <td><code>AAAAMMDD*.xlsm</code> (el de fecha más alta en el nombre)</td>
+          <td>Se mantienen las CSV temporales de AV del fichero de instalación</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Las CSV fijas solo cambian cuando se actualizan a mano en el XLSX Conv/AV o en el XLSM Métrico, por ejemplo con una nueva edición del CVM; si no han cambiado, no hace falta indicar esos ficheros. Las temporales, en cambio, cambian cada semana: si no se indica el PDF DLTV o el XLSM AV, se publican las de la semana del fichero de instalación, que pueden no estar al día.</p>
+
+    <p>Las CSV que se mantienen se publican con todos sus datos, tomados de la versión publicada de la semana del fichero de instalación. Si no se puede obtener, por ejemplo sin conexión, se toman solo del fichero de instalación, sin Descripción, Dependencia ni Motivo.</p>
+
+    <p>Los ficheros temporales de Excel (los que empiezan por <code>~$</code>) se ignoran. El número NN de <code>CSV_RFIG_NN_AAAA</code> sale de la fecha del ordenador (semana ISO), así que conviene ejecutar el proceso en la semana correspondiente.</p>
+  </section>
+
+  <!-- ══ 5. EJECUCIÓN ══ -->
+  <section class="section" id="ejecucion">
+    <h2>5. Ejecución paso a paso</h2>
+    <p>El programa no empieza solo: primero muestra los ficheros que ha encontrado y espera a que se pulse <kbd>Comenzar</kbd>. Todos los ficheros se eligen en la lista antes de comenzar.</p>
+
+    <ol class="steps">
+      <li>
+        <div>
+          <strong>Abrir el programa</strong>
+          Abra <code>csv_build_windows.exe</code>. Aparece la ventana del programa con «Cargando módulos...» durante unos segundos.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Revisar los ficheros de entrada</strong>
+          Revise la lista <em>Ficheros de entrada</em>: muestra la carpeta y el fichero propuesto para cada tipo. Los que no ha encontrado aparecen en rojo como «No encontrado», con la casilla desactivada, salvo los de CSV fijas, que no se muestran.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Revisar la línea GitHub</strong>
+          Al abrir, el programa comprueba si puede acceder a GitHub y lo indica: «Conectado: se publicará la nueva versión», en verde, o «Sin conexión: solo se generará el fichero de instalación, sin publicar», en rojo. Sin conexión, el proceso no descarga ni publica nada en GitHub. Si se recupera la conexión, pulse <kbd>Comprobar</kbd> para repetir la comprobación; el proceso usa el estado que muestra la ventana al pulsar <kbd>Comenzar</kbd>.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Cambiar de carpeta, si hace falta</strong>
+          Si los ficheros están en otra carpeta, pulse <kbd>Cambiar carpeta...</kbd> y elíjala; la lista se actualiza.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Elegir o cambiar un fichero</strong>
+          Pulse el botón <kbd>Seleccionar...</kbd> de su fila. Al elegirlo, su casilla se marca; si está en otra carpeta, se indica entre paréntesis.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Desmarcar lo que no se use</strong>
+          Desmarque los ficheros que no quiera usar. Con fichero de instalación, los ficheros desmarcados o no encontrados mantienen sus CSV del fichero de instalación.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Comenzar</strong>
+          Pulse <kbd>Comenzar</kbd>. El proceso usa los ficheros marcados y no pide ninguno más. Sin fichero de instalación, los cuatro ficheros fuente son obligatorios: si falta alguno, el programa lo indica y se vuelve a la lista.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Seguir el avance</strong>
+          Siga el avance en la ventana (<a href="#progreso">sección 7</a>). Mientras dura el proceso, el botón <kbd>Comenzar</kbd> pasa a ser <kbd>Cancelar</kbd> y permite interrumpirlo en cualquier momento.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Terminar</strong>
+          Al terminar, pulse <kbd>Cerrar</kbd>, o ajuste los ficheros y pulse <kbd>Comenzar</kbd> para volver a ejecutarlo.
+        </div>
+      </li>
+    </ol>
+
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <div>Este manual se puede consultar en cualquier momento con el botón <kbd>Ayuda</kbd> o la tecla <kbd>F1</kbd>.</div>
+    </div>
+  </section>
+
+  <!-- ══ 6. FASES ══ -->
+  <section class="section" id="fases">
+    <h2>6. Las ocho fases del proceso</h2>
+    <p>El programa recorre siempre las mismas ocho fases y muestra una línea <code>[n/8]</code> al empezar cada una. Las fases 1 a 6 preparan el listado actualizado de CSVs; la fase 7 lo traslada al fichero de instalación y la fase 8 lo publica. Cuando falta un fichero, la fase usa las CSV correspondientes del fichero de instalación y lo indica.</p>
+
+    <table class="coltable">
+      <thead>
+        <tr><th>Fase</th><th>Qué hace</th><th>Si falta el fichero</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Extracción del PDF</strong></td>
+          <td>Lee el PDF DLTV y extrae las LTV temporales (CSV = X) de la red Conv/AV y de la red Métrica</td>
+          <td>Se omite</td>
+        </tr>
+        <tr>
+          <td><strong>2. XLSM Métrico</strong></td>
+          <td>Une las CSV fijas métricas con las temporales métricas y genera <code>CSV_RAM_NN.xlsm</code></td>
+          <td>Fijas o temporales del fichero de instalación</td>
+        </tr>
+        <tr>
+          <td><strong>3. XLSX Conv/AV</strong></td>
+          <td>Une las CSV fijas Conv/AV con las temporales Conv/AV</td>
+          <td>Fijas o temporales del fichero de instalación</td>
+        </tr>
+        <tr>
+          <td><strong>4. CSV temporales de AV</strong></td>
+          <td>Copia las filas con la celda A naranja de la hoja con fecha más reciente del XLSM AV</td>
+          <td>Temporales de AV del fichero de instalación</td>
+        </tr>
+        <tr>
+          <td><strong>5. Secuencia de balizas</strong></td>
+          <td>Rellena la columna «Secuencia de Balizas»</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>6. Fusión</strong></td>
+          <td>Une Conv/AV y Métrico en <code>CSV_RFIG_NN_AAAA.xlsx</code> e indica cuántas CSV hay de cada grupo y de dónde salen</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>7. Fichero de instalación</strong></td>
+          <td>Regenera <code>CSV_RFIG_NN_AAAA_instalacion.xlsx</code> a partir del de la semana anterior, con el listado de CSVs actualizado</td>
+          <td>Se omite si no hay fichero de instalación anterior</td>
+        </tr>
+        <tr>
+          <td><strong>8. Publicando html</strong></td>
+          <td>Sube la nueva versión a GitHub y, si se ha subido bien, regenera y publica la página principal con todas las versiones</td>
+          <td>Se omite si no hay conexión con GitHub</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout ok">
+      <span class="callout-icon">✅</span>
+      <div>La página principal solo se actualiza si la nueva versión se ha subido correctamente. Así nunca enlaza una versión que no esté publicada.</div>
+    </div>
+  </section>
+
+  <!-- ══ 7. PROGRESO ══ -->
+  <section class="section" id="progreso">
+    <h2>7. Ventana de progreso</h2>
+    <p>La ventana muestra la fase en curso, el avance y los errores, y al final indica el resultado del proceso.</p>
+
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>Arranque</strong></td><td>El aviso «Cargando módulos...» puede durar unos segundos; es normal.</td></tr>
+        <tr><td><strong>Fase en curso</strong></td><td>El texto <code>[n/8]</code> y la primera barra indican la fase, como en la <a href="#fases">sección 6</a>.</td></tr>
+        <tr><td><strong>Operación en curso</strong></td><td>La segunda barra muestra el avance de la lectura del PDF (por páginas), la lectura de las versiones del repositorio, el cálculo de diferencias entre versiones y la subida de la página principal (en MB).</td></tr>
+        <tr><td><strong>Registro</strong></td><td>Lista los ficheros de entrada recibidos, las fases, el número de CSV de cada grupo y su origen, el aviso <code>Publicado:</code> con la dirección cuando la publicación termina bien, la ruta donde se guarda el fichero de instalación, los avisos en naranja (por ejemplo, las CSV que se mantienen del fichero de instalación) y los errores, en rojo.</td></tr>
+        <tr><td><strong>Final</strong></td><td>La ventana indica «El proceso ha concluido de forma correcta.»; «El proceso ha concluido sin publicar (no hay conexión con GitHub).», en naranja, si no había conexión; o, si hubo algún error, «El proceso ha concluido con errores.». Después se activa el botón <kbd>Cerrar</kbd>. Si se intenta cerrar la ventana con el proceso en marcha, pide confirmación.</td></tr>
+        <tr><td><strong>Cancelar</strong></td><td>Con el proceso en marcha, el botón <kbd>Cancelar</kbd> lo interrumpe tras pedir confirmación. El proceso se detiene al terminar la operación en curso (la subida a GitHub, por ejemplo, se corta en el momento) y la ventana indica «Proceso cancelado.». Lo que no se haya completado no se guarda ni se publica: el fichero de instalación no se guarda y, si se cancela después de subir la nueva versión, la página principal no se actualiza. Después, el botón vuelve a ser <kbd>Comenzar</kbd> y se puede repetir el proceso.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ══ 8. RESULTADOS ══ -->
+  <section class="section" id="resultados">
+    <h2>8. Resultados y ficheros guardados</h2>
+    <p>El resultado del proceso es el nuevo fichero de instalación, y es el único que queda en disco; todo lo demás se genera en una carpeta temporal que se borra al terminar.</p>
+
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>Fichero de instalación</strong></td><td><code>CSV_RFIG_NN_AAAA_instalacion.xlsx</code> se guarda en la carpeta de los ficheros de entrada, si se ha creado.</td></tr>
+        <tr><td><strong>Nueva versión y página principal</strong></td><td>Solo se guardan en GitHub, no en disco.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div>Conserve cada semana el fichero de instalación: es el que hay que usar como «anterior» al ejecutar la semana siguiente.</div>
+    </div>
+  </section>
+
+  <!-- ══ 9. PUBLICACIÓN ══ -->
+  <section class="section" id="publicacion">
+    <h2>9. Publicación en GitHub Pages</h2>
+    <p>El programa publica en el repositorio <code>asfadigital/csv</code> la nueva versión y la página principal, y ambas quedan visibles en la web sin más pasos.</p>
+
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>Página principal</strong></td><td>Se genera a partir de todas las versiones que hay en el repositorio, cuyos datos van incrustados. Enlaza cada versión y permite compararlas. Las comparaciones entre versiones van comprimidas y el navegador las descomprime al abrir el comparador, así que la página pesa solo unos pocos MB. La subida muestra una barra de progreso.</td></tr>
+        <tr><td><strong>Repetir la ejecución</strong></td><td>Si se ejecuta de nuevo en la misma semana, se sobrescribe la versión de esa semana.</td></tr>
+        <tr><td><strong>Actualización de la web</strong></td><td>GitHub Pages puede tardar uno o dos minutos en reflejar el cambio. Si no lo ve, recargue con <kbd>Ctrl</kbd>+<kbd>F5</kbd>.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout danger">
+      <span class="callout-icon">❌</span>
+      <div>Si la subida de la nueva versión falla, aparece <code>* NO SE HA PODIDO PUBLICAR EL HTML EN GITHUB *</code>, precedido por el motivo. En ese caso la página principal no se actualiza, pero el fichero de instalación se guarda igualmente. Si falla solo la subida de la página principal, la nueva versión ya está publicada y aparece <code>* NO SE HA PODIDO PUBLICAR LA PÁGINA PRINCIPAL EN GITHUB *</code>.</div>
+    </div>
+  </section>
+
+  <!-- ══ 10. PÁGINA PRINCIPAL ══ -->
+  <section class="section" id="pagina-principal">
+    <h2>10. Página principal y consulta de una semana</h2>
+    <p>La página principal reúne todas las versiones publicadas, y desde ella se abre cada semana en otra ventana del navegador. Es también la herramienta de seguimiento de la implantación: permite ver los datos de instalación de cada CSV y el porcentaje de ejecución.</p>
+
+    <h3>Página principal</h3>
+    <table class="info-table">
+      <tbody>
+        <tr><td><span class="view-badge">Versiones</span></td><td>Lista cada versión publicada, con el número de CSVs, y un botón para abrirla en una pestaña nueva.</td></tr>
+        <tr><td><span class="view-badge">Comparador</span></td><td>Calcula las LTV añadidas, eliminadas y modificadas entre dos versiones cualesquiera, y muestra gráficas de la evolución del número de CSVs por semana.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Al abrir una semana</h3>
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>Filtros</strong></td><td>Por Línea, Tipo LV y Modo ASFA, más una búsqueda libre. El botón <kbd>Quitar filtros</kbd> los restablece.</td></tr>
+        <tr><td><strong>Exportar CSV</strong></td><td>Descarga los registros que se están viendo.</td></tr>
+        <tr><td><strong>Ventana de instalación</strong></td><td>Al pulsar sobre un CSV (una fila), se muestran sus datos de instalación (hasta cuatro parejas de balizas), tal y como constan en el fichero de instalación. La columna «Secuencia de Balizas» se colorea en verde oscuro si la instalación está completa y en granate si falta algún dato.</td></tr>
+        <tr><td><strong>Instalación completa</strong></td><td>Requiere todos los campos de instalación rellenos. La fecha de instalación no cuenta si pone «SIN PLANIFICAR», ni las hojas de control si ponen «SIN RECIBIR».</td></tr>
+        <tr><td><strong>Botón «Progreso instalación»</strong></td><td>Se habilita cuando hay al menos una instalación completa entre los registros filtrados. Al pulsarlo, muestra el porcentaje de ejecución, es decir, de instalaciones completadas y pendientes. Este porcentaje es la medida principal para seguir la implantación y, combinado con los filtros, permite ver el avance por línea, tipo o modo. Si no hay ninguna completa, permanece deshabilitado. Solo funciona en las versiones generadas con esta versión del programa.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ══ 11. SOLUCIÓN DE PROBLEMAS ══ -->
+  <section class="section" id="problemas">
+    <h2>11. Solución de problemas</h2>
+    <p>La mayoría de los fallos se identifican por el mensaje que aparece en la ventana; esta tabla recoge los más habituales.</p>
+
+    <table class="coltable">
+      <thead>
+        <tr><th>Mensaje o síntoma</th><th>Causa probable</th><th>Qué hacer</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Al abrir el EXE: «Windows no tiene acceso al dispositivo, ruta de acceso o archivo especificado»</td>
+          <td>El antivirus o una política de la empresa bloquea o ha borrado el ejecutable</td>
+          <td>Revisar el historial de protección de Windows y pedir a TI que autoricen el programa</td>
+        </tr>
+        <tr>
+          <td>«Cargando módulos...» durante unos segundos</td>
+          <td>Carga de módulos</td>
+          <td>Esperar</td>
+        </tr>
+        <tr>
+          <td>Un fichero aparece en rojo, «No encontrado»</td>
+          <td>No está en la carpeta o su nombre no sigue el formato de la <a href="#ficheros-entrada">sección 4</a></td>
+          <td>Pulsar <kbd>Cambiar carpeta...</kbd> o elegirlo con su botón <kbd>Seleccionar...</kbd></td>
+        </tr>
+        <tr>
+          <td>Aviso «Faltan ficheros» o <code>ERROR: no se ha indicado el fichero de instalación...</code></td>
+          <td>Sin fichero de instalación falta alguno de los cuatro ficheros de CSV fijas y temporales</td>
+          <td>Elegir con <kbd>Seleccionar...</kbd> el fichero de instalación o los ficheros que faltan; el registro muestra al empezar qué ficheros ha recibido el proceso</td>
+        </tr>
+        <tr>
+          <td><code>ERROR: no se encuentra el fichero indicado como...</code></td>
+          <td>El fichero se ha movido, renombrado o borrado después de seleccionarlo</td>
+          <td>Comprobar el fichero y repetir el proceso</td>
+        </tr>
+        <tr>
+          <td>Aviso «Fichero no válido»</td>
+          <td>El XLSX elegido no se llama <code>CSV_CONV_AV_NN.xlsx</code></td>
+          <td>Renombrar el fichero y volver a elegirlo; la selección anterior se mantiene</td>
+        </tr>
+        <tr>
+          <td>Aviso naranja «se mantienen las ... del fichero de instalación»</td>
+          <td>No se indicó el fichero de ese grupo de CSV</td>
+          <td>Es lo esperado si no ha cambiado; si debía actualizarse, elegirlo con <kbd>Seleccionar...</kbd></td>
+        </tr>
+        <tr>
+          <td>GitHub: «Sin conexión: solo se generará el fichero de instalación, sin publicar»</td>
+          <td>Sin conexión a internet, bloqueo por proxy o acceso a GitHub denegado</td>
+          <td>Comprobar la conexión y pulsar <kbd>Comprobar</kbd>; si persiste con internet disponible, avisar al responsable del programa</td>
+        </tr>
+        <tr>
+          <td>Aviso «No se ha podido obtener la versión publicada»</td>
+          <td>Sin conexión a internet o bloqueo por proxy</td>
+          <td>Comprobar la conexión; las CSV mantenidas se publicarían sin Descripción, Dependencia ni Motivo</td>
+        </tr>
+        <tr>
+          <td><code>ERROR GitHub: la aplicacion no incluye el token de acceso</code></td>
+          <td>El programa no lleva el token de acceso</td>
+          <td>Avisar al responsable del programa</td>
+        </tr>
+        <tr>
+          <td><code>ERROR GitHub</code> con <code>HTTP Error 403</code></td>
+          <td>El acceso a GitHub no tiene permiso de escritura</td>
+          <td>Avisar al responsable del programa</td>
+        </tr>
+        <tr>
+          <td><code>ERROR GitHub</code> con <code>HTTP Error 404</code> o <code>422</code></td>
+          <td>Repositorio o rama incorrectos, o rama protegida</td>
+          <td>Avisar al responsable del programa</td>
+        </tr>
+        <tr>
+          <td><code>no se pudo leer la lista de HTML del repositorio</code></td>
+          <td>Sin conexión a internet o bloqueo por proxy</td>
+          <td>Comprobar la conexión</td>
+        </tr>
+        <tr>
+          <td>La página principal no se actualiza en la web</td>
+          <td>GitHub Pages tarda en publicar</td>
+          <td>Esperar uno o dos minutos y recargar con <kbd>Ctrl</kbd>+<kbd>F5</kbd></td>
+        </tr>
+        <tr>
+          <td>El botón «Progreso instalación» está deshabilitado</td>
+          <td>No hay instalaciones completas entre los registros filtrados</td>
+          <td>Completar datos de instalación o quitar filtros</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <div>Si el error no aparece aquí, haga una captura de la ventana completa y envíela al responsable del programa.</div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // Active sidebar link on scroll
+  const sections = document.querySelectorAll('.section');
+  const links = document.querySelectorAll('.sidebar a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.sidebar a[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-60px 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+</script>
+</body>
+</html>
