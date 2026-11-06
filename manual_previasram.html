@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Usuario — PREVIASRAM</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap');
+
+  :root {
+    --prev: #4f46a5;
+    --prev-dark: #352e78;
+    --prev-mid: #6459c4;
+    --prev-light: #eceafa;
+    --prev-pale: #f6f5fd;
+    --blue: #1a6fba;
+    --amber: #c47a00;
+    --green: #1a8a4a;
+    --red: #cc2a2a;
+    --bg: #f2f4f7;
+    --surface: #ffffff;
+    --surface2: #e8eaee;
+    --border: #d0d4dc;
+    --text: #1a1e2a;
+    --muted: #6b7280;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --sidebar-w: 280px;
+    --header-h: 56px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
+    background: var(--prev-dark);
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 28px;
+    z-index: 200;
+    box-shadow: 0 2px 12px rgba(0,0,0,.35);
+  }
+  .topbar-badge {
+    font-family: var(--mono);
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    background: #cfc9f5;
+    color: var(--prev-dark);
+    padding: 3px 8px; border-radius: 2px;
+  }
+  .topbar-title {
+    font-family: var(--sans);
+    font-size: 15px; font-weight: 600;
+    color: rgba(255,255,255,.88);
+    letter-spacing: .3px;
+  }
+  .topbar-ver {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 11px; color: rgba(255,255,255,.35);
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed;
+    top: var(--header-h); left: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    z-index: 100;
+    padding: 20px 0 40px;
+  }
+  .sidebar-section {
+    padding: 6px 20px 4px;
+    font-family: var(--mono);
+    font-size: 9px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 14px;
+  }
+  .sidebar a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 20px;
+    text-decoration: none;
+    font-size: 13px; color: var(--text);
+    border-left: 3px solid transparent;
+    transition: all .15s;
+    line-height: 1.3;
+  }
+  .sidebar a:hover { background: var(--prev-pale); color: var(--prev); border-left-color: var(--prev); }
+  .sidebar a.active { background: var(--prev-pale); color: var(--prev-dark); border-left-color: var(--prev-dark); font-weight: 600; }
+  .sidebar a .ic { font-size: 15px; flex-shrink: 0; width: 18px; text-align: center; }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: var(--sidebar-w);
+    margin-top: var(--header-h);
+    padding: 40px 48px 80px;
+    max-width: 920px;
+  }
+
+  /* ── SECTIONS ── */
+  .section { margin-bottom: 60px; scroll-margin-top: 80px; }
+
+  h1 { font-size: 28px; font-weight: 700; color: #1a1e2a; line-height: 1.2; margin-bottom: 10px; }
+  h2 { font-size: 19px; font-weight: 700; color: var(--prev-dark); margin-bottom: 16px; margin-top: 0;
+       border-bottom: 2px solid var(--prev-light); padding-bottom: 6px; }
+  h3 { font-size: 14px; font-weight: 700; color: var(--text); margin: 20px 0 8px; text-transform: uppercase;
+       letter-spacing: .8px; font-family: var(--mono); }
+  p  { margin-bottom: 12px; color: #2c3a50; }
+
+  .lead { font-size: 15px; color: var(--muted); margin-bottom: 24px; line-height: 1.8; }
+
+  /* ── CALLOUTS ── */
+  .callout {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 14px 18px; border-radius: 4px; margin: 16px 0;
+    border-left: 4px solid;
+    font-size: 13px; line-height: 1.65;
+  }
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .callout.info  { background: var(--prev-pale); border-color: var(--prev); }
+  .callout.warn  { background: #fff8e1; border-color: #e0a000; }
+  .callout.danger{ background: #fdecea; border-color: var(--red); }
+  .callout.ok    { background: #edf7ef; border-color: var(--green); }
+
+  /* ── STEPS ── */
+  .steps { list-style: none; padding: 0; margin: 16px 0; counter-reset: steps; }
+  .steps li {
+    counter-increment: steps;
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+  }
+  .steps li:last-child { border-bottom: none; }
+  .steps li::before {
+    content: counter(steps);
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    background: var(--prev-dark); color: #cfc9f5;
+    font-family: var(--mono); font-size: 12px; font-weight: 700;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px;
+  }
+  .steps li strong { display: block; margin-bottom: 2px; }
+
+  /* ── CODE / MONO ── */
+  code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 1px 6px; border-radius: 3px;
+    color: var(--prev-dark);
+  }
+  .file-path {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--mono); font-size: 12px;
+    background: var(--prev-dark); color: #cfc9f5;
+    padding: 3px 10px; border-radius: 3px;
+  }
+  kbd {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--surface2);
+    border: 1px solid #b0bdd0;
+    border-bottom: 2px solid #8090a8;
+    padding: 2px 7px; border-radius: 4px;
+    color: var(--text);
+  }
+
+  /* ── FEATURE GRID ── */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px; margin: 16px 0;
+  }
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--prev);
+    border-radius: 4px;
+    padding: 16px;
+  }
+  .feature-card .fc-icon { font-size: 22px; margin-bottom: 8px; }
+  .feature-card .fc-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; color: var(--prev-dark); }
+  .feature-card .fc-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ── TABLES ── */
+  table.info-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  table.info-table th, table.info-table td { padding: 9px 14px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border); }
+  table.info-table th { background: var(--surface2); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); }
+  table.info-table tr:last-child td { border-bottom: none; }
+
+  /* ── COL TABLE ── */
+  table.coltable { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12px; }
+  table.coltable th { background: var(--prev-dark); color: #cfc9f5; padding: 8px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+  table.coltable td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  table.coltable tr:hover td { background: var(--prev-pale); }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--prev-dark) 0%, #4f46a5 100%);
+    border-radius: 8px;
+    padding: 32px 36px;
+    margin-bottom: 40px;
+    color: #fff;
+    position: relative; overflow: hidden;
+    border-left: 5px solid #cfc9f5;
+  }
+  .hero::after {
+    content: '📍';
+    position: absolute; right: 24px; bottom: -22px;
+    font-size: 90px;
+    opacity: .09;
+    line-height: 1;
+    user-select: none;
+  }
+  .hero h1 { color: #fff; font-size: 22px; margin-bottom: 6px; }
+  .hero p { color: rgba(255,255,255,.65); font-size: 13px; margin: 0; }
+  .hero-meta { display: flex; gap: 20px; margin-top: 18px; flex-wrap: wrap; }
+  .hero-meta span { font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,.45); }
+  .hero-meta strong { color: rgba(255,255,255,.85); }
+
+  /* ── VISTA BADGE ── */
+  .view-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--prev-dark); color: #cfc9f5;
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 2px;
+    vertical-align: middle;
+  }
+
+  /* ── CHIPS (badges de categoría) ── */
+  .chip { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; color: #fff; }
+  .chip.av    { background: #e5484d; }
+  .chip.ld    { background: #f0883e; }
+  .chip.md    { background: #2fbf71; }
+  .chip.cer   { background: #3a9bdc; }
+  .chip.ouigo { background: #e6007e; }
+  .chip.fgc   { background: #2e7d32; }
+  .chip.eus   { background: #00838f; }
+  .chip.sfm   { background: #c77c02; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 24px 20px 60px; }
+  }
+  /* Los nombres de fichero largos pueden partirse dentro de las tablas */
+  table.coltable code { overflow-wrap: anywhere; }
+  table.coltable td.code { font-family: var(--mono); color: var(--prev-dark); font-weight: 600; white-space: nowrap; }
+  table.coltable td.group { background: var(--surface2); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+  .plain-list { margin: 12px 0 16px 20px; line-height: 1.9; }
+  .swatch { display: inline-block; width: 14px; height: 14px; border: 1px solid var(--border); border-radius: 3px; margin-right: 8px; vertical-align: -2px; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-badge">RAM</div>
+  <div class="topbar-title">PREVIASRAM — Manual de Usuario</div>
+  <div class="topbar-ver">V1-15</div>
+</div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-section">Inicio</div>
+  <a href="#introduccion"><span class="ic">📘</span>1. Introducción</a>
+  <a href="#requisitos"><span class="ic">📦</span>2. Requisitos y primer uso</a>
+  <a href="#hojas"><span class="ic">🗂️</span>3. Hojas del libro</a>
+  <a href="#flujo"><span class="ic">🔁</span>4. Flujo de trabajo</a>
+
+  <div class="sidebar-section">Carga de datos</div>
+  <a href="#cargar"><span class="ic">📥</span>5. Cargar una tabla</a>
+  <a href="#actualizar"><span class="ic">🔄</span>6. Actualizar PREVIASRAM</a>
+
+  <div class="sidebar-section">Hoja PREVIASRAM</div>
+  <a href="#columnas"><span class="ic">📊</span>7. Columnas</a>
+  <a href="#colores"><span class="ic">🎨</span>8. Significado de los colores</a>
+  <a href="#comprobaciones"><span class="ic">📏</span>9. Comprobaciones automáticas</a>
+  <a href="#seguimiento"><span class="ic">📈</span>10. Seguimiento y grado de avance</a>
+
+  <div class="sidebar-section">Referencia</div>
+  <a href="#comandos"><span class="ic">⌨️</span>11. Comandos y atajos</a>
+  <a href="#problemas"><span class="ic">🔧</span>12. Solución de problemas</a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>PREVIASRAM</h1>
+    <p>Manual de manejo del libro Excel de seguimiento de las balizas previas de señales de la red de ancho métrico (RAM)</p>
+    <div class="hero-meta">
+      <span>Versión: <strong>V1-15</strong></span>
+      <span>Fichero: <strong>PREVIASRAM_COMPLETA_V1-15.xlsm</strong></span>
+      <span>Formato: <strong>Excel con macros</strong></span>
+    </div>
+  </div>
+
+  <!-- ══ 1. INTRODUCCIÓN ══ -->
+  <section class="section" id="introduccion">
+    <h2>1. Introducción</h2>
+    <p class="lead"><strong>PREVIASRAM</strong> reúne en una sola hoja las señales de todos los bloques de trabajo, compara la posición antigua y la nueva de cada baliza previa, comprueba las distancias y lleva el control de las hojas de control recibidas.</p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="fc-icon">📥</div>
+        <div class="fc-title">Carga por bloques</div>
+        <div class="fc-desc">Incorpora los ficheros de cada bloque y del Lote 2 en hojas <code>TablaN</code>.</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon">📊</div>
+        <div class="fc-title">Listado único</div>
+        <div class="fc-desc">Vuelca los datos a la hoja PREVIASRAM y conserva lo introducido a mano.</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon">📏</div>
+        <div class="fc-title">Comprobaciones</div>
+        <div class="fc-desc">Calcula distancias, declividades y frenado, y marca el resultado con colores.</div>
+      </div>
+      <div class="feature-card">
+        <div class="fc-icon">📈</div>
+        <div class="fc-title">Grado de avance</div>
+        <div class="fc-desc">Muestra el porcentaje de señales con hoja de control correcta.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 2. REQUISITOS ══ -->
+  <section class="section" id="requisitos">
+    <h2>2. Requisitos y primer uso</h2>
+
+    <ol class="steps">
+      <li>
+        <div>
+          <strong>Abrir el libro en Excel para Windows</strong>
+          Abra el fichero <code>.xlsm</code> con Excel. Las macros usan funciones propias de Windows.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Habilitar las macros</strong>
+          Sin macros, los comandos de teclado no funcionan. Si Excel muestra un aviso de seguridad, pulse <em>Habilitar contenido</em>.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Aceptar el mensaje de bienvenida</strong>
+          Al abrir, el libro recuerda que debe hacer una copia periódica del fichero en su disco local.
+        </div>
+      </li>
+    </ol>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div>Excel no permite deshacer con <kbd>Ctrl</kbd>+<kbd>Z</kbd> lo que hace una macro. Guarde una copia del libro antes de cargar datos o borrar filas.</div>
+    </div>
+
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <div>Los atajos solo funcionan mientras este libro es el activo. Al pasar a otro libro, las mismas teclas recuperan su función habitual en Excel.</div>
+    </div>
+
+    <h3>Protección de las hojas</h3>
+    <p>Las macros protegen las hojas al terminar. Con PREVIASRAM protegida se pueden usar los filtros y editar las columnas de seguimiento (<a href="#columnas">sección 7</a>). Para ordenar o borrar datos, use los comandos de la <a href="#comandos">sección 11</a>.</p>
+  </section>
+
+  <!-- ══ 3. HOJAS ══ -->
+  <section class="section" id="hojas">
+    <h2>3. Hojas del libro</h2>
+
+    <h3>Hojas visibles</h3>
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>PREVIASRAM</strong></td><td>Hoja principal de trabajo: una fila por señal.</td></tr>
+        <tr><td><strong>AYUDA</strong></td><td>Comandos, colores y acrónimos, más el fichero cargado en cada tabla. Compruebe aquí la versión de los datos de cada bloque.</td></tr>
+        <tr><td><strong>Tabla1 a Tabla7</strong></td><td>Copia de la hoja <code>Tabla</code> del fichero de cada bloque.</td></tr>
+        <tr><td><strong>Tabla10 (Lote2)</strong></td><td>Copia de la hoja <code>Tabla</code> del fichero del Lote 2.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Hojas ocultas de referencia</h3>
+    <p>Las usan las macros para calcular. No hace falta abrirlas durante el trabajo normal.</p>
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>LINEAS</strong></td><td>Tramos por línea y PK, con el tipo de curva de frenado de cada uno.</td></tr>
+        <tr><td><strong>Tipo_0, Tipo_1, Tipo_2</strong></td><td>Distancias de frenado por declividad y velocidad para cada tipo de curva.</td></tr>
+        <tr><td><strong>DECLIVIDADES POR LINEA</strong></td><td>Perfil de declividad de cada línea por tramos de PK.</td></tr>
+        <tr><td><strong>TABLA DECLIVIDADES</strong></td><td>Distancia mínima entre baliza previa y señal según la declividad y la velocidad.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ══ 4. FLUJO ══ -->
+  <section class="section" id="flujo">
+    <h2>4. Flujo de trabajo</h2>
+    <p>Cada vez que recibe una versión nueva del fichero de un bloque:</p>
+
+    <ol class="steps">
+      <li>
+        <div>
+          <strong>Hacer una copia del libro</strong>
+          Guárdela en su disco local antes de empezar.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Cargar la tabla del bloque</strong>
+          Pulse <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>O</kbd> y elija el fichero (<a href="#cargar">sección 5</a>).
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Actualizar PREVIASRAM</strong>
+          Pulse <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>C</kbd> e indique el número de tabla (<a href="#actualizar">sección 6</a>). La carga del paso anterior, por sí sola, no cambia PREVIASRAM.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Leer el mensaje final</strong>
+          Indica cuántas filas se han actualizado y cuáles han quedado sin distancia de frenado.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Revisar los resultados</strong>
+          Revise colores y comprobaciones (<a href="#colores">secciones 8</a> y <a href="#comprobaciones">9</a>), y busque duplicados con <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>W</kbd>.
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Registrar el seguimiento</strong>
+          Rellene las columnas editables y consulte el avance con <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>G</kbd> (<a href="#seguimiento">sección 10</a>).
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ══ 5. CARGAR ══ -->
+  <section class="section" id="cargar">
+    <h2>5. Cargar una tabla</h2>
+    <p>El comando <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>O</kbd> abre el selector de ficheros. El fichero debe ser un libro de Excel con una hoja llamada exactamente <code>Tabla</code>.</p>
+
+    <h3>Tabla de destino</h3>
+    <p>La tabla se deduce del nombre del fichero, sin distinguir mayúsculas:</p>
+    <table class="coltable">
+      <thead>
+        <tr><th>El nombre contiene</th><th>Hoja de destino</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>BLOQUE1</code>, <code>BLOQUE 1</code> o <code>BLOQUE_1</code> (del 1 al 7)</td><td>Tabla1 a Tabla7</td></tr>
+        <tr><td><code>LOTE2</code></td><td>Tabla10 (Lote2)</td></tr>
+        <tr><td>Ninguno de los anteriores</td><td>El programa pregunta el número: 1 a 7, o 10 para el Lote 2</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Qué hace el comando</h3>
+    <ul class="plain-list">
+      <li>Sustituye la hoja de destino por la copia nueva. La hoja anterior solo se elimina si el fichero tiene la hoja <code>Tabla</code>.</li>
+      <li>Borra de la copia las celdas con errores de Excel.</li>
+      <li>Anota el nombre del fichero en la hoja AYUDA.</li>
+      <li>Protege la hoja nueva y vuelve a PREVIASRAM.</li>
+    </ul>
+  </section>
+
+  <!-- ══ 6. ACTUALIZAR ══ -->
+  <section class="section" id="actualizar">
+    <h2>6. Actualizar PREVIASRAM</h2>
+    <p>El comando <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>C</kbd> pide un número de tabla (1 a 7, o 10 para el Lote 2) y traslada sus filas a PREVIASRAM.</p>
+
+    <h3>Columnas que busca en la tabla</h3>
+    <p>Las localiza por el texto de la <strong>fila 2</strong>, sin depender de su posición.</p>
+    <table class="coltable">
+      <thead>
+        <tr><th>Tipo</th><th>Cabeceras</th><th>Si falta alguna</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Imprescindibles</strong></td>
+          <td>LINEA (o LÍNEA), SEÑAL, PK SEÑAL (o PK real SEÑAL)</td>
+          <td>La macro se detiene y no modifica nada</td>
+        </tr>
+        <tr>
+          <td><strong>Opcionales</strong></td>
+          <td>PROVINCIA, ESTACIÓN, SECTOR, TIPO (o ALTURA SEÑAL), PK BALIZA ACTUAL, PK NUEVA BALIZA, DECLIVIDAD EXISTENTE, las dos «Distancia a la primera baliza señal» y las tres «Si AVANZADA»</td>
+          <td>Pregunta si desea continuar; esos datos quedan vacíos</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Cómo se tratan las filas</h3>
+    <ul class="plain-list">
+      <li><strong>Referencia:</strong> cada señal se identifica por código de línea, señal y PK de la señal. Si cambia alguno de esos datos, la fila cuenta como nueva.</li>
+      <li><strong>Señal existente:</strong> se actualizan sus datos y se recalculan sus comprobaciones.</li>
+      <li><strong>Señal nueva:</strong> se añade al final del listado.</li>
+      <li><strong>Señal que ya no está en la tabla:</strong> no se borra. Si debe desaparecer, elimínela con <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>L</kbd>.</li>
+    </ul>
+
+    <div class="callout warn">
+      <span class="callout-icon">⚠️</span>
+      <div>Las filas ocultas de la hoja <code>TablaN</code>, por ejemplo por un filtro, no se copian. Las filas sin dato en la columna B de la tabla tampoco.</div>
+    </div>
+
+    <div class="callout ok">
+      <span class="callout-icon">✅</span>
+      <div>La actualización no sobrescribe las observaciones ni las columnas ATO/CTO, AVO, Esquema de señalización y E.S. actualizado. Las hojas de control solo cambian en el caso indicado en la <a href="#seguimiento">sección 10</a>.</div>
+    </div>
+
+    <p>Al terminar, la macro también recalcula la declividad de <strong>todas</strong> las filas, no solo las del bloque cargado.</p>
+  </section>
+
+  <!-- ══ 7. COLUMNAS ══ -->
+  <section class="section" id="columnas">
+    <h2>7. Columnas de PREVIASRAM</h2>
+    <p>Los datos empiezan en la fila 3. Solo se escribe a mano en las columnas <strong>AE, AF, AG, AI, AJ, AK y AL</strong>. Las columnas U, V, W y AD están ocultas y las macros no las rellenan.</p>
+
+    <table class="coltable">
+      <thead>
+        <tr><th>Col.</th><th>Dato</th><th>Origen</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="group" colspan="3">Identificación de la señal</td></tr>
+        <tr><td class="code">A</td><td>Referencia</td><td>Se forma a partir de línea, señal y PK</td></tr>
+        <tr><td class="code">B–D</td><td>Provincia, estación, sector</td><td>Tabla</td></tr>
+        <tr><td class="code">E–F</td><td>Línea y trayecto</td><td>Tabla: código de 3 caracteres y resto del texto</td></tr>
+        <tr><td class="code">G–I</td><td>Señal, tipo, PK de la señal</td><td>Tabla</td></tr>
+        <tr><td class="code">J</td><td>¿Es avanzada?</td><td>«SI» si el nombre de la señal lleva <code>´</code> o <code>`</code></td></tr>
+
+        <tr><td class="group" colspan="3">Baliza previa</td></tr>
+        <tr><td class="code">K</td><td>PK antiguo de la baliza previa</td><td>Tabla: PK BALIZA ACTUAL</td></tr>
+        <tr><td class="code">L</td><td>Distancia antigua previa-señal</td><td>Cálculo: diferencia entre K e I</td></tr>
+        <tr><td class="code">M</td><td>PK nuevo de la baliza previa</td><td>Tabla: PK NUEVA BALIZA</td></tr>
+        <tr><td class="code">N</td><td>Velocidad en el PK nuevo</td><td>Tabla: Si AVANZADA: Velocidad Máxima</td></tr>
+        <tr><td class="code">O</td><td>Distancia nueva previa-señal</td><td>Cálculo: diferencia entre M e I</td></tr>
+        <tr><td class="code">P</td><td>Qué se hace</td><td>Cálculo: ACERCAR, ALEJAR, NADA o SIN DATOS</td></tr>
+        <tr><td class="code">Q</td><td>Distancia que se mueve</td><td>Cálculo: O − L</td></tr>
+
+        <tr><td class="group" colspan="3">Declividad y distancias</td></tr>
+        <tr><td class="code">R</td><td>Declividad de bloques</td><td>Tabla: DECLIVIDAD EXISTENTE</td></tr>
+        <tr><td class="code">S</td><td>Declividad calculada</td><td>Cálculo con el perfil de la línea</td></tr>
+        <tr><td class="code">T</td><td>Distancia mínima previa-señal</td><td>Cálculo con TABLA DECLIVIDADES</td></tr>
+        <tr><td class="code">X–Y</td><td>Distancia a la primera baliza de la señal anterior y siguiente</td><td>Tabla</td></tr>
+        <tr><td class="code">Z</td><td>Distancia del PK nuevo a la siguiente señal</td><td>Tabla: Si AVANZADA</td></tr>
+        <tr><td class="code">AA</td><td>Declividad media hasta la siguiente señal</td><td>Tabla: Si AVANZADA</td></tr>
+        <tr><td class="code">AB</td><td>¿Distancia de frenado correcta?</td><td>Cálculo: Z ≥ AC</td></tr>
+        <tr><td class="code">AC</td><td>Distancia mínima de frenado</td><td>Cálculo con las hojas Tipo_N</td></tr>
+
+        <tr><td class="group" colspan="3">Seguimiento (editable, salvo AH)</td></tr>
+        <tr><td class="code">AE–AF</td><td>¿Hoja de control recibida? ¿Correcta?</td><td>Lista: SI, NO, N.A.</td></tr>
+        <tr><td class="code">AG</td><td>Observaciones</td><td>Manual</td></tr>
+        <tr><td class="code">AH</td><td>Bloque</td><td>Lo escribe la macro</td></tr>
+        <tr><td class="code">AI–AJ</td><td>ATO/CTO y AVO</td><td>Manual</td></tr>
+        <tr><td class="code">AK</td><td>Esquema de señalización</td><td>Manual</td></tr>
+        <tr><td class="code">AL</td><td>E.S. actualizado</td><td>Lista: SI, NO, N.A.</td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>N.D.</strong> significa No Definido o No Disponible, y <strong>N.A.</strong>, No Aplica.</p>
+  </section>
+
+  <!-- ══ 8. COLORES ══ -->
+  <section class="section" id="colores">
+    <h2>8. Significado de los colores</h2>
+
+    <table class="coltable">
+      <thead>
+        <tr><th>Color</th><th>Significado</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="swatch" style="background:#c0ffff"></span>Celeste</td><td>Dato copiado desde la hoja <code>TablaN</code>.</td></tr>
+        <tr><td><span class="swatch" style="background:#ffc0ff"></span>Rosa lila</td><td>Dato de referencia incorporado.</td></tr>
+        <tr><td><span class="swatch" style="background:#c0ffc0"></span>Verde</td><td>Dato válido o en rango, calculado en PREVIASRAM.</td></tr>
+        <tr><td><span class="swatch" style="background:#ffc0c0"></span>Rosa</td><td>Dato no encontrado en la hoja <code>TablaN</code>.</td></tr>
+        <tr><td><span class="swatch" style="background:#ff8080"></span>Rojo</td><td>Dato no válido, calculado en PREVIASRAM.</td></tr>
+        <tr><td><span class="swatch" style="background:#ffffc0"></span>Amarillo (columnas A y AH)</td><td>Fila no actualizada en la última carga.</td></tr>
+        <tr><td><span class="swatch" style="background:#c0c000"></span>Oliva (columnas A y AH)</td><td>Fila añadida en la última carga.</td></tr>
+        <tr><td><span class="swatch" style="background:#8080ff"></span>Azul (columna AH)</td><td>La señal ha cambiado de bloque en la última carga.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <div>El amarillo se refiere solo a la última tabla cargada, así que las señales de los demás bloques también salen en amarillo. Para ver las que han desaparecido de un bloque, filtre su número en la columna AH justo después de actualizarlo: las que sigan en amarillo ya no están en la tabla.</div>
+    </div>
+
+    <p>Con <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>Q</kbd> se devuelve el color blanco a las columnas A y AH.</p>
+  </section>
+
+  <!-- ══ 9. COMPROBACIONES ══ -->
+  <section class="section" id="comprobaciones">
+    <h2>9. Comprobaciones automáticas</h2>
+
+    <table class="coltable">
+      <thead>
+        <tr><th>Col.</th><th>Correcto</th><th>Incorrecto</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="code">L</td>
+          <td>Verde: mayor que 0 y hasta 430 m</td>
+          <td>Rojo: fuera de ese rango</td>
+        </tr>
+        <tr>
+          <td class="code">O</td>
+          <td>Verde: hasta 430 m y mayor que la distancia recorrida en 4 s a la velocidad de la columna N</td>
+          <td>Rojo: fuera de ese rango</td>
+        </tr>
+        <tr>
+          <td class="code">X, Y</td>
+          <td>Celeste: 470 m o más</td>
+          <td>Rojo: menos de 470 m</td>
+        </tr>
+        <tr>
+          <td class="code">M</td>
+          <td>Celeste: la distancia entre M e I alcanza la mínima de la columna T</td>
+          <td>Rojo: es menor que la mínima. No se aplica a las señales de salida (S seguida de un número)</td>
+        </tr>
+        <tr>
+          <td class="code">AB</td>
+          <td>«SI» en verde: Z es igual o mayor que AC</td>
+          <td>«NO» en rojo: Z es menor que AC</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Declividad calculada (columnas S y T)</h3>
+    <p>La columna S es la media de la declividad entre la baliza previa y la señal, ponderada por la longitud de cada tramo y en sentido de la marcha: los valores positivos son rampa y los negativos, pendiente. La columna T toma la distancia mínima según esa declividad y según si la velocidad supera o no 160 km/h.</p>
+    <p>Si el perfil de la línea no cubre el tramo, S indica «sin perfil» y T queda vacía.</p>
+
+    <h3>Distancia de frenado (columnas AB y AC)</h3>
+    <p>La macro identifica el tipo de curva por la línea y el PK nuevo, redondea la declividad de AA y toma la primera velocidad de la tabla igual o superior a la de la columna N. Si no hay velocidad, ambas columnas quedan vacías.</p>
+    <p>Para ver los datos usados, seleccione una celda con valor de la columna AB y pulse <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>I</kbd>: se muestran el tipo de curva, la velocidad, la declividad y la distancia.</p>
+  </section>
+
+  <!-- ══ 10. SEGUIMIENTO ══ -->
+  <section class="section" id="seguimiento">
+    <h2>10. Seguimiento y grado de avance</h2>
+    <p>Registre el estado de cada señal en las columnas <strong>AE</strong> (hoja de control recibida) y <strong>AF</strong> (hoja de control correcta).</p>
+
+    <h3>Valores que propone la actualización</h3>
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>Señal nueva con ACERCAR o ALEJAR</strong></td><td>AE y AF se rellenan con «NO».</td></tr>
+        <tr><td><strong>Señal nueva sin movimiento</strong></td><td>AE y AF se rellenan con «N.A.».</td></tr>
+        <tr><td><strong>Señal existente con N.A. que ahora se mueve</strong></td><td>AE y AF pasan a «NO».</td></tr>
+        <tr><td><strong>Resto de señales existentes</strong></td><td>Se conserva lo que haya.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Grado de avance</h3>
+    <p>Pulse <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>G</kbd> para ver el porcentaje. Se calcula sobre la columna <strong>AF</strong>:</p>
+    <p><code>Avance = SI ÷ (SI + NO)</code></p>
+    <p>Las señales con N.A. no cuentan. El cálculo incluye todas las filas, aunque haya filtros aplicados.</p>
+  </section>
+
+  <!-- ══ 11. COMANDOS ══ -->
+  <section class="section" id="comandos">
+    <h2>11. Comandos y atajos</h2>
+
+    <table class="coltable">
+      <thead>
+        <tr><th>Atajo</th><th>Acción</th><th>Observaciones</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>O</kbd></td><td>Cargar un fichero en su hoja <code>TablaN</code></td><td><a href="#cargar">Sección 5</a></td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>C</kbd></td><td>Copiar los datos de una tabla a PREVIASRAM</td><td><a href="#actualizar">Sección 6</a></td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>A</kbd></td><td>Ordenar en ascendente</td><td>Por línea y, dentro de ella, por PK de señal</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>D</kbd></td><td>Ordenar en descendente</td><td>Por línea y, dentro de ella, por PK de señal</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>L</kbd></td><td>Borrar una fila de PREVIASRAM</td><td>Pide el número de fila y confirmación. No admite las filas 1 y 2</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>G</kbd></td><td>Ver el grado de avance</td><td><a href="#seguimiento">Sección 10</a></td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>F</kbd></td><td>Quitar los filtros</td><td></td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>E</kbd></td><td>Borrar toda la hoja PREVIASRAM</td><td>Pide confirmación. Elimina también los datos manuales</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>I</kbd></td><td>Ver los datos de cálculo de AB y AC</td><td>Con una celda de la columna AB seleccionada</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>W</kbd></td><td>Buscar filas duplicadas</td><td>Las marca en las columnas A y AH: rosa la primera y rojo la repetida</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>Q</kbd></td><td>Reiniciar el color de las columnas A y AH</td><td>También lo hace la búsqueda de duplicados</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout danger">
+      <span class="callout-icon">⚠️</span>
+      <div>Antes de usar <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>E</kbd>, compruebe que tiene una copia del libro: borra también las hojas de control, las observaciones y el resto de los datos manuales, y no se puede deshacer.</div>
+    </div>
+
+    <h3>Macros sin atajo</h3>
+    <p>Se ejecutan desde <kbd>Alt</kbd>+<kbd>F8</kbd>.</p>
+    <table class="info-table">
+      <tbody>
+        <tr><td><code>CALCULAR_DECLIVIDAD</code></td><td>Recalcula las columnas S y T de todas las filas sin cargar datos.</td></tr>
+        <tr><td><code>COPIAANTIGUOBLOQUE</code></td><td>Devuelve a la columna AH el bloque anterior de las señales que cambiaron de bloque. Ese valor se guarda en la columna AM.</td></tr>
+        <tr><td><code>MostrarSoloColumnaA</code></td><td>Muestra la columna A si está oculta.</td></tr>
+        <tr><td><code>VISUALIZA</code></td><td>Muestra la columna R si está oculta.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ══ 12. SOLUCIÓN DE PROBLEMAS ══ -->
+  <section class="section" id="problemas">
+    <h2>12. Solución de problemas</h2>
+
+    <table class="coltable">
+      <thead>
+        <tr><th>Mensaje o síntoma</th><th>Causa probable</th><th>Qué hacer</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Los atajos no hacen nada</td>
+          <td>Macros deshabilitadas u otro libro activo</td>
+          <td>Habilite las macros y active este libro</td>
+        </tr>
+        <tr>
+          <td>Un atajo no muestra nada al pedir los datos de cálculo</td>
+          <td>La celda seleccionada no es de la columna AB o está vacía</td>
+          <td>Seleccione una celda con valor de AB en PREVIASRAM</td>
+        </tr>
+        <tr>
+          <td>«No se reconoce el número de bloque en el nombre del fichero»</td>
+          <td>El nombre no incluye BLOQUE ni LOTE2</td>
+          <td>Escriba el número de tabla: 1 a 7, o 10</td>
+        </tr>
+        <tr>
+          <td>«Número de bloque fuera de rango.»</td>
+          <td>El número no es del 1 al 7 ni 10</td>
+          <td>Repita el comando con un número válido</td>
+        </tr>
+        <tr>
+          <td>«El fichero ... no contiene ninguna hoja llamada 'Tabla'.»</td>
+          <td>Fichero incorrecto o hoja con otro nombre</td>
+          <td>No se ha modificado nada. Revise el fichero y repita la carga</td>
+        </tr>
+        <tr>
+          <td>«NO SE ENCUENTRA LA TABLA ORIGEN»</td>
+          <td>La hoja de esa tabla no existe</td>
+          <td>Cárguela antes con <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>O</kbd></td>
+        </tr>
+        <tr>
+          <td>«No se encuentran en la fila 2 ... las columnas imprescindibles»</td>
+          <td>Han cambiado las cabeceras de LINEA, SEÑAL o PK SEÑAL</td>
+          <td>No se ha modificado nada. Corrija el fichero de origen y cárguelo de nuevo</td>
+        </tr>
+        <tr>
+          <td>«Los datos correspondientes quedarán vacíos en PREVIASRAM. ¿Desea continuar?»</td>
+          <td>Falta una columna opcional o ha cambiado su cabecera</td>
+          <td>Responda «No» y revise el fichero. Si continúa, esos datos se vacían</td>
+        </tr>
+        <tr>
+          <td>«Filas sin distancia de frenado (columnas AB y AC vacías)»</td>
+          <td>Tramo no identificado en LINEAS, declividad no numérica, o velocidad o declividad fuera de la tabla</td>
+          <td>El mensaje indica la fila y el motivo de cada caso. Revise esos datos en la tabla de origen</td>
+        </tr>
+        <tr>
+          <td>«sin perfil» en la columna S</td>
+          <td>La hoja DECLIVIDADES POR LINEA no cubre el tramo</td>
+          <td>Compruebe la línea y los PK de la señal. Si son correctos, falta el perfil de ese tramo</td>
+        </tr>
+        <tr>
+          <td>«Se han encontrado ... filas repetidas.»</td>
+          <td>Hay referencias duplicadas</td>
+          <td>Localice las marcas en las columnas A y AH, y borre la fila sobrante con <kbd>Ctrl</kbd>+<kbd>Mayús</kbd>+<kbd>L</kbd></td>
+        </tr>
+        <tr>
+          <td>«La actualización ha quedado incompleta.»</td>
+          <td>Error al procesar la fila indicada de la tabla</td>
+          <td>Recupere la copia del libro, corrija esa fila en el origen y repita el proceso</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<script>
+  // Active sidebar link on scroll
+  const sections = document.querySelectorAll('.section');
+  const links = document.querySelectorAll('.sidebar a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.sidebar a[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-60px 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+</script>
+</body>
+</html>

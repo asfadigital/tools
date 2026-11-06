@@ -107,6 +107,12 @@
     transform: translateY(-2px);
   }
 
+  .card-prev:hover {
+    box-shadow: 0 6px 24px rgba(79,70,165,0.18);
+    border-color: #4f46a5;
+    transform: translateY(-2px);
+  }
+
   .card-icon {
     width: 48px;
     height: 48px;
@@ -122,6 +128,7 @@
   .card-cvm .card-icon   { background: var(--navy-light); }
   .card-sim .card-icon   { background: #fbeee0; }
   .card-csv .card-icon   { background: #e3f5f1; }
+  .card-prev .card-icon  { background: #eceafa; }
 
   .card-tag {
     font-family: var(--mono);
@@ -139,6 +146,7 @@
   .card-cvm .card-tag { background: var(--navy-light);  color: var(--navy); }
   .card-sim .card-tag { background: #fbeee0;            color: #6e3c10; }
   .card-csv .card-tag { background: #e3f5f1;            color: #0a5a4f; }
+  .card-prev .card-tag { background: #eceafa;           color: #352e78; }
 
   .card h2 {
     font-size: 1.1rem;
@@ -167,6 +175,7 @@
   .card-cvm .card-cta { color: var(--navy); }
   .card-sim .card-cta { color: #a85c1a; }
   .card-csv .card-cta { color: #0f7a6c; }
+  .card-prev .card-cta { color: #4f46a5; }
 
   .divider {
     width: 100%;
@@ -212,6 +221,14 @@
     <span class="card-tag">CSV</span>
     <h2>csv_build</h2>
     <p>Manual del programa de generación del listado global de CSV. Actualización semanal del fichero de instalación, publicación en GitHub Pages y seguimiento del progreso de instalación de las balizas L1X.</p>
+    <span class="card-cta">Abrir manual →</span>
+  </a>
+
+  <a class="card card-prev" href="manual_previasram.html">
+    <div class="card-icon">📍</div>
+    <span class="card-tag">RAM</span>
+    <h2>PREVIASRAM</h2>
+    <p>Manual del libro Excel de seguimiento de las balizas previas de la red de ancho métrico. Carga de bloques, comprobación de distancias, declividad y frenado, y grado de avance de las hojas de control.</p>
     <span class="card-cta">Abrir manual →</span>
   </a>
 
@@ -263,7 +280,7 @@
 
 </div>
 
-<footer>Analizador CLS de ASFA Digital &nbsp;·&nbsp; CVM Explorer &nbsp;·&nbsp; SIMAsfa &nbsp;·&nbsp; csv_build</footer>
+<footer>Analizador CLS de ASFA Digital &nbsp;·&nbsp; CVM Explorer &nbsp;·&nbsp; SIMAsfa &nbsp;·&nbsp; csv_build &nbsp;·&nbsp; PREVIASRAM</footer>
 
 </body>
 </html>
