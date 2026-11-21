@@ -154,6 +154,22 @@
     line-height: 1.3;
   }
 
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .card-version {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+  }
+
   .card-status {
     display: block;
     margin-top: 0.25rem;
@@ -232,7 +248,10 @@
 
   <div class="card card-csv">
     <div class="card-icon">📋</div>
-    <span class="card-tag">CSV</span>
+    <div class="card-meta">
+      <span class="card-tag">CSV</span>
+      <span class="card-version">v1.1.0</span>
+    </div>
     <h2>csv_build</h2>
     <p>Generación semanal del listado global de CSV y del fichero de instalación, y su consulta en la web de listados: versiones, comparador, gráficas, histórico y progreso de instalación de las balizas L1X.</p>
     <div class="card-links">
@@ -243,7 +262,10 @@
 
   <a class="card card-prev" href="manual_previasram.html">
     <div class="card-icon">📍</div>
-    <span class="card-tag">RAM</span>
+    <div class="card-meta">
+      <span class="card-tag">RAM</span>
+      <span class="card-version">V1-XX</span>
+    </div>
     <h2>PREVIASRAM</h2>
     <p>Manual del libro Excel de seguimiento de las balizas previas de la red de ancho métrico. Carga de bloques, comprobación de distancias, declividad y frenado, y grado de avance de las hojas de control.</p>
     <span class="card-cta">Abrir manual →</span>
@@ -258,7 +280,10 @@
 
   <a class="card card-via" href="manual_analizador_cls_via.html">
     <div class="card-icon">🛤️</div>
-    <span class="card-tag">Vía</span>
+    <div class="card-meta">
+      <span class="card-tag">Vía</span>
+      <span class="card-version">v1.0</span>
+    </div>
     <h2>Analizador CLS<br>ASFA Digital Vía</h2>
     <p>Manual del analizador para equipos de vía. Cobertura de balizas, grupos funcionales, registro de eventos y exportación de informes.</p>
     <span class="card-cta">Abrir manual →</span>
