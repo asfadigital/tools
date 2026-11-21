@@ -271,7 +271,7 @@
 <div class="topbar">
   <div class="topbar-badge">CSV</div>
   <div class="topbar-title">csv_build — Manual de Usuario</div>
-  <div class="topbar-ver">v1.0.0</div>
+  <div class="topbar-ver">v1.1.0</div>
 </div>
 
 <!-- SIDEBAR -->
@@ -306,7 +306,7 @@
     <h1>csv_build</h1>
     <p>Manual de usuario para la generación, publicación y seguimiento del listado y del progreso de instalación de CSV</p>
     <div class="hero-meta">
-      <span>Versión: <strong>1.0.0</strong></span>
+      <span>Versión: <strong>1.1.0</strong></span>
       <span>Ejecutable: <strong>csv_build_windows.exe</strong></span>
       <span>Web: <a href="https://asfadigital.github.io/csv/" target="_blank" rel="noopener"><strong>asfadigital.github.io/csv</strong></a></span>
     </div>
@@ -529,7 +529,7 @@
       <li>
         <div>
           <strong>Comenzar</strong>
-          Pulse <kbd>Comenzar</kbd>. El proceso usa los ficheros marcados y no pide ninguno más. Sin fichero de instalación, los cuatro ficheros fuente son obligatorios: si falta alguno, el programa lo indica y se vuelve a la lista.
+          Pulse <kbd>Comenzar</kbd>. El proceso usa los ficheros marcados y no pide ninguno más. Sin fichero de instalación, los cuatro ficheros fuente son obligatorios: si falta alguno, el programa lo indica y se vuelve a la lista. Antes de empezar, el programa comprueba también que ningún fichero de entrada, ni el fichero de instalación que se va a guardar, esté abierto en Excel; si lo está, muestra el aviso «Ficheros abiertos» con la lista de ficheros y se vuelve a la lista para cerrarlos.
         </div>
       </li>
       <li>
@@ -674,9 +674,38 @@
     <table class="info-table">
       <tbody>
         <tr><td><span class="view-badge">Versiones</span></td><td>Lista cada versión publicada, con el número de CSVs, y un botón para abrirla en una pestaña nueva.</td></tr>
-        <tr><td><span class="view-badge">Comparador</span></td><td>Calcula las LTV añadidas, eliminadas y modificadas entre dos versiones cualesquiera, y muestra gráficas de la evolución del número de CSVs por semana.</td></tr>
+        <tr><td><span class="view-badge">Comparador</span></td><td>Calcula las LTV añadidas, eliminadas y modificadas entre dos versiones cualesquiera. La comparación se hace fila a fila, de modo que las altas menos las bajas coinciden siempre con la variación del número de CSVs entre las dos versiones.</td></tr>
+        <tr><td><span class="view-badge">Gráficas</span></td><td>Tiene dos gráficas, que se filtran por Tipo LV, modo y línea. Los desplegables de modo y línea solo ofrecen las opciones que tienen CSVs del Tipo LV elegido. Arrastrando el ratón sobre cualquiera de ellas se acota un periodo, que se aplica a las dos; con <kbd>Ver todo el periodo</kbd> o con doble clic se vuelve a ver todo. Cada una se puede descargar como imagen PNG.</td></tr>
+        <tr><td><span class="view-badge">Histórico</span></td><td>Histórico de las CSVs que han dejado de aparecer en los listados publicados (véase más abajo).</td></tr>
       </tbody>
     </table>
+
+    <h3>Pestaña Gráficas</h3>
+    <ul class="plain-list">
+      <li><strong>Gráfica «Evolución de CSVs por semana»:</strong> número de CSVs de cada versión, con línea de tendencia opcional.</li>
+      <li><strong>Gráfica «Altas y bajas de CSVs entre versiones»:</strong> para cada versión, las CSVs que aparecen respecto a la versión anterior (barras verdes, hacia arriba) y las que desaparecen (barras rojas, hacia abajo). Al pasar el ratón se ven las dos versiones comparadas y la variación neta, y encima de la gráfica, el total de altas y bajas del periodo.</li>
+    </ul>
+    <p>Sobre la gráfica de altas y bajas hay cuatro casillas para mostrar u ocultar sus líneas: <strong>Tendencia altas</strong>, <strong>Tendencia bajas</strong>, <strong>Media altas</strong> y <strong>Media bajas</strong>. Al abrir la página, las medias están activadas y las tendencias desactivadas. Solo aparecen en la leyenda las líneas activadas; al pulsar una de ellas en la leyenda, se desactiva su casilla.</p>
+    <p>Las medias son la media de altas y de bajas por versión en el periodo visible, y su valor se indica junto a las casillas. Las tendencias se calculan con el mismo método de ajuste elegido para la primera gráfica (mínimos cuadrados o Theil-Sen); para cada tendencia activada se indica su pendiente, en CSVs por semana, con sus indicadores de ajuste. La pendiente de las bajas se calcula sobre su número, de modo que un valor negativo indica que cada semana desaparecen menos CSVs.</p>
+    <p>Las cifras coinciden con las altas y bajas del Comparador para esas dos versiones, y las altas menos las bajas coinciden con la variación de la gráfica de evolución. Si falta alguna semana publicada, la barra compara con la última versión anterior disponible.</p>
+
+    <h3>Pestaña Histórico</h3>
+    <p>Recoge el histórico de las CSVs que han dejado de aparecer en los listados publicados, con la vigencia que tuvo cada una: las semanas transcurridas entre la primera versión en que aparece y la versión en que ya no está.</p>
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>Identificación</strong></td><td>Las CSVs temporales se identifican por su ID PDF LTV, el código de la LTV en el DLTV. Una LTV renovada con otro código cuenta como eliminada, y la nueva empieza su propia vigencia. Las fijas, que no tienen ID PDF LTV, se identifican por su Referencia LV. Si una CSV desaparece y vuelve a aparecer, cada periodo cuenta por separado.</td></tr>
+        <tr><td><strong>Filtros</strong></td><td>Tipo LV (por defecto, temporales), modo ASFA, línea, versiones entre las que se eliminó y búsqueda por referencia, ID o motivo. Como en las gráficas, los desplegables de modo y línea solo ofrecen las opciones con CSVs eliminadas del Tipo LV elegido. <kbd>Quitar filtros</kbd> vuelve a la vista inicial.</td></tr>
+        <tr><td><strong>Estadísticas</strong></td><td>Número de CSVs eliminadas, cuántas tienen vigencia conocida y vigencia media, mediana, mínima, máxima y un percentil, en semanas, de las CSVs filtradas. El percentil se elige en el desplegable <em>Percentil</em> (de 50 a 99; por defecto, 90): el percentil N es la vigencia que no supera el N % de las CSVs.</td></tr>
+        <tr><td><strong>Gráficas</strong></td><td>La distribución de la vigencia por tramos de semanas (con el número de CSVs y su porcentaje sobre el total encima de cada barra) y la vigencia media agrupada por modo ASFA, línea, motivo o versión de eliminación. Al pasar el ratón se ven la mediana y el número de CSVs de cada grupo. Por línea y por motivo se muestran los 25 grupos con más CSVs.</td></tr>
+        <tr><td><strong>Tabla</strong></td><td>Una fila por CSV eliminada, con sus datos de identificación, la primera versión en que aparece, la versión en que se eliminó y su vigencia, seguidos del resto de datos y de la última versión en que aparece. Se ordena pulsando en la cabecera de cada columna. <kbd>Exportar CSV</kbd> descarga las filas filtradas en un fichero que se abre en Excel.</td></tr>
+        <tr><td><strong>Vigencia incompleta (≥)</strong></td><td>Las CSVs que ya estaban en la primera versión registrada llevaban vigentes desde antes, así que su vigencia real es desconocida y mayor que la calculada. Se muestran en la tabla marcadas con «≥», pero no se incluyen en las estadísticas ni en las gráficas. La tarjeta <em>Con vigencia conocida</em> indica cuántas CSVs entran en las estadísticas.</td></tr>
+        <tr><td><strong>Precisión</strong></td><td>La vigencia se mide entre versiones publicadas, por lo que tiene una precisión de una semana. Cuando faltan semanas publicadas (por ejemplo, entre V.31 y V.36), la eliminación se sitúa en la primera versión publicada en la que ya no aparece la CSV.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Referencias LV repetidas</h3>
+    <p>La Referencia LV se forma con la línea, el tipo (T o F), la velocidad, el sentido, la vía y el PK inicial. Dos LTV distintas (con distinto ID PDF LTV) pueden tener la misma referencia cuando coinciden en todos esos datos; por ejemplo, una LTV y la que la renueva mientras las dos están vigentes, o dos LTV que empiezan en el mismo punto y terminan en PK distintos.</p>
+    <p>En el Comparador y en la gráfica de altas y bajas, cada fila cuenta por separado: si una referencia aparece varias veces, sus filas se ordenan por ID PDF LTV y, a partir de la segunda, se muestran como «REFERENCIA (2ª)», «REFERENCIA (3ª)», etc.</p>
 
     <h3>Al abrir una semana</h3>
     <table class="info-table">
@@ -724,6 +753,16 @@
           <td><code>ERROR: no se encuentra el fichero indicado como...</code></td>
           <td>El fichero se ha movido, renombrado o borrado después de seleccionarlo</td>
           <td>Comprobar el fichero y repetir el proceso</td>
+        </tr>
+        <tr>
+          <td>Aviso «Ficheros abiertos»</td>
+          <td>Algún fichero de entrada, o el fichero de instalación de la semana, está abierto en Excel u otro programa</td>
+          <td>Cerrar los ficheros indicados y pulsar <kbd>Comenzar</kbd> de nuevo</td>
+        </tr>
+        <tr>
+          <td><code>ERROR: no se puede acceder a ...: está abierto en otro programa</code></td>
+          <td>Se ha abierto un fichero en Excel con el proceso en marcha</td>
+          <td>Cerrarlo y repetir el proceso</td>
         </tr>
         <tr>
           <td>Aviso «Fichero no válido»</td>
