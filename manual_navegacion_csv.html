@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de navegación — Web de listados de CSV</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap');
+
+  :root {
+    --csv: #0f7a6c;
+    --csv-dark: #0a5a4f;
+    --csv-mid: #14957f;
+    --csv-light: #e3f5f1;
+    --csv-pale: #f2faf8;
+    --blue: #1a6fba;
+    --amber: #c47a00;
+    --green: #1a8a4a;
+    --red: #cc2a2a;
+    --bg: #f2f4f7;
+    --surface: #ffffff;
+    --surface2: #e8eaee;
+    --border: #d0d4dc;
+    --text: #1a1e2a;
+    --muted: #6b7280;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --sidebar-w: 280px;
+    --header-h: 56px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
+    background: var(--csv-dark);
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 28px;
+    z-index: 200;
+    box-shadow: 0 2px 12px rgba(0,0,0,.35);
+  }
+  .topbar-badge {
+    font-family: var(--mono);
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    background: #9fe3d3;
+    color: var(--csv-dark);
+    padding: 3px 8px; border-radius: 2px;
+  }
+  .topbar-title {
+    font-family: var(--sans);
+    font-size: 15px; font-weight: 600;
+    color: rgba(255,255,255,.88);
+    letter-spacing: .3px;
+  }
+  .topbar-ver {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 11px; color: rgba(255,255,255,.35);
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: fixed;
+    top: var(--header-h); left: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    z-index: 100;
+    padding: 20px 0 40px;
+  }
+  .sidebar-section {
+    padding: 6px 20px 4px;
+    font-family: var(--mono);
+    font-size: 9px; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 14px;
+  }
+  .sidebar a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 20px;
+    text-decoration: none;
+    font-size: 13px; color: var(--text);
+    border-left: 3px solid transparent;
+    transition: all .15s;
+    line-height: 1.3;
+  }
+  .sidebar a:hover { background: var(--csv-pale); color: var(--csv); border-left-color: var(--csv); }
+  .sidebar a.active { background: var(--csv-pale); color: var(--csv-dark); border-left-color: var(--csv-dark); font-weight: 600; }
+  .sidebar a .ic { font-size: 15px; flex-shrink: 0; width: 18px; text-align: center; }
+
+  /* ── MAIN ── */
+  .main {
+    margin-left: var(--sidebar-w);
+    margin-top: var(--header-h);
+    padding: 40px 48px 80px;
+    max-width: 920px;
+  }
+
+  /* ── SECTIONS ── */
+  .section { margin-bottom: 60px; scroll-margin-top: 80px; }
+
+  h1 { font-size: 28px; font-weight: 700; color: #1a1e2a; line-height: 1.2; margin-bottom: 10px; }
+  h2 { font-size: 19px; font-weight: 700; color: var(--csv-dark); margin-bottom: 16px; margin-top: 0;
+       border-bottom: 2px solid var(--csv-light); padding-bottom: 6px; }
+  h3 { font-size: 14px; font-weight: 700; color: var(--text); margin: 20px 0 8px; text-transform: uppercase;
+       letter-spacing: .8px; font-family: var(--mono); }
+  p  { margin-bottom: 12px; color: #2c3a50; }
+
+  .lead { font-size: 15px; color: var(--muted); margin-bottom: 24px; line-height: 1.8; }
+
+  /* ── CALLOUTS ── */
+  .callout {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 14px 18px; border-radius: 4px; margin: 16px 0;
+    border-left: 4px solid;
+    font-size: 13px; line-height: 1.65;
+  }
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .callout.info  { background: var(--csv-pale); border-color: var(--csv); }
+  .callout.warn  { background: #fff8e1; border-color: #e0a000; }
+  .callout.danger{ background: #fdecea; border-color: var(--red); }
+  .callout.ok    { background: #edf7ef; border-color: var(--green); }
+
+  /* ── STEPS ── */
+  .steps { list-style: none; padding: 0; margin: 16px 0; counter-reset: steps; }
+  .steps li {
+    counter-increment: steps;
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+  }
+  .steps li:last-child { border-bottom: none; }
+  .steps li::before {
+    content: counter(steps);
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    background: var(--csv-dark); color: #9fe3d3;
+    font-family: var(--mono); font-size: 12px; font-weight: 700;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px;
+  }
+  .steps li strong { display: block; margin-bottom: 2px; }
+
+  /* ── CODE / MONO ── */
+  code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 1px 6px; border-radius: 3px;
+    color: var(--csv-dark);
+  }
+  .file-path {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--mono); font-size: 12px;
+    background: var(--csv-dark); color: #9fe3d3;
+    padding: 3px 10px; border-radius: 3px;
+  }
+  kbd {
+    font-family: var(--mono);
+    font-size: 11px;
+    background: var(--surface2);
+    border: 1px solid #b0bdd0;
+    border-bottom: 2px solid #8090a8;
+    padding: 2px 7px; border-radius: 4px;
+    color: var(--text);
+  }
+
+  /* ── FEATURE GRID ── */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px; margin: 16px 0;
+  }
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--csv);
+    border-radius: 4px;
+    padding: 16px;
+  }
+  .feature-card .fc-icon { font-size: 22px; margin-bottom: 8px; }
+  .feature-card .fc-title { font-weight: 700; font-size: 13px; margin-bottom: 4px; color: var(--csv-dark); }
+  .feature-card .fc-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ── TABLES ── */
+  table.info-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  table.info-table th, table.info-table td { padding: 9px 14px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border); }
+  table.info-table th { background: var(--surface2); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); }
+  table.info-table tr:last-child td { border-bottom: none; }
+
+  /* ── COL TABLE ── */
+  table.coltable { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12px; }
+  table.coltable th { background: var(--csv-dark); color: #9fe3d3; padding: 8px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+  table.coltable td { padding: 7px 12px; border-bottom: 1px solid var(--border); }
+  table.coltable tr:hover td { background: var(--csv-pale); }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--csv-dark) 0%, #146b5c 100%);
+    border-radius: 8px;
+    padding: 32px 36px;
+    margin-bottom: 40px;
+    color: #fff;
+    position: relative; overflow: hidden;
+    border-left: 5px solid #9fe3d3;
+  }
+  .hero::after {
+    content: '📋';
+    position: absolute; right: 24px; bottom: -22px;
+    font-size: 90px;
+    opacity: .09;
+    line-height: 1;
+    user-select: none;
+  }
+  .hero h1 { color: #fff; font-size: 22px; margin-bottom: 6px; }
+  .hero p { color: rgba(255,255,255,.65); font-size: 13px; margin: 0; }
+  .hero-meta { display: flex; gap: 20px; margin-top: 18px; flex-wrap: wrap; }
+  .hero-meta span { font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,.45); }
+  .hero-meta strong { color: rgba(255,255,255,.85); }
+  .hero-meta a { color: rgba(255,255,255,.85); }
+  .hero-meta a:hover strong { color: #fff; }
+
+  /* ── VISTA BADGE ── */
+  .view-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--csv-dark); color: #9fe3d3;
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 2px;
+    vertical-align: middle;
+  }
+
+  /* ── CHIPS (badges de categoría) ── */
+  .chip { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11.5px; font-weight: 700; letter-spacing: .02em; color: #fff; }
+  .chip.av    { background: #e5484d; }
+  .chip.ld    { background: #f0883e; }
+  .chip.md    { background: #2fbf71; }
+  .chip.cer   { background: #3a9bdc; }
+  .chip.ouigo { background: #e6007e; }
+  .chip.fgc   { background: #2e7d32; }
+  .chip.eus   { background: #00838f; }
+  .chip.sfm   { background: #c77c02; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 24px 20px 60px; }
+  }
+  /* Los nombres de fichero largos pueden partirse dentro de las tablas */
+  table.coltable code { overflow-wrap: anywhere; }
+  .plain-list { margin: 8px 0 16px 20px; line-height: 1.75; }
+  .plain-list li { margin-bottom: 6px; }
+  .callout .plain-list { margin-bottom: 0; }
+  figure.shot { margin: 18px 0 22px; }
+  figure.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,.06); }
+  figure.shot a:hover img { border-color: var(--csv); }
+  figure.shot figcaption { font-size: 12px; color: var(--muted); text-align: center; margin-top: 6px; font-style: italic; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-badge">CSV</div>
+  <div class="topbar-title">Web de listados de CSV — Manual de navegación</div>
+  <div class="topbar-ver">RFIG</div>
+</div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-section">Inicio</div>
+  <a href="#introduccion"><span class="ic">📘</span>1. Introducción</a>
+
+  <div class="sidebar-section">Página principal</div>
+  <a href="#versiones"><span class="ic">🗂️</span>2. Pestaña Versiones</a>
+  <a href="#comparador"><span class="ic">🔍</span>3. Pestaña Comparador</a>
+  <a href="#graficas"><span class="ic">📈</span>4. Pestaña Gráficas</a>
+  <a href="#historico"><span class="ic">🕓</span>5. Pestaña Histórico</a>
+
+  <div class="sidebar-section">Listado semanal</div>
+  <a href="#semana"><span class="ic">📋</span>6. Página de cada semana</a>
+
+  <div class="sidebar-section">Referencia</div>
+  <a href="#consejos"><span class="ic">🔧</span>7. Consejos y problemas habituales</a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <h1>Web de listados de CSV (RFIG)</h1>
+    <p>Manual de navegación: consulta de versiones, comparador, gráficas, histórico y seguimiento de la instalación</p>
+    <div class="hero-meta">
+      <span>Web: <a href="https://asfadigital.github.io/csv/" target="_blank" rel="noopener"><strong>asfadigital.github.io/csv</strong></a></span>
+      <span>Navegadores: <strong>Edge, Chrome o Firefox</strong></span>
+    </div>
+  </div>
+
+  <!-- ══ 1. INTRODUCCIÓN ══ -->
+  <section class="section" id="introduccion">
+    <h2>1. Introducción</h2>
+    <p class="lead">La web de listados de CSV publica cada semana el listado global de CSVs (fijas y temporales) y permite consultar su evolución y el seguimiento de la instalación de las balizas L1X. Está en <a href="https://asfadigital.github.io/csv/" target="_blank" rel="noopener">https://asfadigital.github.io/csv/</a> y se abre con cualquier navegador actual (Edge, Chrome o Firefox); no hace falta instalar nada.</p>
+
+    <p>La web tiene dos tipos de páginas:</p>
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>Página principal</strong></td><td>Reúne todas las versiones publicadas y tiene cuatro pestañas: <span class="view-badge">Versiones</span> <span class="view-badge">Comparador</span> <span class="view-badge">Gráficas</span> <span class="view-badge">Histórico</span></td></tr>
+        <tr><td><strong>Página de cada semana</strong></td><td>El listado completo de CSVs de una versión, con filtros, búsqueda, datos de instalación de cada CSV y progreso de la instalación.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout danger">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>IMPORTANTE:</strong> los datos de la web son de consulta. Cualquier dato concreto que se vaya a usar debe confirmarse con los listados oficiales de ADIF.</div>
+    </div>
+
+    <p>Las capturas de este manual están tomadas con las versiones publicadas de V.15.2026 a V.46.2026. Pulse cualquier captura para verla a tamaño completo.</p>
+
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <div>La generación y publicación semanal de los listados se explica en el <a href="manual_csv_build.html">manual del programa csv_build</a>.</div>
+    </div>
+  </section>
+
+  <!-- ══ 2. VERSIONES ══ -->
+  <section class="section" id="versiones">
+    <h2>2. Pestaña Versiones</h2>
+    <p>Es la pestaña que se muestra al abrir la página principal. Lista todas las versiones publicadas, de la más reciente a la más antigua. La última está destacada con la etiqueta <strong>ÚLTIMA ACTUALIZACIÓN</strong>.</p>
+
+    <figure class="shot">
+      <a href="img/navegacion_csv/01_versiones.jpg" target="_blank" rel="noopener"><img src="img/navegacion_csv/01_versiones.jpg" alt="Pestaña Versiones de la página principal" loading="lazy" width="1600" height="983"></a>
+      <figcaption>Pestaña Versiones de la página principal</figcaption>
+    </figure>
+
+    <p>Para cada versión se indica la semana y el número de CSVs, con el desglose de fijas y temporales. El botón <kbd>Abrir</kbd> abre la página de esa semana en otra pestaña del navegador (<a href="#semana">sección 6</a>).</p>
+    <p>Para cambiar de pestaña, pulse su nombre en la parte superior derecha: Versiones, Comparador, Gráficas o Histórico.</p>
+  </section>
+
+  <!-- ══ 3. COMPARADOR ══ -->
+  <section class="section" id="comparador">
+    <h2>3. Pestaña Comparador</h2>
+    <p>Compara dos versiones cualesquiera y muestra las CSVs que aparecen (altas), las que desaparecen (bajas) y las que han cambiado algún dato (modificaciones).</p>
+
+    <figure class="shot">
+      <a href="img/navegacion_csv/02_comparador.jpg" target="_blank" rel="noopener"><img src="img/navegacion_csv/02_comparador.jpg" alt="Pestaña Comparador: V.45.2026 frente a V.46.2026" loading="lazy" width="1600" height="983"></a>
+      <figcaption>Pestaña Comparador: V.45.2026 frente a V.46.2026</figcaption>
+    </figure>
+
+    <h3>Elegir las versiones</h3>
+    <p>Hay dos formas de elegir las versiones que se comparan:</p>
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>Desplegables Desde y Hasta</strong></td><td>Elija las dos versiones y pulse <kbd>Comparar</kbd>. Al abrir la pestaña vienen seleccionadas las dos últimas versiones.</td></tr>
+        <tr><td><strong>Línea de tiempo</strong></td><td>La fila de círculos de la parte superior representa las versiones, con su número de CSVs debajo. Pulse una versión para fijarla como origen y después otra para fijarla como destino; la comparación se hace sola al pulsar la segunda.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Resultado</h3>
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>Tarjetas de resumen</strong></td><td>Número de altas, bajas, modificaciones y CSVs sin cambios. Las mismas cifras aparecen en pequeño a la derecha de la barra de selección.</td></tr>
+        <tr><td><strong>Pestañas Altas, Bajas y Modificaciones</strong></td><td>Cada una lista sus CSVs. En Modificaciones se muestra, para cada dato que ha cambiado, el valor anterior <span style="color:var(--red);text-decoration:line-through;">tachado en rojo</span> y el nuevo <span style="color:var(--green);font-weight:600;">en verde</span>.</td></tr>
+        <tr><td><strong>Buscador</strong></td><td>El cuadro «Buscar referencia, línea, motivo...» filtra la lista de la pestaña activa.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Cómo se cuenta</h3>
+    <p>La comparación se hace fila a fila, de modo que las altas menos las bajas coinciden siempre con la variación del número de CSVs entre las dos versiones. La Referencia LV se forma con la línea, el tipo (T o F), la velocidad, el sentido, la vía y el PK inicial, y puede repetirse en LTV distintas (por ejemplo, dos LTV del mismo tramo con distinto horario). En ese caso, sus filas se ordenan por ID PDF LTV y, a partir de la segunda, se muestran como «REFERENCIA (2ª)», «REFERENCIA (3ª)», etc.</p>
+  </section>
+
+  <!-- ══ 4. GRÁFICAS ══ -->
+  <section class="section" id="graficas">
+    <h2>4. Pestaña Gráficas</h2>
+    <p>Tiene dos gráficas: la evolución del número de CSVs y las altas y bajas entre versiones.</p>
+
+    <h3>Gráfica de evolución</h3>
+    <figure class="shot">
+      <a href="img/navegacion_csv/03_grafica_evolucion.jpg" target="_blank" rel="noopener"><img src="img/navegacion_csv/03_grafica_evolucion.jpg" alt="Gráfica de evolución de CSVs por semana" loading="lazy" width="1600" height="983"></a>
+      <figcaption>Gráfica de evolución de CSVs por semana</figcaption>
+    </figure>
+
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>Filtros</strong></td><td>Tipo LV (temporales, fijas o ambas), Modo (CONV, AV, RAM) y Línea. Para elegir una línea hay que elegir antes un modo. Los desplegables solo ofrecen los modos y líneas con CSVs del Tipo LV elegido.</td></tr>
+        <tr><td><strong>Mostrar línea de tendencia</strong></td><td>Dibuja la recta que mejor se ajusta a la serie. Encima de la gráfica, el recuadro rojo indica la pendiente (CSVs por semana) y los indicadores de ajuste.</td></tr>
+        <tr><td><strong>Ajuste</strong></td><td>Método de cálculo de la tendencia, <em>Mínimos cuadrados</em> o <em>Theil-Sen</em>. Theil-Sen es menos sensible a semanas con valores atípicos.</td></tr>
+        <tr><td><strong>Cómo se calcula la tendencia</strong></td><td>Abre una ventana que explica los dos métodos y los indicadores.</td></tr>
+        <tr><td><strong>Mostrar valor en cada punto</strong></td><td>Escribe el número de CSVs sobre cada versión.</td></tr>
+        <tr><td><strong>Descargar gráfica (PNG)</strong></td><td>Guarda la gráfica como imagen, con su título.</td></tr>
+      </tbody>
+    </table>
+
+    <figure class="shot">
+      <a href="img/navegacion_csv/04_ventana_tendencia.jpg" target="_blank" rel="noopener"><img src="img/navegacion_csv/04_ventana_tendencia.jpg" alt="Ventana «Cómo se calcula la línea de tendencia»" loading="lazy" width="1600" height="983"></a>
+      <figcaption>Ventana «Cómo se calcula la línea de tendencia»</figcaption>
+    </figure>
+
+    <h3>Acotar un periodo</h3>
+    <p>Para ver solo una parte de la serie, pulse sobre la gráfica y arrastre el ratón hasta el final del periodo. Mientras se arrastra, el periodo se marca en azul.</p>
+
+    <figure class="shot">
+      <a href="img/navegacion_csv/05_seleccion_periodo.jpg" target="_blank" rel="noopener"><img src="img/navegacion_csv/05_seleccion_periodo.jpg" alt="Selección de un periodo arrastrando el ratón" loading="lazy" width="1600" height="983"></a>
+      <figcaption>Selección de un periodo arrastrando el ratón</figcaption>
+    </figure>
+
+    <p>Al soltar, la gráfica muestra solo ese periodo y la tendencia se recalcula con sus versiones. Encima de la gráfica se indica el periodo acotado. Para volver a ver toda la serie, pulse <kbd>Ver todo el periodo</kbd> o haga doble clic sobre la gráfica.</p>
+
+    <figure class="shot">
+      <a href="img/navegacion_csv/06_periodo_acotado.jpg" target="_blank" rel="noopener"><img src="img/navegacion_csv/06_periodo_acotado.jpg" alt="Gráfica con el periodo acotado" loading="lazy" width="1600" height="983"></a>
+      <figcaption>Gráfica con el periodo acotado</figcaption>
+    </figure>
+
+    <p>El periodo acotado se aplica también a la gráfica de altas y bajas, y se puede acotar igualmente desde ella.</p>
+
+    <h3>Gráfica de altas y bajas entre versiones</h3>
+    <figure class="shot">
+      <a href="img/navegacion_csv/07_altas_bajas.jpg" target="_blank" rel="noopener"><img src="img/navegacion_csv/07_altas_bajas.jpg" alt="Gráfica de altas y bajas, con medias y tendencias activadas" loading="lazy" width="1600" height="781"></a>
+      <figcaption>Gráfica de altas y bajas, con medias y tendencias activadas</figcaption>
+    </figure>
+
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>Barras</strong></td><td>Para cada versión, las CSVs que aparecen respecto a la versión anterior (verdes, hacia arriba) y las que desaparecen (rojas, hacia abajo). Al pasar el ratón se ven las dos versiones comparadas y la variación neta.</td></tr>
+        <tr><td><strong>Total del periodo</strong></td><td>Encima de la gráfica, la suma de altas y bajas del periodo visible y el saldo neto.</td></tr>
+        <tr><td><strong>Casillas Tendencia altas, Tendencia bajas, Media altas y Media bajas</strong></td><td>Muestran u ocultan cada línea. Al abrir la página, las medias están activadas y las tendencias desactivadas. Las medias son la media de altas y de bajas por versión en el periodo visible. Las tendencias usan el método de ajuste elegido en la primera gráfica, y su pendiente se indica encima de la gráfica.</td></tr>
+        <tr><td><strong>Filtros</strong></td><td>Usa los mismos filtros de Tipo LV, modo y línea que la gráfica de evolución.</td></tr>
+        <tr><td><strong>Descargar gráfica (PNG)</strong></td><td>Guarda la gráfica con su título, el total, las tendencias y las medias visibles.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <div>Cuando faltan semanas publicadas (por ejemplo, entre V.31 y V.36), la barra compara directamente las dos versiones publicadas y recoge los cambios de todo ese intervalo.</div>
+    </div>
+  </section>
+
+  <!-- ══ 5. HISTÓRICO ══ -->
+  <section class="section" id="historico">
+    <h2>5. Pestaña Histórico</h2>
+    <p>Recoge las CSVs que han dejado de aparecer en los listados, con la vigencia que tuvo cada una: las semanas transcurridas entre la primera versión en que aparece y la versión en que ya no está.</p>
+
+    <figure class="shot">
+      <a href="img/navegacion_csv/08_historico.jpg" target="_blank" rel="noopener"><img src="img/navegacion_csv/08_historico.jpg" alt="Pestaña Histórico: filtros, estadísticas y gráficas" loading="lazy" width="1600" height="983"></a>
+      <figcaption>Pestaña Histórico: filtros, estadísticas y gráficas</figcaption>
+    </figure>
+
+    <h3>Filtros</h3>
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>Tipo LV</strong></td><td>Por defecto, temporales.</td></tr>
+        <tr><td><strong>Modo ASFA y Línea</strong></td><td>Solo ofrecen las opciones con CSVs eliminadas del Tipo LV elegido.</td></tr>
+        <tr><td><strong>Eliminadas entre ... y ...</strong></td><td>Versiones entre las que se eliminaron las CSVs.</td></tr>
+        <tr><td><strong>Buscar</strong></td><td>Por referencia, ID PDF LTV o motivo.</td></tr>
+        <tr><td><strong>Percentil</strong></td><td>Elige qué percentil se muestra en su tarjeta (de 50 a 99; por defecto, 90).</td></tr>
+        <tr><td><strong>Quitar filtros</strong></td><td>Vuelve a la vista inicial.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Estadísticas y gráficas</h3>
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>Tarjetas</strong></td><td>Número de CSVs eliminadas, cuántas de ellas tienen vigencia conocida (las que entran en las estadísticas) y vigencia media, mediana, mínima, máxima y el percentil elegido, en semanas. El percentil N es la vigencia que no supera el N % de las CSVs; por ejemplo, un percentil 90 de 11 semanas indica que 9 de cada 10 CSVs estuvieron vigentes 11 semanas o menos.</td></tr>
+        <tr><td><strong>Distribución de la vigencia</strong></td><td>Número de CSVs eliminadas por tramos de vigencia. Encima de cada barra se indica el número de CSVs y, entre paréntesis, su porcentaje sobre el total de CSVs con vigencia conocida.</td></tr>
+        <tr><td><strong>Vigencia media por</strong></td><td>Agrupa por modo ASFA, línea, motivo o versión de eliminación. Al pasar el ratón se ven la mediana y el número de CSVs de cada grupo. Por línea y por motivo se muestran los 25 grupos con más CSVs.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Tabla</h3>
+    <figure class="shot">
+      <a href="img/navegacion_csv/09_historico_tabla.jpg" target="_blank" rel="noopener"><img src="img/navegacion_csv/09_historico_tabla.jpg" alt="Tabla de CSVs eliminadas, con todas sus columnas" loading="lazy" width="2400" height="743"></a>
+      <figcaption>Tabla de CSVs eliminadas, con todas sus columnas (pulse la imagen para leerla con detalle)</figcaption>
+    </figure>
+
+    <p>Una fila por CSV eliminada. Las primeras columnas son las de identificación (referencia, ID PDF LTV, línea, tipo y modo), seguidas de la primera versión en que aparece, la versión en que se eliminó y su vigencia en semanas; después vienen la descripción de la línea, la vía, los PK, la velocidad, el motivo y la última versión en que aparece. Si la ventana del navegador es estrecha, a estas últimas columnas se llega desplazando la tabla hacia la derecha. Pulse la cabecera de una columna para ordenar por ella; un segundo clic invierte el orden. <kbd>Exportar CSV</kbd> descarga las filas filtradas en un fichero que se abre en Excel.</p>
+
+    <h3>Cómo se calcula</h3>
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>Identificación</strong></td><td>Las CSVs temporales se identifican por su ID PDF LTV. Una LTV renovada con otro código cuenta como eliminada, y la nueva empieza su propia vigencia. Las fijas se identifican por su Referencia LV. Si una CSV desaparece y vuelve a aparecer, cada periodo cuenta por separado.</td></tr>
+        <tr><td><strong>Vigencia incompleta (≥)</strong></td><td>Las CSVs que ya estaban en la primera versión registrada llevaban vigentes desde antes, así que su vigencia real es desconocida y mayor que la calculada. Se muestran en la tabla marcadas con «≥», pero no se incluyen en las estadísticas ni en las gráficas.</td></tr>
+        <tr><td><strong>Precisión</strong></td><td>La vigencia se mide entre versiones publicadas, con una precisión de una semana. Cuando faltan semanas publicadas, la eliminación se sitúa en la primera versión publicada en la que ya no aparece la CSV.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ══ 6. SEMANA ══ -->
+  <section class="section" id="semana">
+    <h2>6. Página de cada semana</h2>
+    <p>Se abre con el botón <kbd>Abrir</kbd> de la pestaña Versiones. Muestra el listado completo de CSVs de esa versión, que se indica arriba a la derecha.</p>
+
+    <figure class="shot">
+      <a href="img/navegacion_csv/10_pagina_semana.jpg" target="_blank" rel="noopener"><img src="img/navegacion_csv/10_pagina_semana.jpg" alt="Página de la semana V.46.2026" loading="lazy" width="1600" height="983"></a>
+      <figcaption>Página de la semana V.46.2026</figcaption>
+    </figure>
+
+    <h3>Filtros y búsqueda</h3>
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>Línea, Tipo LV y Modo ASFA</strong></td><td>Desplegables para filtrar el listado.</td></tr>
+        <tr><td><strong>Búsqueda libre</strong></td><td>Busca el texto escrito en cualquier columna (referencia, dependencia, motivo...).</td></tr>
+        <tr><td><strong>Quitar filtros</strong></td><td>Restablece los filtros y la búsqueda.</td></tr>
+        <tr><td><strong>Mostrando N / M registros</strong></td><td>A la derecha, el número de CSVs que cumplen los filtros sobre el total.</td></tr>
+      </tbody>
+    </table>
+
+    <figure class="shot">
+      <a href="img/navegacion_csv/11_listado_filtrado.jpg" target="_blank" rel="noopener"><img src="img/navegacion_csv/11_listado_filtrado.jpg" alt="Listado filtrado por Modo ASFA" loading="lazy" width="1600" height="983"></a>
+      <figcaption>Listado filtrado por Modo ASFA</figcaption>
+    </figure>
+
+    <h3>Otras opciones</h3>
+    <table class="info-table">
+      <tbody>
+        <tr><td><strong>Ordenar</strong></td><td>Pulse la cabecera de una columna para ordenar por ella; un segundo clic invierte el orden.</td></tr>
+        <tr><td><strong>Zoom</strong></td><td>Los botones <kbd>−</kbd> y <kbd>+</kbd> reducen o amplían el tamaño de la tabla.</td></tr>
+        <tr><td><strong>Exportar CSV</strong></td><td>Descarga las filas filtradas en un fichero que se abre en Excel.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Ventana de instalación</h3>
+    <p>Al pulsar sobre una fila se abre la ventana de instalación de esa CSV, con los datos que constan en el fichero de seguimiento de la instalación: número de parejas y tipo de balizas y, para cada pareja (hasta cuatro), el PK y el número de serie de cada baliza. También incluye el fabricante, la fecha de instalación, las hojas de control, la fecha de puesta en servicio y las observaciones. Se cierra con la ✕, pulsando fuera de ella o con la tecla <kbd>Esc</kbd>.</p>
+
+    <figure class="shot">
+      <a href="img/navegacion_csv/12_ventana_instalacion.jpg" target="_blank" rel="noopener"><img src="img/navegacion_csv/12_ventana_instalacion.jpg" alt="Ventana de instalación de una CSV" loading="lazy" width="1600" height="983"></a>
+      <figcaption>Ventana de instalación de una CSV</figcaption>
+    </figure>
+
+    <p>En el listado, la columna <strong>Secuencia de Balizas</strong> se colorea en verde oscuro si la instalación de la CSV está completa y en granate si falta algún dato. La instalación está completa cuando todos los campos de instalación están rellenos; la fecha de instalación no cuenta si pone «SIN PLANIFICAR», ni las hojas de control si ponen «SIN RECIBIR».</p>
+
+    <h3>Progreso de la instalación</h3>
+    <p>El botón <kbd>Progreso instalación</kbd> muestra, para las CSVs que cumplen los filtros aplicados, el número total de CSVs y el porcentaje de instalaciones completas y pendientes. Combinado con los filtros, permite seguir el avance por línea, tipo o modo.</p>
+    <p>El botón solo se habilita cuando hay al menos una instalación completa entre las CSVs filtradas. En la versión V.46.2026 todavía no hay ninguna, por lo que aparece deshabilitado en las capturas.</p>
+  </section>
+
+  <!-- ══ 7. CONSEJOS ══ -->
+  <section class="section" id="consejos">
+    <h2>7. Consejos y problemas habituales</h2>
+
+    <table class="coltable">
+      <thead>
+        <tr><th>Situación</th><th>Qué hacer</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>No aparece la última versión</td><td>La web puede tardar uno o dos minutos en actualizarse tras la publicación. Recargue la página con <kbd>Ctrl</kbd>+<kbd>F5</kbd>.</td></tr>
+        <tr><td>El Comparador muestra «Cargando comparaciones...»</td><td>Es normal durante unos segundos la primera vez: los datos de las comparaciones van comprimidos y el navegador los prepara al abrir el comparador.</td></tr>
+        <tr><td>«Este navegador no puede abrir las comparaciones»</td><td>Use una versión actual de Edge, Chrome o Firefox.</td></tr>
+        <tr><td>Las gráficas no se dibujan</td><td>Las gráficas necesitan conexión a internet para cargar sus librerías. Compruebe la conexión y recargue la página.</td></tr>
+        <tr><td>El botón «Progreso instalación» está deshabilitado</td><td>No hay instalaciones completas entre las CSVs filtradas. Quite filtros o complete los datos de instalación en el fichero de seguimiento.</td></tr>
+        <tr><td>Las cifras del Comparador y de la gráfica de evolución parecen no cuadrar</td><td>Ambas cuentan filas del listado y deben coincidir: compruebe que los filtros de Tipo LV, modo y línea son los mismos.</td></tr>
+        <tr><td>Las CSVs eliminadas del Histórico no coinciden con las bajas de las gráficas</td><td>El Histórico identifica las temporales por su ID PDF LTV, así que cuenta como eliminada una LTV renovada con otro código; las gráficas comparan por Referencia LV.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+
+<script>
+  // Active sidebar link on scroll
+  const sections = document.querySelectorAll('.section');
+  const links = document.querySelectorAll('.sidebar a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.sidebar a[href="#${e.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-60px 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+</script>
+</body>
+</html>
